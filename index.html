@@ -3,127 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRPG攻略模擬器 (隨機事件版)</title>
+    <title>TRPG攻略模擬器 (原生滑動無敵版)</title>
     <style>
         :root {
-            /* 潮流風格 5 色配置 */
             --bg-main: #EEEEEE; 
             --card-bg: #FAFAFA; 
             --border-dark: #282828; 
             --text-main: #282828; 
-            
             --text-sub: #808080; 
             --accent-neon: #EDFF66; 
             --accent-gray: #BFB3B8; 
-            
-            /* 潮流硬陰影 */
             --hard-shadow: 4px 4px 0px var(--border-dark);
         }
 
+        /* 🚨 終極修復 1：徹底移除所有 overflow: hidden，讓網頁回歸最原始的滑動狀態！ */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", "Microsoft JhengHei", sans-serif; }
-        /* 鎖死底層，防止手機滑動衝突 */
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; position: fixed; }
+        body, html { 
+            width: 100%; min-height: 100%; 
+            background-color: var(--bg-main); color: var(--text-main); 
+        }
 
-        /* 滾動條隱藏 */
         ::-webkit-scrollbar { display: none; }
 
-        /* 大廳與選單畫面 */
-        #setup-screen, #save-menu-screen, #lore-screen, #edit-scenario-screen { width: 100%; max-width: 550px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; transition: all 0.3s; }
+        /* 🚨 終極修復 2：讓長頁面變成最普通的網頁排版，保證絕對不會卡住 */
+        #setup-screen, #edit-scenario-screen, #save-menu-screen { 
+            width: 100%; max-width: 550px; margin: 0 auto; 
+            padding: 40px 20px; display: none; flex-direction: column; 
+        }
         
+        /* 首頁因為比較短，所以設定最小高度來置中 */
+        #setup-screen { min-height: 100vh; justify-content: center; align-items: center; padding: 20px; }
+
         h2 { color: var(--text-main); text-shadow: 0 0 12px #fff, 3px 3px 0px var(--accent-neon); margin-bottom: 8px; font-weight: 900; text-align: center; }
 
         .key-input, .model-select, .scenario-input { background: #ffffff; border: 2px solid var(--border-dark); padding: 14px; border-radius: 8px; color: var(--text-main); width: 100%; text-align: left; font-size: 14px; margin-bottom: 15px; transition: all 0.2s; font-weight: 600; }
         .key-input { text-align: center; max-width: 400px; }
         .key-input:focus, .model-select:focus, .scenario-input:focus { border-color: var(--border-dark); outline: none; box-shadow: 4px 4px 0px var(--accent-neon); transform: translate(-2px, -2px); }
 
-        .model-select { cursor: pointer; text-align: center; max-width: 400px; appearance: none; -webkit-appearance: none; }
-        .model-select option { background: #fff; color: var(--text-main); }
+        .model-select { cursor: pointer; text-align: center; max-width: 400px; appearance: none; -webkit-appearance: none; align-self: center; }
         
-        #model-selection-area { display: none; width: 100%; max-width: 400px; text-align: center; }
+        #model-selection-area { display: none; width: 100%; max-width: 400px; text-align: center; margin: 0 auto; }
         .action-buttons { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; width: 100%; }
         
-        /* 設定列表與頭像區 */
-        #lore-container, #edit-scenario-container, #save-list { width: 100%; background: #ffffff; border: 2px solid var(--border-dark); border-radius: 12px; padding: 20px; overflow-y: auto; text-align: left; box-shadow: 6px 6px 0px rgba(40,40,40,0.05); }
-        #lore-container { max-height: 60vh; padding: 25px; }
-        #edit-scenario-container { max-height: 75vh; display: flex; flex-direction: column; gap: 10px; }
-        #save-list { max-height: 400px; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; background: transparent; border: none; box-shadow: none; padding: 0; }
+        #edit-scenario-container { 
+            width: 100%; background: #ffffff; border: 2px solid var(--border-dark); border-radius: 12px; 
+            padding: 20px; text-align: left; box-shadow: 6px 6px 0px rgba(40,40,40,0.05); 
+            display: flex; flex-direction: column; gap: 10px; 
+        }
+        #save-list { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; background: transparent; border: none; box-shadow: none; padding: 0; }
         
-        /* 首頁主圖 */
-        #setup-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border-dark); filter: grayscale(100%); margin-bottom: 25px; cursor: pointer; box-shadow: var(--hard-shadow); transition: all 0.2s; background: #fff; }
+        #setup-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border-dark); filter: grayscale(100%); margin-bottom: 25px; cursor: pointer; box-shadow: var(--hard-shadow); transition: all 0.2s; background: #fff; align-self: center;}
         #setup-pic:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--accent-neon), 6px 6px 0px 2px var(--border-dark); }
 
-        /* 紙娃娃上傳區 */
         .avatar-setup-area { display: flex; justify-content: space-around; margin-bottom: 10px; padding: 10px; background: var(--card-bg); border-radius: 8px; border: 2px solid var(--text-sub); }
         .avatar-box { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
         .avatar-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-dark); background: #eee; transition: all 0.2s; box-shadow: 2px 2px 0px var(--accent-neon); }
-        .avatar-box:hover .avatar-preview { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px var(--accent-neon); }
         .avatar-label { font-size: 12px; font-weight: 800; color: var(--text-main); }
 
-        /* 情境卡片樣式 */
         .scenario-card { background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; }
         .scenario-card h4 { margin-bottom: 10px; font-size: 14px; color: var(--text-main); }
         .delete-scen-btn { position: absolute; top: 10px; right: 10px; background: #ff4444; color: #fff; border: 2px solid var(--border-dark); border-radius: 6px; font-size: 11px; padding: 2px 8px; cursor: pointer; font-weight: bold; }
 
-        /* Modal 基礎 (裁切與面板) */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 15px; overscroll-behavior: none; }
+        /* ==================================================
+           🚨 終極修復 3：完美的 Modal (狀態面板) 原生滾動系統
+           ================================================== */
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+            background: rgba(0,0,0,0.85); z-index: 9999; 
+            overflow-y: auto !important; /* 直接讓黑底變成可滑動視窗 */
+            -webkit-overflow-scrolling: touch !important; 
+            padding: 20px 10px; 
+        }
         
-        #crop-container { width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--accent-neon); overflow: hidden; position: relative; background: #222; box-shadow: 0 0 20px rgba(0,0,0,0.5); touch-action: none; }
-        #crop-img { position: absolute; transform-origin: top left; pointer-events: none; }
-        .crop-controls { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; }
-
-        /* 🚨 終極滑動修復版：狀態面板 */
         #status-modal-content { 
-            background: var(--bg-main); 
-            width: 100%; max-width: 600px; 
-            height: 85vh; max-height: 800px;
+            background: var(--bg-main); width: 100%; max-width: 600px; 
+            margin: 0 auto; /* 靠自動 margin 置中與推擠空間 */
+            height: auto; /* 絕對不鎖死高度 */
             border-radius: 12px; border: 3px solid var(--border-dark); 
-            display: flex; flex-direction: column; 
+            padding: 20px; display: flex; flex-direction: column; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
         }
 
-        /* 讓內部內容區塊獨立滾動 */
-        .modal-scroll-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
-            -webkit-overflow-scrolling: touch; 
-        }
-        
-        /* 面板頂部固定區 (儲存按鈕在這) */
+        /* 儲存返回鍵：面板滑動時永遠黏在視窗頂部 */
         .modal-header-sticky {
+            position: sticky; top: -20px; 
+            background: var(--bg-main); z-index: 10;
+            margin: -20px -20px 15px -20px; padding: 15px 20px;
+            border-bottom: 2px solid var(--border-dark); border-radius: 10px 10px 0 0;
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--border-dark); padding: 15px 20px; 
-            background: #fff; border-radius: 9px 9px 0 0;
-            flex-shrink: 0; z-index: 10;
         }
-        .modal-header-sticky h3 { font-size: 15px; color: var(--text-main); font-weight: 900; margin: 0; }
+        .modal-header-sticky h3 { font-size: 16px; color: var(--text-main); font-weight: 900; margin: 0; border: none; padding: 0;}
+        #status-modal-content h3 { font-size: 14px; margin-bottom: 8px; color: var(--text-main); font-weight: 900; letter-spacing: 0.5px; }
 
-        .modal-scroll-area h3 { 
-            font-size: 14px; margin-bottom: 10px; margin-top: 5px; 
-            color: var(--text-main); font-weight: 900; letter-spacing: 0.5px;
-        }
-
-        /* 標籤與道具樣式 */
         #ui-flags-container, #ui-items-container { 
             display: flex; flex-wrap: wrap; gap: 8px; 
             padding: 12px; background: #e2e2e2; 
             border-radius: 8px; margin-bottom: 15px; min-height: 48px; align-content: flex-start;
-            flex-shrink: 0; 
         }
         
-        .flag-tag { display: inline-flex; align-items: center; background: var(--border-dark); color: var(--accent-neon); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 800; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+        .flag-tag { display: inline-flex; align-items: center; background: var(--border-dark); color: var(--accent-neon); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 800; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); white-space: nowrap;}
         .flag-tag span { cursor: pointer; margin-left: 10px; color: #ff4444; font-size: 14px; line-height: 1; }
-        .flag-tag span:hover { color: #fff; }
         
-        .item-tag { display: inline-flex; align-items: center; background: #fff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 800; box-shadow: 2px 2px 0px var(--accent-neon); }
+        .item-tag { display: inline-flex; align-items: center; background: #fff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 800; box-shadow: 2px 2px 0px var(--accent-neon); white-space: nowrap;}
         
-        #flag-input-area { display: flex; gap: 8px; margin-bottom: 25px; flex-shrink: 0; }
+        #flag-input-area { display: flex; gap: 8px; margin-bottom: 25px; }
         #new-flag-input { flex: 1; padding: 10px; border: 2px solid var(--border-dark); border-radius: 8px; font-size: 13px; font-weight: 600; }
 
-        #ui-adventure-log { width: 100%; min-height: 120px; border: 2px solid var(--border-dark); border-radius: 8px; padding: 12px; font-size: 13px; margin-bottom: 25px; resize: vertical; line-height: 1.6; background: #fff; font-weight: 600; flex-shrink: 0;}
-        #ui-stats-display { flex-shrink: 0; margin-bottom: 20px;}
+        #ui-adventure-log { width: 100%; min-height: 120px; border: 2px solid var(--border-dark); border-radius: 8px; padding: 12px; font-size: 13px; margin-bottom: 25px; resize: vertical; line-height: 1.6; background: #fff; font-weight: 600;}
+        #ui-stats-display { margin-bottom: 20px;}
 
         .scenario-label { font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; letter-spacing: 1px; display: block; }
         textarea.scenario-input { resize: vertical; min-height: 80px; }
@@ -135,19 +122,16 @@
         .save-slot:hover .save-info { color: var(--text-main); }
         
         .delete-save-btn { position: absolute; top: 12px; right: 12px; background: #fff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; z-index: 2; }
-        .delete-save-btn:hover { background: #ff4444; color: #fff; border-color: #ff4444; box-shadow: 2px 2px 0px var(--border-dark); }
 
         /* 遊戲主容器 */
         #game-container {
-            width: 100%; max-width: 950px; height: 100%; max-height: 850px;
-            background: var(--card-bg); 
+            width: 100%; max-width: 950px; height: 100vh;
+            margin: 0 auto; background: var(--card-bg); 
             border: 3px solid var(--border-dark); border-radius: 16px;
-            display: flex; flex-direction: column; justify-content: space-between; padding: 20px 25px;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.05); display: none; transition: all 0.3s;
-            position: relative;
+            display: none; flex-direction: column; justify-content: space-between; padding: 20px 25px;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.05); position: relative;
         }
 
-        /* 側邊懸浮按鈕：角色面板 */
         #floating-menu-btn {
             position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
             background: var(--border-dark); color: var(--accent-neon);
@@ -168,43 +152,23 @@
         .red-accent { color: #fff; font-weight: 900; background: #ff4444; padding: 2px 6px; border-radius: 4px; border: none; }
         .purple-accent { color: #fff; font-weight: 900; background: #9b59b6; padding: 2px 6px; border-radius: 4px; border: none; }
         
-        select.btn-location, .game-model-select { white-space: nowrap; flex-shrink: 0; background: #ffffff; padding: 6px 12px; border-radius: 8px; border: 2px solid var(--border-dark); font-size: 12px; font-weight: 800; color: var(--text-main); transition: all 0.2s; appearance: none; -webkit-appearance: none; cursor: pointer; }
-        select.btn-location:hover, .game-model-select:hover { background: var(--accent-neon); box-shadow: 2px 2px 0px var(--border-dark); transform: translate(-1px, -1px); }
-        .game-model-select { max-width: 180px; }
-
-        /* 對話區塊與大頭貼 */
+        select.btn-location, .game-model-select { white-space: nowrap; flex-shrink: 0; background: #ffffff; padding: 6px 12px; border-radius: 8px; border: 2px solid var(--border-dark); font-size: 12px; font-weight: 800; color: var(--text-main); cursor: pointer; }
+        
         #dialogue-box { background: transparent; padding: 5px; margin: 5px 0; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; scroll-behavior: smooth; }
         
-        .msg-narrative {
-            background-color: var(--accent-neon); border: 2px solid var(--border-dark); color: var(--text-main);
-            padding: 14px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; line-height: 1.7; white-space: pre-line;
-            box-shadow: 3px 3px 0px var(--border-dark); animation: fadeIn 0.4s ease-out; margin: 0 10px;
-        }
-
+        .msg-narrative { background-color: var(--accent-neon); border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; line-height: 1.7; white-space: pre-line; box-shadow: 3px 3px 0px var(--border-dark); animation: fadeIn 0.4s ease-out; margin: 0 10px; }
         .msg-wrapper { display: flex; gap: 10px; align-items: flex-end; animation: fadeIn 0.4s ease-out; }
         .msg-wrapper.player { flex-direction: row-reverse; }
-        
         .chat-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-dark); flex-shrink: 0; background: #fff; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
-        
         .msg-content { display: flex; flex-direction: column; gap: 4px; max-width: 80%; }
         .msg-speaker { font-size: 12px; color: var(--text-sub); font-weight: 900; letter-spacing: 1px; }
         .msg-wrapper.sanko .msg-speaker { margin-left: 4px; color: var(--text-main); border-left: 2px solid var(--accent-neon); padding-left: 6px;}
         .msg-wrapper.player .msg-speaker { text-align: right; margin-right: 4px; }
+        .msg-text { background-color: var(--accent-gray); color: var(--text-main); padding: 12px 18px; border-radius: 16px; border-bottom-left-radius: 4px; font-size: 15px; font-weight: 800; line-height: 1.6; white-space: pre-line; border: 2px solid var(--border-dark); box-shadow: 4px 4px 0px rgba(40,40,40,0.1); }
+        .msg-wrapper.player .msg-text { background-color: #ffffff; border-radius: 16px; border-bottom-right-radius: 4px; border-bottom-left-radius: 16px; box-shadow: 4px 4px 0px var(--accent-neon); }
         
-        .msg-text { 
-            background-color: var(--accent-gray); color: var(--text-main); 
-            padding: 12px 18px; border-radius: 16px; border-bottom-left-radius: 4px;
-            font-size: 15px; font-weight: 800; line-height: 1.6; white-space: pre-line; 
-            border: 2px solid var(--border-dark); box-shadow: 4px 4px 0px rgba(40,40,40,0.1); 
-        }
-        
-        .msg-wrapper.player .msg-text { 
-            background-color: #ffffff; border-radius: 16px; border-bottom-right-radius: 4px; border-bottom-left-radius: 16px; box-shadow: 4px 4px 0px var(--accent-neon); 
-        }
-
         .system-msg { color: var(--text-sub); text-align: center; font-style: italic; font-weight: 800; font-size: 12px; padding: 10px 0; letter-spacing: 1px; }
 
-        /* 選項與輸入區 */
         #options-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; padding-right: 5px; flex-shrink: 0; }
         .opt-btn { background: #ffffff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 800; text-align: left; transition: all 0.2s; line-height: 1.4; }
         .opt-btn:hover { background: var(--accent-neon); box-shadow: var(--hard-shadow); transform: translate(-3px, -3px); }
@@ -215,42 +179,36 @@
 
         .btn { background: #ffffff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 900; transition: all 0.2s; white-space: nowrap; letter-spacing: 1px; }
         .btn:hover { background: var(--accent-neon); box-shadow: var(--hard-shadow); transform: translate(-2px, -2px); }
-        .btn:active { transform: translate(0, 0); box-shadow: none; }
         .btn:disabled { background: #ddd !important; border-color: var(--text-sub) !important; color: var(--text-sub) !important; cursor: not-allowed; transform: none; box-shadow: none !important; }
         
         #dice-btn { background: var(--accent-neon); color: var(--border-dark); border: 2px solid var(--border-dark); padding: 12px 14px; }
-        #dice-btn:hover { background: #d7e85c; }
         #send-btn { background: var(--border-dark); color: #fff; }
-        #send-btn:hover { background: var(--accent-gray); color: var(--border-dark); border-color: var(--border-dark); }
         
         #loading { display: none; color: var(--text-sub); font-style: italic; font-weight: bold; font-size: 12px; text-align: center; padding: 10px 0; animation: pulse 1.5s infinite; }
+
+        #crop-container { width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--accent-neon); overflow: hidden; position: relative; background: #222; box-shadow: 0 0 20px rgba(0,0,0,0.5); touch-action: none; margin-top: 20px;}
+        #crop-img { position: absolute; transform-origin: top left; pointer-events: none; }
+        .crop-controls { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; margin-bottom: 20px;}
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
         
-        /* 📱 手機版極致瘦身排版 */
+        /* 📱 手機版排版：遊戲畫面填滿螢幕，沒有邊框 */
         @media screen and (max-width: 600px) {
-            #game-container { border-radius: 0; padding: 8px 10px; border: none; box-shadow: none; background: var(--bg-main); overflow: hidden; height: 100dvh; max-height: 100dvh; }
+            #game-container { border-radius: 0; padding: 8px 10px; border: none; box-shadow: none; height: 100dvh; max-height: 100dvh; }
             #floating-menu-btn { right: -5px; padding: 12px 4px; font-size: 11px; border-radius: 8px 0 0 8px; }
-            
             .chat-avatar { width: 32px; height: 32px; }
             .msg-content { max-width: 88%; }
             .msg-text { padding: 8px 12px; font-size: 14px; line-height: 1.5; }
             .msg-narrative { padding: 8px 12px; font-size: 13px; line-height: 1.5; margin: 0 5px; }
             #dialogue-box { gap: 12px; padding: 0; }
-            
             #status-bar { padding-bottom: 8px; margin-bottom: 8px; gap: 6px; }
             #input-area { padding-top: 8px; gap: 6px; }
             #player-input { padding: 10px; font-size: 14px; min-height: 40px; }
             .btn { padding: 8px 12px; font-size: 13px; }
             #dice-btn { padding: 8px 10px; }
-            
             #options-area { gap: 6px; margin-bottom: 6px; }
             .opt-btn { padding: 10px 12px; font-size: 13px; }
-            
-            #status-modal-content { height: 90vh; }
-            .modal-scroll-area { padding: 15px; }
-            .modal-header-sticky { padding: 15px; }
         }
     </style>
 </head>
@@ -264,14 +222,16 @@
     </script>
 
     <div id="crop-modal" class="modal-overlay">
-        <h3 style="color: #fff; margin-bottom: 15px; font-weight:800; letter-spacing:1px; border: none;">拖拉照片位置</h3>
-        <div id="crop-container">
-            <img id="crop-img" src="">
-        </div>
-        <div class="crop-controls">
-            <input type="range" id="crop-scale" min="0.1" max="3" step="0.05" value="1" style="width: 100%;">
-            <button class="btn" onclick="confirmCrop()" style="background: var(--accent-neon); width: 100%;">確認</button>
-            <button class="btn" onclick="closeCropModal()" style="background: var(--border-dark); color: #fff; width: 100%;">取消</button>
+        <div style="display:flex; flex-direction:column; align-items:center; width:100%; margin:auto;">
+            <h3 style="color: #fff; margin-bottom: 15px; font-weight:800; letter-spacing:1px; border: none;">拖拉照片位置</h3>
+            <div id="crop-container">
+                <img id="crop-img" src="">
+            </div>
+            <div class="crop-controls">
+                <input type="range" id="crop-scale" min="0.1" max="3" step="0.05" value="1" style="width: 100%;">
+                <button class="btn" onclick="confirmCrop()" style="background: var(--accent-neon); width: 100%;">確認</button>
+                <button class="btn" onclick="closeCropModal()" style="background: var(--border-dark); color: #fff; width: 100%;">取消</button>
+            </div>
         </div>
     </div>
 
@@ -279,49 +239,48 @@
         <div id="status-modal-content">
             
             <div class="modal-header-sticky">
-                <h3>角色狀態與日誌面板</h3>
-                <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 12px; border-width: 2px;">儲存並返回</button>
+                <h3 style="border:none; margin:0; padding:0;">角色狀態與面板</h3>
+                <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px;">儲存並返回</button>
             </div>
 
-            <div class="modal-scroll-area">
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">永久事件標籤 (長期記憶 Flag)</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                    達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行干涉世界線！
-                </p>
-                <div id="ui-flags-container"></div>
-                <div id="flag-input-area">
-                    <input type="text" id="new-flag-input" placeholder="輸入你想植入的記憶 (如: 答應拍照)...">
-                    <button class="btn" onclick="manualAddFlag()" style="padding:6px 12px; font-size:12px;">寫入</button>
-                </div>
-
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">玩家背包與道具</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                    遊戲過程中獲得或消耗的物品會顯示於此。
-                </p>
-                <div id="ui-items-container"></div>
-
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">冒險日誌 (AI 條列式記憶)</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                    AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。
-                </p>
-                <textarea id="ui-adventure-log"></textarea>
-                
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:8px;">角色數值面板</p>
-                <div id="ui-stats-display" style="font-size:13px; color:var(--text-main); line-height:1.6; white-space: pre-wrap; font-weight:600; padding:12px; background:#e2e2e2; border-radius:8px;"></div>
+            <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; margin-top:5px;">永久事件標籤 (長期記憶 Flag)</p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
+                達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行干涉世界線！
+            </p>
+            <div id="ui-flags-container"></div>
+            <div id="flag-input-area">
+                <input type="text" id="new-flag-input" placeholder="輸入你想植入的記憶 (如: 答應拍照)...">
+                <button class="btn" onclick="manualAddFlag()" style="padding:6px 12px; font-size:12px;">寫入</button>
             </div>
+
+            <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">玩家背包與道具</p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
+                遊戲過程中獲得或消耗的物品會顯示於此。
+            </p>
+            <div id="ui-items-container"></div>
+
+            <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">冒險日誌 (AI 條列式記憶)</p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
+                AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。
+            </p>
+            <textarea id="ui-adventure-log"></textarea>
+            
+            <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:8px;">角色數值面板</p>
+            <div id="ui-stats-display" style="font-size:13px; color:var(--text-main); line-height:1.6; white-space: pre-wrap; font-weight:600; padding:12px; background:#e2e2e2; border-radius:8px;"></div>
+            
         </div>
     </div>
 
-    <div id="setup-screen">
+    <div id="setup-screen" style="display: flex;">
         <img id="setup-pic" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" title="點擊上傳首頁照片" onclick="document.getElementById('pic-input').click();">
         <input type="file" id="pic-input" accept="image/*" style="display:none" onchange="loadPic(this)">
 
-        <h2>攻略模擬器 (隨機事件版)</h2>
+        <h2>攻略模擬器 (滑動無敵版)</h2>
         <p style="color: var(--text-sub); text-align: center; font-size: 11px; margin-bottom: 25px; letter-spacing: 2px; font-weight: 800;"> A C H R O M A T O P S i A </p>
         
         <input type="password" id="api-key" class="key-input" placeholder="請貼上你的 API Key">
         
-        <div style="display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin-bottom: 15px;">
+        <div style="display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin: 0 auto 15px auto;">
             <button class="btn" id="verify-btn" onclick="fetchAvailableModels()" style="flex: 1; background: var(--border-dark); color: #fff;">驗證金鑰</button>
         </div>
 
@@ -342,7 +301,7 @@
         </div>
     </div>
 
-    <div id="edit-scenario-screen" style="display: none;">
+    <div id="edit-scenario-screen">
         <h2>劇本與多情境配置</h2>
         
         <div style="width: 100%; display: flex; gap: 10px; margin-bottom: 15px; max-width: 550px;">
@@ -383,9 +342,7 @@
                 <button class="btn" onclick="addScenarioBlock()" style="padding:6px 12px; font-size:12px; background:var(--border-dark); color:#fff;">+ 新增情境</button>
             </div>
             
-            <div id="scenario-list-container">
-            </div>
-
+            <div id="scenario-list-container"></div>
         </div>
         
         <div class="action-buttons" style="width: 100%; margin-top: 15px;">
@@ -396,15 +353,15 @@
             <button class="btn" onclick="saveCurrentPreset()" style="background: var(--accent-neon);">儲存 (覆蓋目前)</button>
             <button class="btn" onclick="saveAsNewPreset()">另存新檔</button>
         </div>
-        <div class="action-buttons" style="width: 100%; margin-top: 10px;">
+        <div class="action-buttons" style="width: 100%; margin-top: 10px; margin-bottom: 40px;">
             <button class="btn" onclick="cancelEdit()" style="flex-grow: 1; background: var(--border-dark); color: #fff;">返回選單</button>
         </div>
     </div>
 
-    <div id="save-menu-screen" style="display: none;">
+    <div id="save-menu-screen">
         <h2>選擇記憶紀錄</h2>
         <div id="save-list"></div>
-        <div class="action-buttons">
+        <div class="action-buttons" style="margin-bottom: 40px;">
             <button class="btn" onclick="createNewSave()" style="background: var(--accent-neon);">創建新紀錄</button>
             <button class="btn" onclick="exportSaves()">匯出</button>
             <button class="btn" onclick="document.getElementById('import-input').click()">匯入</button>
@@ -561,7 +518,8 @@
                     cropImgObj.onload = () => {
                         cropState.scale = 1; scaleSlider.value = 1;
                         cropState.imgX = (250 - cropImgObj.width) / 2; cropState.imgY = (250 - cropImgObj.height) / 2;
-                        updateCropTransform(); document.getElementById('crop-modal').style.display = 'flex';
+                        updateCropTransform(); 
+                        document.getElementById('crop-modal').style.display = 'flex';
                     }
                 };
                 reader.readAsDataURL(input.files[0]);
@@ -606,7 +564,8 @@
         }
 
         function openEditScenario() {
-            document.getElementById('setup-screen').style.display = 'none'; document.getElementById('edit-scenario-screen').style.display = 'flex';
+            document.getElementById('setup-screen').style.display = 'none'; 
+            document.getElementById('edit-scenario-screen').style.display = 'flex'; 
             renderPresetSelector(); loadPresetToForm(activePresetId);
         }
 
@@ -724,7 +683,8 @@
 
         function cancelEdit() {
             activePresetId = localStorage.getItem('sanko_active_preset_id') || Object.keys(scenarioPresets)[0];
-            document.getElementById('edit-scenario-screen').style.display = 'none'; document.getElementById('setup-screen').style.display = 'flex';
+            document.getElementById('edit-scenario-screen').style.display = 'none'; 
+            document.getElementById('setup-screen').style.display = 'flex';
         }
 
         function deleteAllData() {
@@ -773,7 +733,7 @@
 目前 HP (生命/體力)：${currentHp}/100
 目前 SAN (理智/壓力)：${currentSan}/100
 目前背包道具：${itemsText}
-(若玩家受傷、勞累扣除 HP；恐懼、社死扣除 SAN。🚨 本遊戲沒有 Game Over！若 HP 或 SAN 歸零，請在 narrative 中強制觸發「救援」、「斷線」或「回到現實世界清醒」等保護機制，並在後續讓數值微幅回升。)
+(若玩家受傷、勞累扣除 HP；恐懼、社死扣除 SAN。🚨 本遊戲沒有 Game Over！若 HP 或 SAN 歸零，請在 narrative 中強制觸發「三高捨身救援」、「強制登出斷線」或「回到現實世界清醒」等保護機制，並在後續讓數值微幅回升。)
 
 【永久記憶標籤 (Flags)】
 ${flagsText}
@@ -850,7 +810,7 @@ ${flagsText}
             const msgBox = document.getElementById('dialogue-box'); 
             const systemMsgDiv = document.createElement('div'); 
             systemMsgDiv.className = 'system-msg'; 
-            systemMsgDiv.innerText = sysMsg;
+            systemMsgDiv.innerHTML = `<i>${sysMsg}</i>`;
             msgBox.appendChild(systemMsgDiv); 
             msgBox.scrollTop = msgBox.scrollHeight; 
             
@@ -869,7 +829,7 @@ ${flagsText}
             
             renderFlags();
             renderItems();
-            document.getElementById('status-modal').style.display = 'flex';
+            document.getElementById('status-modal').style.display = 'block'; 
         }
 
         function saveStatusModal() {
@@ -1036,13 +996,13 @@ ${flagsText}
                     else if (line.startsWith(`${currentScenario.playerName}：`)) { appendMessage(currentScenario.playerName, line.replace(`${currentScenario.playerName}：`, "")); }
                     else if (line.startsWith(`${currentScenario.targetName}：`)) { appendMessage(currentScenario.targetName, line.replace(`${currentScenario.targetName}：`, "")); }
                     else if (line.startsWith(`【系統提示】：`)) {
-                        const msgBox = document.getElementById('dialogue-box'); const systemMsgDiv = document.createElement('div'); systemMsgDiv.className = 'system-msg'; systemMsgDiv.innerText = line.replace(`【系統提示】：`, "");
+                        const msgBox = document.getElementById('dialogue-box'); const systemMsgDiv = document.createElement('div'); systemMsgDiv.className = 'system-msg'; 
+                        systemMsgDiv.innerHTML = `<i>${line.replace(`【系統提示】：`, "")}</i>`;
                         msgBox.appendChild(systemMsgDiv);
                     }
                 });
-                const msgBox = document.getElementById('dialogue-box'); const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerText = "— 已載入記憶 —"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
+                const msgBox = document.getElementById('dialogue-box'); const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 已載入記憶 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
             } else {
-                // 隨機開場事件邏輯
                 const openings = [
                     "【系統啟動要求】遊戲開始。請以「一個平凡但突然發生小意外的日常情境」做為開場，利用 narrative 描寫場景與事件，展現角色的性格。",
                     "【系統啟動要求】遊戲開始。請以「雙方正處於某種緊繃或危急的狀況（如戰鬥中、工作死線）」做為開場，利用 narrative 描寫場景與事件。",
@@ -1110,7 +1070,7 @@ ${flagsText}
             const msgBox = document.getElementById('dialogue-box'); 
             const systemMsgDiv = document.createElement('div'); 
             systemMsgDiv.className = 'system-msg'; 
-            systemMsgDiv.innerText = msg;
+            systemMsgDiv.innerHTML = `<i>${msg}</i>`;
             msgBox.appendChild(systemMsgDiv);
         }
 
