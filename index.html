@@ -154,7 +154,7 @@
         
         select.btn-location, .game-model-select { white-space: nowrap; flex-shrink: 0; background: #ffffff; padding: 6px 12px; border-radius: 8px; border: 2px solid var(--border-dark); font-size: 12px; font-weight: 800; color: var(--text-main); cursor: pointer; }
         
-        #dialogue-box { background: transparent; padding: 5px; margin: 5px 0; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; scroll-behavior: smooth; }
+        #dialogue-box { background: transparent; padding: 5px; margin: 5px 0; flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         
         .msg-narrative { background-color: var(--accent-neon); border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; line-height: 1.7; white-space: pre-line; box-shadow: 3px 3px 0px var(--border-dark); animation: fadeIn 0.4s ease-out; margin: 0 10px; }
         .msg-wrapper { display: flex; gap: 10px; align-items: flex-end; animation: fadeIn 0.4s ease-out; }
@@ -537,7 +537,8 @@
         }
 
         function handleDragMove(e) {
-            e.preventDefault(); if (!cropState.isDragging) return;
+            if (!cropState.isDragging) return;
+            e.preventDefault(); 
             let clientX = e.touches ? e.touches[0].clientX : e.clientX; let clientY = e.touches ? e.touches[0].clientY : e.clientY;
             cropState.imgX = clientX - cropState.startX; cropState.imgY = clientY - cropState.startY;
             updateCropTransform();
