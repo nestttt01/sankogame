@@ -438,11 +438,7 @@
         let currentItems = [];
         
         let currentScenarioIndex = 0; 
-        
-        // 【核心變更】：改為多重平行分頁
-        let chatScripts = [[]]; 
-        let currentChatPageIndex = 0; 
-
+        let chatScript = []; 
         let currentAdventureLog = "1. 遊戲剛開始，眾人處於初步接觸階段。"; 
         let currentFlags = []; 
         let currentSaveId = null; 
@@ -960,8 +956,7 @@
 
         function createNewSave() {
             const id = Date.now().toString();
-            // 注意這邊改為 scripts 陣列，並加入 chatPageIndex
-            const newSave = { title: `群像劇紀錄 - ${new Date().toLocaleDateString()}`, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, chatPageIndex: 0, scripts: [[]], log: "1. 遊戲剛開始，眾人處於初步接觸階段。", flags: [], scenario: JSON.parse(JSON.stringify(currentScenario)) };
+            const newSave = { title: `群像劇紀錄 - ${new Date().toLocaleDateString()}`, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, script: [], log: "1. 遊戲剛開始，眾人處於初步接觸階段。", flags: [], scenario: JSON.parse(JSON.stringify(currentScenario)) };
             savesData[id] = newSave; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); loadGame(id); 
         }
 
@@ -987,15 +982,11 @@
 
         function saveCurrentProgress() {
             if(!currentSaveId) return;
-            // 寫入多重視窗紀錄
-            savesData[currentSaveId].scripts = chatScripts;
-            savesData[currentSaveId].chatPageIndex = currentChatPageIndex;
+            savesData[currentSaveId].script = chatScript;
             savesData[currentSaveId].hp = currentHp; savesData[currentSaveId].san = currentSan; savesData[currentSaveId].items = currentItems;
             savesData[currentSaveId].scenIndex = currentScenarioIndex; savesData[currentSaveId].date = new Date().toLocaleString();
             savesData[currentSaveId].log = currentAdventureLog; savesData[currentSaveId].flags = currentFlags;
             savesData[currentSaveId].scenario = currentScenario;
-            // 為了乾淨，刪掉舊版的單一 script
-            delete savesData[currentSaveId].script;
             localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData));
         }
         function getSystemInstruction() {
@@ -1112,54 +1103,32 @@ ${flagsText}
 
             const sc = currentScenario.scenarios[newIndex];
             
-            // 跳出視窗詢問是要「切換獨立頁面」還是「留在當前畫面」
-            const isSwitchPage = confirm(`即將切換情境設定至：【${sc.name}】\n\n請問你要跳轉到該情境的「專屬獨立頁面」嗎？\n\n[確定]：進入專屬分頁，聊天紀錄各自獨立 (適合單人支線/雙開)\n[取消]：留在當前對話畫面，僅切換背景世界觀 (適合大家一起移動場景)`);
+            // 無縫切換分頁，不再彈出警告視窗與文字提示
+            currentScenarioIndex = newIndex;
+            currentChatPageIndex = newIndex;
             
-            const sysMsg = `— 情境/世界觀切換至：${sc.name} —`; 
+            if (!chatScripts[currentChatPageIndex]) {
+                chatScripts[currentChatPageIndex] = [];
+            }
 
-            if (isSwitchPage) {
-                // 切換分頁邏輯
-                currentScenarioIndex = newIndex;
-                currentChatPageIndex = newIndex;
-                
-                if (!chatScripts[currentChatPageIndex]) {
-                    chatScripts[currentChatPageIndex] = [];
-                }
+            // 渲染該分頁的對話
+            renderChatPage(currentChatPageIndex);
 
-                // 渲染該分頁的歷史對話
-                renderChatPage(currentChatPageIndex);
-
-                // 如果這個分頁是全新的
-                if (chatScripts[currentChatPageIndex].length === 0) {
-                    chatScripts[currentChatPageIndex].push(`【系統提示】：${sysMsg} (全新獨立支線)`);
-                    const msgBox = document.getElementById('dialogue-box'); 
-                    const systemMsgDiv = document.createElement('div'); 
-                    systemMsgDiv.className = 'system-msg'; 
-                    systemMsgDiv.innerHTML = `<i>${sysMsg} (全新獨立支線)</i>`;
-                    msgBox.appendChild(systemMsgDiv); 
-                    
-                    pendingMetaPrompt = `(DM絕對指令：遊戲剛剛進入了全新支線與獨立分頁，場景為「${sc.name}」。請根據這段新情境的設定，隨機生成一段開場描述與NPC的第一句話。)`;
-                    
-                    document.getElementById('loading').style.display = 'block';
-                    callAI_JSON(pendingMetaPrompt, true);
-                    pendingMetaPrompt = "";
-                } else {
-                    // 如果切回已有歷史的分頁
-                    createSystemAlert(`${sysMsg} (已切換回此分頁)`);
-                    pendingMetaPrompt = `(DM絕對指令：視角已切換回「${sc.name}」的專屬支線。請緊扣此頁面稍早發生的歷史對話做出回應。)`;
-                }
+            if (chatScripts[currentChatPageIndex].length === 0) {
+                // 若為全新分頁，直接設定開場 Prompt
+                pendingMetaPrompt = `(DM絕對指令：遊戲剛剛進入了全新支線與獨立分頁，場景為「${sc.name}」。請根據這段新情境的設定，隨機生成一段開場描述與NPC的第一句話。)`;
+                document.getElementById('loading').style.display = 'block';
+                callAI_JSON(pendingMetaPrompt, true);
+                pendingMetaPrompt = "";
             } else {
-                // 不切分頁，只換世界觀
-                currentScenarioIndex = newIndex;
-                createSystemAlert(`${sysMsg} (無縫切換，留在原畫面)`);
-                pendingMetaPrompt = `(DM絕對指令：視角剛剛已切換至「${sc.name}」。請緊扣上一秒發生的事件，描寫大家在新場景的反應或狀態轉變。)`;
+                // 切回舊分頁時，隱性帶入情境提示，但不顯示在畫面
+                pendingMetaPrompt = `(DM絕對指令：視角已切換回「${sc.name}」的專屬支線。請緊扣此頁面稍早發生的歷史對話做出回應。)`;
             }
 
             saveCurrentProgress();
             document.getElementById('btn-location').value = currentScenarioIndex;
         }
 
-        // 把渲染對話框的工作抽成獨立函數
         function renderChatPage(pageIndex) {
             const msgBox = document.getElementById('dialogue-box');
             msgBox.innerHTML = '';
@@ -1175,7 +1144,8 @@ ${flagsText}
                     }
                     else if (line.startsWith(`【系統提示】：`)) {
                         const rawMsg = line.replace(`【系統提示】：`, ""); 
-                        if (rawMsg.includes("解鎖") || rawMsg.includes("獲得") || rawMsg.includes("失去") || rawMsg.includes("消耗") || rawMsg.includes("好感度") || rawMsg.includes("發生改變") || rawMsg.includes("切換")) {
+                        // 🌟 成就、好感度、道具、人設變更的深色警告框都在這，完好無缺！
+                        if (rawMsg.includes("解鎖") || rawMsg.includes("獲得") || rawMsg.includes("失去") || rawMsg.includes("消耗") || rawMsg.includes("好感度") || rawMsg.includes("發生改變")) {
                             const alertDiv = document.createElement('div'); alertDiv.className = 'alert-msg'; alertDiv.innerText = rawMsg; msgBox.appendChild(alertDiv);
                         } else {
                             const systemMsgDiv = document.createElement('div'); systemMsgDiv.className = 'system-msg'; systemMsgDiv.innerHTML = `<i>${rawMsg}</i>`; msgBox.appendChild(systemMsgDiv);
@@ -1185,9 +1155,10 @@ ${flagsText}
                         if (splitIdx > -1) { const speaker = line.substring(0, splitIdx); const text = line.substring(splitIdx + 1); appendMessage(speaker, text); }
                     }
                 });
-                const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 已載入此分頁記憶 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
+                msgBox.scrollTop = msgBox.scrollHeight;
             } else {
-                const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 獨立頁面已建立。請手動輸入動作，或讓 AI 生成 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
+                // 乾淨的空狀態顯示
+                const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 此情境/支線尚無對話。請輸入動作，或讓 AI 生成開場 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
                 
                 const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.style.borderColor = 'var(--accent-neon)'; btn.innerHTML = '🎲 讓 AI 根據「情境設定」隨機生成開場事件';
                 btn.onclick = () => { optArea.innerHTML = ''; document.getElementById('loading').style.display = 'block'; const prompt = "【系統啟動要求】請嚴格根據「當前場景的世界觀與物理法則」以及「NPC的個人設定」，隨機生成一個極具帶入感的開局事件（例如：遭遇突發危機、日常衝突、或是某個角色正在做符合他人設的行為）。請利用 narrative 豐富描寫場景氣氛，並讓合適的 NPC 講出第一句話。"; callAI_JSON(prompt, true); };
@@ -1266,6 +1237,11 @@ ${flagsText}
             document.getElementById('save-menu-screen').style.display = 'none'; document.getElementById('game-container').style.display = 'flex';
             
             renderChatPage(currentChatPageIndex);
+            
+            // 只有剛讀檔時才會出現這條提示
+            const msgBox = document.getElementById('dialogue-box'); 
+            const sysMsg = document.createElement('div'); sysMsg.className = 'system-msg'; sysMsg.innerHTML = "<i>— 遊戲紀錄已載入 —</i>"; msgBox.appendChild(sysMsg); msgBox.scrollTop = msgBox.scrollHeight;
+
             document.getElementById('player-input').focus();
         }
 
@@ -1336,8 +1312,8 @@ ${flagsText}
                 if(jsonMatch) {
                     rawText = jsonMatch[0];
                 } else {
-                    /* 修復：將意外的斷行移除，維持在一行 */
-                    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+                    rawText = rawText.replace(/```json/g, "").replace(/
+```/g, "").trim();
                 }
                 
                 const parsedData = JSON.parse(rawText);
