@@ -116,7 +116,6 @@
         
         .delete-save-btn { position: absolute; top: 12px; right: 12px; background: #fff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; z-index: 2; }
 
-        /* 遊戲主容器 */
         #game-container {
             width: 100%; max-width: 950px; height: 100vh;
             margin: 0 auto; background: var(--card-bg); 
@@ -136,7 +135,6 @@
         }
         #floating-menu-btn:hover { background: var(--accent-neon); color: var(--border-dark); border-color: var(--border-dark); padding-right: 12px; right: -15px; }
 
-        /* 虛線分隔線 - 頂部狀態列 */
         #status-bar { display: flex; flex-direction: column; gap: 10px; border-bottom: 2px dashed #a0a0a0; padding-bottom: 15px; margin-bottom: 10px; width: 100%; flex-shrink: 0; }
         .top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 4px; }
         .scroll-row { display: flex; gap: 8px; align-items: center; width: 100%; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none; justify-content: flex-start; }
@@ -152,7 +150,6 @@
         
         .msg-narrative { background-color: var(--accent-neon); border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; line-height: 1.7; white-space: pre-line; box-shadow: 3px 3px 0px var(--border-dark); animation: fadeIn 0.4s ease-out; margin: 0 10px; }
         
-        /* 對話頭像置中對齊 */
         .msg-wrapper { display: flex; gap: 10px; align-items: center; animation: fadeIn 0.4s ease-out; margin-top: 5px; }
         .msg-wrapper.player { flex-direction: row-reverse; }
         .chat-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-dark); flex-shrink: 0; background: #fff; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
@@ -165,14 +162,12 @@
         
         .system-msg { color: var(--text-sub); text-align: center; font-style: italic; font-weight: 800; font-size: 12px; padding: 10px 0; letter-spacing: 1px; }
 
-        /* 專屬霸氣成就標籤 */
         .alert-msg { background-color: var(--border-dark); color: var(--accent-neon); text-align: center; font-weight: 800; font-size: 13px; padding: 10px 15px; border-radius: 8px; margin: 10px 10px; letter-spacing: 1px; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); animation: fadeIn 0.4s ease-out; font-style: italic;}
 
         #options-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; padding-right: 5px; flex-shrink: 0; }
         .opt-btn { background: #ffffff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 800; text-align: left; transition: all 0.2s; line-height: 1.4; border-left: 6px solid var(--accent-neon); }
         .opt-btn:hover { background: var(--accent-neon); box-shadow: var(--hard-shadow); transform: translate(-3px, -3px); }
 
-        /* 虛線分隔線 - 底部輸入框 */
         #input-area { display: flex; gap: 10px; border-top: 2px dashed #a0a0a0; padding-top: 15px; align-items: flex-end; flex-shrink: 0; }
         #player-input { flex-grow: 1; background: #ffffff; border: 2px solid var(--border-dark); border-radius: 10px; padding: 14px; color: var(--text-main); font-size: 14px; font-weight: 600; transition: all 0.2s; min-height: 48px; max-height: 100px; resize: none; overflow-y: auto; }
         #player-input:focus { outline: none; box-shadow: 4px 4px 0px var(--accent-neon); transform: translate(-2px, -2px); }
@@ -190,7 +185,6 @@
         #crop-img { position: absolute; transform-origin: top left; pointer-events: none; }
         .crop-controls { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; margin-bottom: 20px;}
 
-        /* 六圍屬性與鎖定網格設計 */
         .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; margin-bottom: 15px;}
         .stat-box { display: flex; flex-direction: column; background: #fff; border: 2px solid var(--border-dark); border-radius: 8px; overflow: hidden; }
         .stat-label { font-size: 11px; font-weight: 900; color: #fff; background: var(--border-dark); text-align: center; padding: 4px 0; letter-spacing: 1px;}
@@ -244,37 +238,42 @@
 
     <div id="status-modal" class="modal-overlay">
         <div id="status-modal-content">
-            
             <div class="modal-header-sticky">
                 <h3 style="border:none; margin:0; padding:0;">玩家狀態與面板</h3>
                 <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px;">儲存並返回</button>
             </div>
-
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; margin-top:5px;">永久事件標籤 (長期記憶 Flag)</p>
-            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行給自己掛Buff/Debuff！
-            </p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行給自己掛Buff/Debuff！</p>
             <div id="ui-flags-container"></div>
             <div id="flag-input-area">
                 <input type="text" id="new-flag-input" placeholder="輸入你想植入的狀態 (如: 右手骨折)...">
                 <button class="btn" onclick="manualAddFlag()" style="padding:6px 12px; font-size:12px;">寫入</button>
             </div>
-
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">玩家背包與道具</p>
-            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                遊戲過程中獲得或消耗的物品會顯示於此。
-            </p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">遊戲過程中獲得或消耗的物品會顯示於此。</p>
             <div id="ui-items-container"></div>
-
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">冒險日誌 (AI 條列式記憶)</p>
-            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">
-                AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。
-            </p>
+            <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。</p>
             <textarea id="ui-adventure-log"></textarea>
-            
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:8px;">當前劇本角色資料預覽 (鎖定狀態)</p>
             <div id="ui-stats-display" style="font-size:13px; color:var(--text-main); line-height:1.6; white-space: pre-wrap; font-weight:600; padding:12px; background:#e2e2e2; border-radius:8px;"></div>
-            
+        </div>
+    </div>
+
+    <div id="tutorial-modal" class="modal-overlay">
+        <div id="status-modal-content" style="max-width: 500px; margin-top: 10vh;">
+            <div class="modal-header-sticky">
+                <h3 style="border:none; margin:0; padding:0;">💡 系統指南與遊玩須知</h3>
+            </div>
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">🔑 1. 核心啟動 (API Key)</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">請至 Google AI Studio 免費申請 Gemini API 金鑰。本系統完全在你的設備上運行，絕不會收集你的金鑰。</p>
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">🎲 2. 自由行動與擲骰</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">這裡沒有固定的按鈕選項！你可以直接對話，或是用括號表示動作（例如：<code>(拔出長劍擋在前方)</code>）。不知道結果時，點擊「🎲 擲骰」按鈕，讓命運與 DM 決定！</p>
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">📊 3. 六圍數值與判定機制</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">AI 會根據你的基礎屬性（力量、敏捷、智力等）來判定行動成功率。若力量太低卻想強行搬開巨石，就算骰出高點數，也可能被判定為受傷。</p>
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">🎭 4. 面板與記憶標籤 (Flags)</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px; font-weight:600; line-height:1.5;">點擊遊戲畫面側邊的「角色面板」，可以隨時查看背包道具、NPC 好感度，以及「永久事件標籤」。你的每一個重大決定，都會被寫入 AI 的長期記憶中。</p>
+            <button class="btn" onclick="closeTutorialModal()" style="background: var(--border-dark); color: #fff; width: 100%; font-size: 14px; padding: 12px;">我瞭解了，關閉說明</button>
         </div>
     </div>
 
@@ -291,9 +290,11 @@
             <button class="btn" id="verify-btn" onclick="fetchAvailableModels()" style="flex: 1; background: var(--border-dark); color: #fff;">驗證金鑰</button>
         </div>
 
-        <p style="font-size: 11px; color: var(--text-sub); text-align: center; font-weight: 800; margin-bottom: 10px; line-height: 1.5;">
-            隱私保證：所有的設定、照片與對話進度，均僅儲存於您設備的本地端，不會上傳至任何伺服器。
+        <p style="font-size: 11px; color: var(--text-main); text-align: left; font-weight: 800; margin-bottom: 15px; line-height: 1.6; background: #e2e2e2; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-neon);">
+            🔒 <b>隱私保證</b>：設定、照片與對話進度，均僅儲存於設備本地端。<br>
+            ⚠️ <b>免責聲明</b>：本工具僅提供介面，請妥善保管 API Key 並留意使用額度。AI 生成內容屬隨機演算，不代表開發者立場。存檔依賴瀏覽器，清除快取將導致資料遺失。
         </p>
+        <button class="btn" onclick="openTutorialModal()" style="margin-bottom: 15px; background: transparent; border: 2px dashed var(--border-dark); width: 100%;">💡 新手教學與系統指南</button>
 
         <div id="model-selection-area">
             <p style="color: var(--text-main); font-weight: 900; font-size: 13px; margin-bottom: 12px;">驗證成功。請選擇大腦核心：</p>
@@ -320,7 +321,6 @@
             <div class="scenario-label" style="color: #c5a059;">配置檔案名稱</div>
             <input type="text" id="input-preset-name" class="scenario-input">
 
-            <!-- 玩家設定與六圍骰點區 (支援守墓人解鎖) -->
             <div style="border: 2px solid var(--border-dark); border-radius: 8px; padding: 15px; background: #fff; margin-bottom: 10px;">
                 <h4 style="margin-bottom: 10px; font-size: 14px; color: #fff; background: var(--border-dark); padding: 4px 8px; border-radius: 4px; display: inline-block;">玩家自己設定</h4>
                 <div class="avatar-setup-area" style="justify-content: center;">
@@ -353,14 +353,12 @@
                 <textarea id="input-player-persona" class="scenario-input" style="min-height:60px;"></textarea>
             </div>
 
-            <!-- 動態 NPC 列表區 -->
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px;">
                 <h3 style="font-size:16px;">登場 NPC 列表</h3>
                 <button class="btn" onclick="addNpcBlock()" style="padding:6px 12px; font-size:12px; background:var(--accent-neon); color:var(--border-dark);">+ 新增 NPC</button>
             </div>
             <div id="npc-list-container" style="margin-bottom: 15px;"></div>
 
-            <!-- 動態情境區 -->
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px;">
                 <h3 style="font-size:16px;">動態情境列表</h3>
                 <button class="btn" onclick="addScenarioBlock()" style="padding:6px 12px; font-size:12px; background:var(--border-dark); color:#fff;">+ 新增情境</button>
@@ -401,7 +399,6 @@
             <div class="top-row">
                 <button class="btn" onclick="backToSaveMenu()" style="padding: 6px 12px; font-size: 12px;">離開</button>
                 <div style="font-size: 13px; font-weight: 900; color: var(--text-main); display:flex; gap:10px; align-items:center;">
-                    <!-- 把全域好感度拿掉，改成提示 -->
                     <span style="color:var(--text-sub); font-size:11px; margin-right:5px;">(隊友狀態請見面板)</span>
                     <span>HP: <span id="ui-hp" class="red-accent">100</span></span>
                     <span>SAN: <span id="ui-san" class="purple-accent">100</span></span>
@@ -427,8 +424,11 @@
             <button class="btn" id="send-btn" onclick="sendChoice()">發送</button>
         </div>
     </div>
-
     <script>
+        /* ======= 教學視窗開關 ======= */
+        function openTutorialModal() { document.getElementById('tutorial-modal').style.display = 'flex'; }
+        function closeTutorialModal() { document.getElementById('tutorial-modal').style.display = 'none'; }
+
         /* ======= 系統核心變數 ======= */
         let apiKey = "";
         let selectedModel = "";
@@ -461,14 +461,14 @@
                     id: 'npc_1',
                     name: '宮崎三高',
                     avatar: emptyAvatar,
-                    affection: 0, /* 🚨 預設改為 0 */
+                    affection: 0,
                     persona: '【通用屬性】\n體質(高)：能扛沉重攝影器材或副本死刑。\n智力(高)：精通攝影光影與副本機制。\n力量(高)：能單手把秀芙拎過機制邊界。\n專長：生存、察覺、運動。\n\n【性格與外觀】\n面部有淡淡傷疤，氣質禁慾，極度內斂。就算玩家搞砸，他也只會默默扛下一切，說話極度精簡（例如：「退後」）。冷靜、邊界感清晰，帶著淡淡疏離感與隱晦的保護慾。'
                 },
                 {
                     id: 'npc_2',
                     name: '亞里莎 (範本)',
                     avatar: emptyAvatar,
-                    affection: 0, /* 🚨 預設改為 0 */
+                    affection: 0,
                     persona: '【通用屬性】\n智力(高)、敏捷(高)。\n\n【性格與外觀】\n毒舌的精靈法師。性格傲嬌，雖然嘴上一直抱怨玩家或三高，但在危險時絕對不會拋下隊友。經常和三高鬥嘴，但其實對他的實力很信任。'
                 }
             ],
@@ -549,10 +549,6 @@
             }
             adjustInputHeight();
         }
-
-// 👇👇👇 第一部分結束，請看下一段回覆 👇👇👇
-
-// 👆👆👆 從這裡接續第一部分 👆👆👆
 
         function loadPic(input) {
             if (input.files && input.files[0]) {
@@ -666,7 +662,6 @@
             }
         }
 
-        /* 🚨 更新：將好感度欄位塞進 NPC 列表的 HTML 結構中 */
         function renderNpcList() {
             const container = document.getElementById('npc-list-container');
             container.innerHTML = '';
@@ -724,7 +719,6 @@
             });
         }
 
-        /* 🚨 儲存前，確保讀取好感度的數值 */
         function syncEditingDataFromDOM() {
             editingNpcs.forEach((npc, index) => {
                 const n = document.getElementById(`npc-name-${index}`);
@@ -748,21 +742,13 @@
 
         function addNpcBlock() {
             syncEditingDataFromDOM();
-            editingNpcs.push({
-                id: 'npc_' + Date.now(),
-                name: '新角色',
-                avatar: emptyAvatar,
-                affection: 0,
-                persona: '【通用屬性】\n體力(中)、智力(中)\n\n【性格與外觀】\n請輸入這個角色的個性、外觀與戰鬥習慣...'
-            });
+            editingNpcs.push({ id: 'npc_' + Date.now(), name: '新角色', avatar: emptyAvatar, affection: 0, persona: '【通用屬性】\n體力(中)、智力(中)\n\n【性格與外觀】\n請輸入這個角色的個性、外觀與戰鬥習慣...' });
             renderNpcList();
         }
 
         function removeNpcBlock(index) {
             if(editingNpcs.length <= 1) { alert("至少要保留一位 NPC 喔！"); return; }
-            syncEditingDataFromDOM();
-            editingNpcs.splice(index, 1);
-            renderNpcList();
+            syncEditingDataFromDOM(); editingNpcs.splice(index, 1); renderNpcList();
         }
 
         function addScenarioBlock() {
@@ -773,9 +759,7 @@
 
         function removeScenarioBlock(index) {
             if(editingScenarios.length <= 1) { alert("至少要保留一個情境喔！"); return; }
-            syncEditingDataFromDOM();
-            editingScenarios.splice(index, 1);
-            renderScenarioList();
+            syncEditingDataFromDOM(); editingScenarios.splice(index, 1); renderScenarioList();
         }
 
         function loadPresetToForm(id) {
@@ -786,12 +770,9 @@
             document.getElementById('preview-player').src = p.playerAvatar || emptyAvatar;
             
             const ps = p.playerStats || {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
-            document.getElementById('stat-str').value = ps.str;
-            document.getElementById('stat-dex').value = ps.dex;
-            document.getElementById('stat-con').value = ps.con;
-            document.getElementById('stat-int').value = ps.int;
-            document.getElementById('stat-wis').value = ps.wis;
-            document.getElementById('stat-cha').value = ps.cha;
+            document.getElementById('stat-str').value = ps.str; document.getElementById('stat-dex').value = ps.dex;
+            document.getElementById('stat-con').value = ps.con; document.getElementById('stat-int').value = ps.int;
+            document.getElementById('stat-wis').value = ps.wis; document.getElementById('stat-cha').value = ps.cha;
 
             const isLocked = p.statsLocked === true;
             const statInputs = document.querySelectorAll('.stat-input');
@@ -806,19 +787,13 @@
             }
 
             editingNpcs = JSON.parse(JSON.stringify(p.npcs || []));
-            if(editingNpcs.length === 0) {
-                editingNpcs.push({
-                    id: 'npc_legacy', name: p.targetName || '未知目標', avatar: p.targetAvatar || emptyAvatar, persona: p.targetPersona || '', affection: 0
-                });
-            } else {
-                editingNpcs.forEach(n => { if (n.affection === undefined) n.affection = 0; });
-            }
+            if(editingNpcs.length === 0) { editingNpcs.push({ id: 'npc_legacy', name: p.targetName || '未知目標', avatar: p.targetAvatar || emptyAvatar, persona: p.targetPersona || '', affection: 0 }); } 
+            else { editingNpcs.forEach(n => { if (n.affection === undefined) n.affection = 0; }); }
             
             editingScenarios = JSON.parse(JSON.stringify(p.scenarios || []));
             if(editingScenarios.length === 0) editingScenarios.push({name: '預設場景', lore: '', npcRoles: '', playerRole: ''});
             
-            renderNpcList();
-            renderScenarioList();
+            renderNpcList(); renderScenarioList();
         }
 
         function createNewPreset() {
@@ -856,12 +831,9 @@
                 playerName: document.getElementById('input-player-name').value.trim(),
                 playerAvatar: document.getElementById('preview-player').src,
                 playerStats: {
-                    str: parseInt(document.getElementById('stat-str').value) || 10,
-                    dex: parseInt(document.getElementById('stat-dex').value) || 10,
-                    con: parseInt(document.getElementById('stat-con').value) || 10,
-                    int: parseInt(document.getElementById('stat-int').value) || 10,
-                    wis: parseInt(document.getElementById('stat-wis').value) || 10,
-                    cha: parseInt(document.getElementById('stat-cha').value) || 10
+                    str: parseInt(document.getElementById('stat-str').value) || 10, dex: parseInt(document.getElementById('stat-dex').value) || 10,
+                    con: parseInt(document.getElementById('stat-con').value) || 10, int: parseInt(document.getElementById('stat-int').value) || 10,
+                    wis: parseInt(document.getElementById('stat-wis').value) || 10, cha: parseInt(document.getElementById('stat-cha').value) || 10
                 },
                 statsLocked: document.getElementById('stat-str').disabled,
                 playerPersona: document.getElementById('input-player-persona').value.trim(),
@@ -897,12 +869,111 @@
             if(confirm("警告：這將會清除設備上儲存的 API 金鑰、照片設定與所有劇本存檔！\n此操作無法復原！")) { localStorage.clear(); location.reload(); }
         }
 
-        function deleteApiKey() {
-            if(confirm("確定要清除儲存的 API Key 嗎？")) {
-                localStorage.removeItem('sanko_api_key'); document.getElementById('api-key').value = ""; document.getElementById('model-selection-area').style.display = 'none';
-                document.getElementById('verify-btn').style.display = 'inline-block'; document.getElementById('verify-btn').innerText = "驗證金鑰"; document.getElementById('verify-btn').disabled = false;
-                document.getElementById('delete-key-btn').style.display = 'none'; apiKey = ""; alert("金鑰已成功清除！");
+        function openStatusModal() {
+            if(!currentSaveId) return;
+            document.getElementById('ui-adventure-log').value = currentAdventureLog;
+            
+            const pStats = currentScenario.playerStats || {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
+            let statsHtml = `<b>玩家：${currentScenario.playerName}</b>\n[力量STR:${pStats.str}] [敏捷DEX:${pStats.dex}] [體質CON:${pStats.con}]\n[智力INT:${pStats.int}] [感知WIS:${pStats.wis}] [魅力CHA:${pStats.cha}]\n${currentScenario.playerPersona}\n\n`;
+            
+            currentScenario.npcs.forEach(n => {
+                const aff = n.affection !== undefined ? n.affection : 0;
+                statsHtml += `<b>NPC：${n.name} <span style="color:var(--accent-neon); background:var(--border-dark); padding:2px 6px; border-radius:4px; font-size:11px;">♥ 好感: ${aff}</span></b>\n${n.persona}\n\n`;
+            });
+            document.getElementById('ui-stats-display').innerHTML = statsHtml;
+            
+            renderFlags(); renderItems(); document.getElementById('status-modal').style.display = 'block'; 
+        }
+
+        function saveStatusModal() {
+            currentAdventureLog = document.getElementById('ui-adventure-log').value.trim() || "無日誌。";
+            saveCurrentProgress();
+            document.getElementById('status-modal').style.display = 'none';
+        }
+
+        function renderFlags() {
+            const container = document.getElementById('ui-flags-container'); container.innerHTML = '';
+            if(currentFlags.length === 0) { container.innerHTML = '<span style="font-size:12px; color:#888;">尚未解鎖任何標籤...</span>'; return; }
+            currentFlags.forEach((flag, index) => {
+                const tag = document.createElement('div'); tag.className = 'flag-tag';
+                tag.innerHTML = `${flag} <span onclick="removeFlag(${index})" title="刪除此標籤">✖</span>`; container.appendChild(tag);
+            });
+        }
+
+        function manualAddFlag() {
+            const input = document.getElementById('new-flag-input'); const val = input.value.trim();
+            if(val && !currentFlags.includes(val)) { currentFlags.push(val); input.value = ''; renderFlags(); }
+        }
+
+        function removeFlag(index) { currentFlags.splice(index, 1); renderFlags(); }
+
+        function renderItems() {
+            const container = document.getElementById('ui-items-container'); container.innerHTML = '';
+            if(currentItems.length === 0) { container.innerHTML = '<span style="font-size:12px; color:#888;">背包空空如也...</span>'; return; }
+            currentItems.forEach((item, index) => {
+                const tag = document.createElement('div'); tag.className = 'item-tag'; tag.innerText = item; container.appendChild(tag);
+            });
+        }
+
+        function openSaveMenu() {
+            apiKey = localStorage.getItem('sanko_api_key'); if(!apiKey || !selectedModel) { alert("請先驗證金鑰。"); return; }
+            document.getElementById('setup-screen').style.display = 'none'; document.getElementById('game-container').style.display = 'none';
+            document.getElementById('save-menu-screen').style.display = 'flex'; renderSaveList();
+        }
+
+        function backToSetup() { document.getElementById('save-menu-screen').style.display = 'none'; document.getElementById('setup-screen').style.display = 'flex'; }
+        function backToSaveMenu() { saveCurrentProgress(); document.getElementById('game-container').style.display = 'none'; document.getElementById('save-menu-screen').style.display = 'flex'; renderSaveList(); }
+
+        function renderSaveList() {
+            const listDiv = document.getElementById('save-list'); listDiv.innerHTML = ''; const saveKeys = Object.keys(savesData).sort((a, b) => b - a);
+            if (saveKeys.length === 0) { listDiv.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:13px; font-weight:bold;">目前沒有任何存檔紀錄。</p>'; return; }
+            saveKeys.forEach(id => {
+                const saveData = savesData[id]; 
+                const pName = saveData.scenario ? saveData.scenario.playerName : "玩家";
+                let tName = "群像劇";
+                if(saveData.scenario && saveData.scenario.npcs && saveData.scenario.npcs.length > 0) tName = saveData.scenario.npcs[0].name;
+                else if(saveData.scenario && saveData.scenario.targetName) tName = saveData.scenario.targetName;
+
+                const slotDiv = document.createElement('div'); slotDiv.className = 'save-slot';
+                slotDiv.innerHTML = `<button class="delete-save-btn" onclick="event.stopPropagation(); deleteSave('${id}')">刪除</button><div class="save-title">${saveData.title}</div><div class="save-info">代表NPC: ${tName} | 玩家: ${pName}</div><div class="save-info" style="margin-top:5px;">最後遊玩：${saveData.date}</div>`;
+                slotDiv.onclick = () => loadGame(id); listDiv.appendChild(slotDiv);
+            });
+        }
+
+        function createNewSave() {
+            const id = Date.now().toString();
+            const newSave = { title: `群像劇紀錄 - ${new Date().toLocaleDateString()}`, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, script: [], log: "1. 遊戲剛開始，眾人處於初步接觸階段。", flags: [], scenario: JSON.parse(JSON.stringify(currentScenario)) };
+            savesData[id] = newSave; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); loadGame(id); 
+        }
+
+        function deleteSave(id) {
+            if(confirm("確定要刪除這個存檔嗎？此操作無法復原。")) {
+                delete savesData[id]; if(currentSaveId === id) currentSaveId = null; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); renderSaveList();
             }
+        }
+
+        function exportSaves() {
+            if (Object.keys(savesData).length === 0) { alert("目前沒有存檔可以匯出。"); return; }
+            const dataStr = JSON.stringify(savesData); const blob = new Blob([dataStr], { type: "application/json" }); const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `AVG_Engine_Saves_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
+        }
+
+        function importSaves(input) {
+            if (!input.files || !input.files[0]) return; const file = input.files[0]; const reader = new FileReader();
+            reader.onload = (e) => {
+                try { const importedData = JSON.parse(e.target.result); Object.assign(savesData, importedData); localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); renderSaveList(); alert("存檔匯入成功！"); }
+                catch (err) { alert("匯入失敗：檔案格式不正確或已損毀。"); } input.value = ""; 
+            }; reader.readAsText(file);
+        }
+
+        function saveCurrentProgress() {
+            if(!currentSaveId) return;
+            savesData[currentSaveId].script = chatScript;
+            savesData[currentSaveId].hp = currentHp; savesData[currentSaveId].san = currentSan; savesData[currentSaveId].items = currentItems;
+            savesData[currentSaveId].scenIndex = currentScenarioIndex; savesData[currentSaveId].date = new Date().toLocaleString();
+            savesData[currentSaveId].log = currentAdventureLog; savesData[currentSaveId].flags = currentFlags;
+            savesData[currentSaveId].scenario = currentScenario;
+            localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData));
         }
 
         function getSystemInstruction() {
@@ -1029,156 +1100,19 @@ ${flagsText}
             saveCurrentProgress();
         }
 
-        function openStatusModal() {
-            if(!currentSaveId) return;
-            document.getElementById('ui-adventure-log').value = currentAdventureLog;
-            
-            const pStats = currentScenario.playerStats || {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
-            let statsHtml = `<b>玩家：${currentScenario.playerName}</b>\n[力量STR:${pStats.str}] [敏捷DEX:${pStats.dex}] [體質CON:${pStats.con}]\n[智力INT:${pStats.int}] [感知WIS:${pStats.wis}] [魅力CHA:${pStats.cha}]\n${currentScenario.playerPersona}\n\n`;
-            
-            currentScenario.npcs.forEach(n => {
-                const aff = n.affection !== undefined ? n.affection : 0;
-                statsHtml += `<b>NPC：${n.name} <span style="color:var(--accent-neon); background:var(--border-dark); padding:2px 6px; border-radius:4px; font-size:11px;">♥ 好感: ${aff}</span></b>\n${n.persona}\n\n`;
-            });
-            document.getElementById('ui-stats-display').innerHTML = statsHtml;
-            
-            renderFlags();
-            renderItems();
-            document.getElementById('status-modal').style.display = 'block'; 
-        }
-
-        function saveStatusModal() {
-            currentAdventureLog = document.getElementById('ui-adventure-log').value.trim() || "無日誌。";
-            saveCurrentProgress();
-            document.getElementById('status-modal').style.display = 'none';
-        }
-
-        function renderFlags() {
-            const container = document.getElementById('ui-flags-container');
-            container.innerHTML = '';
-            if(currentFlags.length === 0) {
-                container.innerHTML = '<span style="font-size:12px; color:#888;">尚未解鎖任何標籤...</span>';
-                return;
-            }
-            currentFlags.forEach((flag, index) => {
-                const tag = document.createElement('div');
-                tag.className = 'flag-tag';
-                tag.innerHTML = `${flag} <span onclick="removeFlag(${index})" title="刪除此標籤">✖</span>`;
-                container.appendChild(tag);
-            });
-        }
-
-        function manualAddFlag() {
-            const input = document.getElementById('new-flag-input');
-            const val = input.value.trim();
-            if(val && !currentFlags.includes(val)) {
-                currentFlags.push(val);
-                input.value = '';
-                renderFlags();
-            }
-        }
-
-        function removeFlag(index) {
-            currentFlags.splice(index, 1);
-            renderFlags();
-        }
-
-        function renderItems() {
-            const container = document.getElementById('ui-items-container');
-            container.innerHTML = '';
-            if(currentItems.length === 0) {
-                container.innerHTML = '<span style="font-size:12px; color:#888;">背包空空如也...</span>';
-                return;
-            }
-            currentItems.forEach((item, index) => {
-                const tag = document.createElement('div');
-                tag.className = 'item-tag';
-                tag.innerText = item;
-                container.appendChild(tag);
-            });
-        }
-
-        function openSaveMenu() {
-            apiKey = localStorage.getItem('sanko_api_key'); if(!apiKey || !selectedModel) { alert("請先驗證金鑰。"); return; }
-            document.getElementById('setup-screen').style.display = 'none'; document.getElementById('game-container').style.display = 'none';
-            document.getElementById('save-menu-screen').style.display = 'flex'; renderSaveList();
-        }
-
-        function backToSetup() { document.getElementById('save-menu-screen').style.display = 'none'; document.getElementById('setup-screen').style.display = 'flex'; }
-        function backToSaveMenu() { saveCurrentProgress(); document.getElementById('game-container').style.display = 'none'; document.getElementById('save-menu-screen').style.display = 'flex'; renderSaveList(); }
-
-        function renderSaveList() {
-            const listDiv = document.getElementById('save-list'); listDiv.innerHTML = ''; const saveKeys = Object.keys(savesData).sort((a, b) => b - a);
-            if (saveKeys.length === 0) { listDiv.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:13px; font-weight:bold;">目前沒有任何存檔紀錄。</p>'; return; }
-            saveKeys.forEach(id => {
-                const saveData = savesData[id]; 
-                const pName = saveData.scenario ? saveData.scenario.playerName : "玩家";
-                let tName = "群像劇";
-                if(saveData.scenario && saveData.scenario.npcs && saveData.scenario.npcs.length > 0) tName = saveData.scenario.npcs[0].name;
-                else if(saveData.scenario && saveData.scenario.targetName) tName = saveData.scenario.targetName;
-
-                const slotDiv = document.createElement('div'); slotDiv.className = 'save-slot';
-                slotDiv.innerHTML = `<button class="delete-save-btn" onclick="event.stopPropagation(); deleteSave('${id}')">刪除</button><div class="save-title">${saveData.title}</div><div class="save-info">代表NPC: ${tName} | 玩家: ${pName}</div><div class="save-info" style="margin-top:5px;">最後遊玩：${saveData.date}</div>`;
-                slotDiv.onclick = () => loadGame(id); listDiv.appendChild(slotDiv);
-            });
-        }
-
-        function createNewSave() {
-            const id = Date.now().toString();
-            const newSave = { title: `群像劇紀錄 - ${new Date().toLocaleDateString()}`, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, script: [], log: "1. 遊戲剛開始，眾人處於初步接觸階段。", flags: [], scenario: JSON.parse(JSON.stringify(currentScenario)) };
-            savesData[id] = newSave; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); loadGame(id); 
-        }
-
-        function deleteSave(id) {
-            if(confirm("確定要刪除這個存檔嗎？此操作無法復原。")) {
-                delete savesData[id]; if(currentSaveId === id) currentSaveId = null; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); renderSaveList();
-            }
-        }
-
-        function exportSaves() {
-            if (Object.keys(savesData).length === 0) { alert("目前沒有存檔可以匯出。"); return; }
-            const dataStr = JSON.stringify(savesData); const blob = new Blob([dataStr], { type: "application/json" }); const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = `AVG_Engine_Saves_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
-        }
-
-        function importSaves(input) {
-            if (!input.files || !input.files[0]) return; const file = input.files[0]; const reader = new FileReader();
-            reader.onload = (e) => {
-                try { const importedData = JSON.parse(e.target.result); Object.assign(savesData, importedData); localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); renderSaveList(); alert("存檔匯入成功！"); }
-                catch (err) { alert("匯入失敗：檔案格式不正確或已損毀。"); } input.value = ""; 
-            }; reader.readAsText(file);
-        }
-
-        function saveCurrentProgress() {
-            if(!currentSaveId) return;
-            savesData[currentSaveId].script = chatScript;
-            savesData[currentSaveId].hp = currentHp; savesData[currentSaveId].san = currentSan; savesData[currentSaveId].items = currentItems;
-            savesData[currentSaveId].scenIndex = currentScenarioIndex; savesData[currentSaveId].date = new Date().toLocaleString();
-            savesData[currentSaveId].log = currentAdventureLog; savesData[currentSaveId].flags = currentFlags;
-            savesData[currentSaveId].scenario = currentScenario;
-            localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData));
-        }
-
         function appendNarrative(text) {
             if (!text) return; const dialogueBox = document.getElementById('dialogue-box'); const navDiv = document.createElement('div'); navDiv.className = 'msg-narrative'; navDiv.innerText = text;
             dialogueBox.appendChild(navDiv); dialogueBox.scrollTop = dialogueBox.scrollHeight;
         }
 
         function appendMessage(speaker, text) {
-            if (!text) return;
-            let isPlayer = false;
-            let avatarSrc = emptyAvatar;
+            if (!text) return; let isPlayer = false; let avatarSrc = emptyAvatar;
 
             if (speaker === currentScenario.playerName) {
-                isPlayer = true;
-                avatarSrc = currentScenario.playerAvatar || emptyAvatar;
+                isPlayer = true; avatarSrc = currentScenario.playerAvatar || emptyAvatar;
             } else {
                 const foundNpc = currentScenario.npcs.find(n => n.name === speaker);
-                if (foundNpc) {
-                    avatarSrc = foundNpc.avatar || emptyAvatar;
-                } else {
-                    avatarSrc = emptyAvatar;
-                }
+                avatarSrc = foundNpc ? (foundNpc.avatar || emptyAvatar) : emptyAvatar;
             }
 
             const dialogueBox = document.getElementById('dialogue-box'); 
@@ -1188,52 +1122,33 @@ ${flagsText}
             dialogueBox.appendChild(msgWrapper); dialogueBox.scrollTop = dialogueBox.scrollHeight;
         }
 
-        /* 🚨 更新：動態判斷是否為新開局，顯示按鈕或對話紀錄 */
         function loadGame(id) {
             currentSaveId = id; const saveData = savesData[id];
             
             if(saveData.scenario) { 
                 currentScenario = saveData.scenario; 
-                if(!currentScenario.playerStats) {
-                    currentScenario.playerStats = {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
-                }
+                if(!currentScenario.playerStats) currentScenario.playerStats = {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
                 if(!currentScenario.npcs) {
-                    currentScenario.npcs = [{
-                        id: 'npc_legacy',
-                        name: currentScenario.targetName || '未知目標',
-                        avatar: currentScenario.targetAvatar || emptyAvatar,
-                        persona: currentScenario.targetPersona || '',
-                        affection: saveData.love !== undefined ? saveData.love : 0
-                    }];
-                } else {
-                    currentScenario.npcs.forEach(n => {
-                        if (n.affection === undefined) n.affection = saveData.love !== undefined ? saveData.love : 0;
-                    });
-                }
+                    currentScenario.npcs = [{ id: 'npc_legacy', name: currentScenario.targetName || '未知目標', avatar: currentScenario.targetAvatar || emptyAvatar, persona: currentScenario.targetPersona || '', affection: saveData.love !== undefined ? saveData.love : 0 }];
+                } else { currentScenario.npcs.forEach(n => { if (n.affection === undefined) n.affection = saveData.love !== undefined ? saveData.love : 0; }); }
                 if(!currentScenario.scenarios) {
                     currentScenario.scenarios = [];
                     if(currentScenario.world1) currentScenario.scenarios.push({name: currentScenario.world1, lore: currentScenario.worldLore||'', npcRoles:'', playerRole:''});
                     if(currentScenario.world2) currentScenario.scenarios.push({name: currentScenario.world2, lore: '', npcRoles:'', playerRole:''});
                     if(currentScenario.scenarios.length === 0) currentScenario.scenarios.push({name: '預設場景', lore: '', npcRoles:'', playerRole:''});
-                } else {
-                    currentScenario.scenarios.forEach(sc => { if(sc.npcRoles === undefined) sc.npcRoles = sc.targetRole || ''; });
-                }
+                } else { currentScenario.scenarios.forEach(sc => { if(sc.npcRoles === undefined) sc.npcRoles = sc.targetRole || ''; }); }
             }
             
             chatScript = saveData.script || []; 
             currentHp = saveData.hp !== undefined ? saveData.hp : 100;
             currentSan = saveData.san !== undefined ? saveData.san : 100;
             currentItems = saveData.items || [];
-            
             currentAdventureLog = saveData.log || "1. 遊戲剛開始，眾人處於初步接觸階段。";
             currentFlags = saveData.flags || [];
-            
             currentScenarioIndex = saveData.scenIndex || 0;
             if (currentScenarioIndex >= currentScenario.scenarios.length) currentScenarioIndex = 0;
 
-            document.getElementById('ui-hp').innerText = currentHp;
-            document.getElementById('ui-san').innerText = currentSan;
-            document.getElementById('ui-target-typing').innerText = "引擎 (DM)";
+            document.getElementById('ui-hp').innerText = currentHp; document.getElementById('ui-san').innerText = currentSan; document.getElementById('ui-target-typing').innerText = "引擎 (DM)";
             
             const locSelect = document.getElementById('btn-location'); locSelect.innerHTML = '';
             currentScenario.scenarios.forEach((sc, i) => {
@@ -1248,8 +1163,7 @@ ${flagsText}
                 chatScript.forEach(line => {
                     if (line.startsWith(`【旁白】：`)) { appendNarrative(line.replace(`【旁白】：`, "")); }
                     else if (line.startsWith(`【系統提示】：`)) {
-                        const rawMsg = line.replace(`【系統提示】：`, "");
-                        const msgBox = document.getElementById('dialogue-box');
+                        const rawMsg = line.replace(`【系統提示】：`, ""); const msgBox = document.getElementById('dialogue-box');
                         if (rawMsg.includes("解鎖") || rawMsg.includes("獲得") || rawMsg.includes("失去") || rawMsg.includes("消耗") || rawMsg.includes("好感度")) {
                             const alertDiv = document.createElement('div'); alertDiv.className = 'alert-msg'; alertDiv.innerText = rawMsg; msgBox.appendChild(alertDiv);
                         } else {
@@ -1257,68 +1171,33 @@ ${flagsText}
                         }
                     } else {
                         const splitIdx = line.indexOf('：');
-                        if (splitIdx > -1) {
-                            const speaker = line.substring(0, splitIdx);
-                            const text = line.substring(splitIdx + 1);
-                            appendMessage(speaker, text);
-                        }
+                        if (splitIdx > -1) { const speaker = line.substring(0, splitIdx); const text = line.substring(splitIdx + 1); appendMessage(speaker, text); }
                     }
                 });
                 const msgBox = document.getElementById('dialogue-box'); const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 已載入記憶 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
             } else {
-                /* 🚨 全新開局介面 */
-                const msgBox = document.getElementById('dialogue-box');
-                const systemMsg = document.createElement('div');
-                systemMsg.className = 'system-msg';
-                systemMsg.innerHTML = "<i>— 遊戲已建立。請手動輸入開局行動，或點擊下方按鈕讓 AI 生成 —</i>";
-                msgBox.appendChild(systemMsg);
-                msgBox.scrollTop = msgBox.scrollHeight;
-
-                const optArea = document.getElementById('options-area');
-                optArea.innerHTML = '';
-                const btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.style.borderColor = 'var(--accent-neon)';
-                btn.innerHTML = '🎲 讓 AI 根據「世界觀與人設」隨機生成開局事件';
-                btn.onclick = () => {
-                    optArea.innerHTML = '';
-                    document.getElementById('loading').style.display = 'block';
-                    const prompt = "【系統啟動要求】遊戲開始！請嚴格根據「當前場景的世界觀與物理法則」以及「NPC的個人設定」，隨機生成一個極具帶入感的開局事件（例如：遭遇突發危機、日常衝突、或是某個角色正在做符合他人設的特殊行為）。請利用 narrative 豐富描寫場景與氣氛，並讓合適的 NPC 講出第一句話。";
-                    callAI_JSON(prompt, true);
-                };
+                const msgBox = document.getElementById('dialogue-box'); const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 遊戲已建立。請手動輸入開局行動，或點擊下方按鈕讓 AI 生成 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
+                const optArea = document.getElementById('options-area'); optArea.innerHTML = '';
+                const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.style.borderColor = 'var(--accent-neon)'; btn.innerHTML = '🎲 讓 AI 根據「世界觀與人設」隨機生成開局事件';
+                btn.onclick = () => { optArea.innerHTML = ''; document.getElementById('loading').style.display = 'block'; const prompt = "【系統啟動要求】遊戲開始！請嚴格根據「當前場景的世界觀與物理法則」以及「NPC的個人設定」，隨機生成一個極具帶入感的開局事件（例如：遭遇突發危機、日常衝突、或是某個角色正在做符合他人設的特殊行為）。請利用 narrative 豐富描寫場景與氣氛，並讓合適的 NPC 講出第一句話。"; callAI_JSON(prompt, true); };
                 optArea.appendChild(btn);
             }
             document.getElementById('player-input').focus();
         }
 
-        function selectOption(text) { 
-            const inputEl = document.getElementById('player-input');
-            inputEl.value = text; adjustInputHeight(); inputEl.focus(); 
-        }
+        function selectOption(text) { const inputEl = document.getElementById('player-input'); inputEl.value = text; adjustInputHeight(); inputEl.focus(); }
 
         function sendDiceChoice() {
-            const inputEl = document.getElementById('player-input');
-            const playerText = inputEl.value.trim();
+            const inputEl = document.getElementById('player-input'); const playerText = inputEl.value.trim();
             if(!playerText) { alert("請先輸入你打算做什麼，再來擲骰子喔！"); return; }
-            
-            document.getElementById('send-btn').disabled = true; 
-            document.getElementById('dice-btn').disabled = true;
-
-            const roll = Math.floor(Math.random() * 20) + 1;
-            const finalAction = `${playerText}\n(系統判定：玩家進行了 D20 檢定，擲出 ${roll} 點)`;
-            inputEl.value = finalAction; 
-            sendChoice();
+            document.getElementById('send-btn').disabled = true; document.getElementById('dice-btn').disabled = true;
+            const roll = Math.floor(Math.random() * 20) + 1; const finalAction = `${playerText}\n(系統判定：玩家進行了 D20 檢定，擲出 ${roll} 點)`;
+            inputEl.value = finalAction; sendChoice();
         }
 
-        function adjustInputHeight() {
-            const input = document.getElementById('player-input');
-            if(!input) return; input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 100) + "px"; 
-        }
+        function adjustInputHeight() { const input = document.getElementById('player-input'); if(!input) return; input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 100) + "px"; }
 
-        function checkInputKey(e) {
-            adjustInputHeight(); const isMobile = window.innerWidth <= 600;
-            if (!isMobile) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChoice(); } }
-        }
+        function checkInputKey(e) { adjustInputHeight(); const isMobile = window.innerWidth <= 600; if (!isMobile) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChoice(); } } }
 
         async function sendChoice() {
             const inputEl = document.getElementById('player-input'); const sendBtn = document.getElementById('send-btn'); const diceBtn = document.getElementById('dice-btn'); 
@@ -1333,22 +1212,14 @@ ${flagsText}
                 appendMessage(currentScenario.playerName, playerText); chatScript.push(`${currentScenario.playerName}：${playerText}`);
             }
             
-            saveCurrentProgress(); 
-            
-            await callAI_JSON(pendingMetaPrompt); 
-            pendingMetaPrompt = ""; 
-            
+            saveCurrentProgress(); await callAI_JSON(pendingMetaPrompt); pendingMetaPrompt = ""; 
             inputEl.disabled = false; sendBtn.disabled = false; diceBtn.disabled = false; inputEl.focus();
         }
 
         function createSystemAlert(msg) {
             chatScript.push(`【系統提示】：${msg}`);
-            const msgBox = document.getElementById('dialogue-box'); 
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert-msg';
-            alertDiv.innerText = msg;
-            msgBox.appendChild(alertDiv);
-            msgBox.scrollTop = msgBox.scrollHeight;
+            const msgBox = document.getElementById('dialogue-box'); const alertDiv = document.createElement('div'); alertDiv.className = 'alert-msg'; alertDiv.innerText = msg;
+            msgBox.appendChild(alertDiv); msgBox.scrollTop = msgBox.scrollHeight;
         }
 
         async function callAI_JSON(extraPrompt = "", isOpening = false) {
@@ -1365,27 +1236,28 @@ ${flagsText}
                     if (response.status === 429 || errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('rate limit')) { throw new Error("【點擊發送太快囉】\nAPI 限制每分鐘大約只能連續對話 15 次。\n請等待大約 10 秒後再次點擊發送即可！\n(系統已幫你保留剛才的輸入)"); }
                     throw new Error(`伺服器錯誤: ${errMsg}`);
                 }
-                        if (!data.candidates || data.candidates.length === 0) { throw new Error(`伺服器拒絕回覆。可能觸發了API限制，或模型無法理解輸入。`); }
+                
+                if (!data.candidates || data.candidates.length === 0) { throw new Error(`伺服器拒絕回覆。可能觸發了API限制，或模型無法理解輸入。`); }
 
-        // --- 👇👇👇 新增的安全審查防護與字串 Bug 修復 👇👇👇 ---
-        if (data.candidates[0].finishReason === 'SAFETY') {
-            throw new Error("【系統警告：安全審查】\nAI 判定剛剛的行動太過火（涉及血腥/暴力/違規），拒絕回覆！\n請稍微修改用詞後再試一次喔。");
-        }
+                /* 🚨 已經修補的安全性審查阻攔 */
+                if (data.candidates[0].finishReason === 'SAFETY') {
+                    throw new Error("【系統警告：安全審查】\nAI 判定剛剛的行動太過火（涉及血腥/暴力/違規），拒絕回覆！\n請稍微修改用詞後再試一次喔。");
+                }
 
-        let rawText = data.candidates[0].content?.parts?.[0]?.text; 
-        if (!rawText) {
-            throw new Error("AI 這次回傳了空白內容，可能是 API 暫時異常，請重新發送一次。");
-        }
-        
-        const jsonMatch = rawText.match(new RegExp("\\{[\\s\\S]*\\}"));
-        if(jsonMatch) {
-            rawText = jsonMatch[0];
-        } else {
-            rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
-        }
-        // --- 👆👆👆 替換到這裡結束 👆👆👆 ---
-        
-        const parsedData = JSON.parse(rawText);
+                let rawText = data.candidates[0].content?.parts?.[0]?.text; 
+                if (!rawText) {
+                    throw new Error("AI 這次回傳了空白內容，可能是 API 暫時異常，請重新發送一次。");
+                }
+                
+                const jsonMatch = rawText.match(new RegExp("\\{[\\s\\S]*\\}"));
+                if(jsonMatch) {
+                    rawText = jsonMatch[0];
+                } else {
+                    /* 🚨 已經修補的字串強制換行 Bug */
+                    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+                }
+                
+                const parsedData = JSON.parse(rawText);
                 
                 if(parsedData.npc_love_change && typeof parsedData.npc_love_change === 'object') {
                     for (const npcName in parsedData.npc_love_change) {
@@ -1401,81 +1273,22 @@ ${flagsText}
                     }
                 }
 
-                if(parsedData.hp_change) { 
-                    currentHp += parseInt(parsedData.hp_change); 
-                    if(currentHp > 100) currentHp = 100; if(currentHp < 0) currentHp = 0;
-                    document.getElementById('ui-hp').innerText = currentHp; 
-                }
-                if(parsedData.san_change) { 
-                    currentSan += parseInt(parsedData.san_change); 
-                    if(currentSan > 100) currentSan = 100; if(currentSan < 0) currentSan = 0;
-                    document.getElementById('ui-san').innerText = currentSan; 
-                }
+                if(parsedData.hp_change) { currentHp += parseInt(parsedData.hp_change); if(currentHp > 100) currentHp = 100; if(currentHp < 0) currentHp = 0; document.getElementById('ui-hp').innerText = currentHp; }
+                if(parsedData.san_change) { currentSan += parseInt(parsedData.san_change); if(currentSan > 100) currentSan = 100; if(currentSan < 0) currentSan = 0; document.getElementById('ui-san').innerText = currentSan; }
                 
-                if(parsedData.adventure_log) { 
-                    let logData = parsedData.adventure_log;
-                    if (Array.isArray(logData)) {
-                        currentAdventureLog = logData.join('\n');
-                    } else if (typeof logData === 'string' && logData.trim() !== "") {
-                        currentAdventureLog = logData.trim();
-                    }
-                }
+                if(parsedData.adventure_log) { let logData = parsedData.adventure_log; if (Array.isArray(logData)) { currentAdventureLog = logData.join('\n'); } else if (typeof logData === 'string' && logData.trim() !== "") { currentAdventureLog = logData.trim(); } }
                 
-                if(parsedData.new_items && Array.isArray(parsedData.new_items) && parsedData.new_items.length > 0) {
-                    parsedData.new_items.forEach(item => {
-                        if(!currentItems.includes(item)) {
-                            currentItems.push(item);
-                            createSystemAlert(`— 獲得道具 [ ${item} ] —`);
-                        }
-                    });
-                }
-                
-                if(parsedData.lost_items && Array.isArray(parsedData.lost_items) && parsedData.lost_items.length > 0) {
-                    parsedData.lost_items.forEach(item => {
-                        const idx = currentItems.indexOf(item);
-                        if(idx > -1) {
-                            currentItems.splice(idx, 1);
-                            createSystemAlert(`— 失去/消耗道具 [ ${item} ] —`);
-                        }
-                    });
-                }
-
-                if(parsedData.new_flags && Array.isArray(parsedData.new_flags) && parsedData.new_flags.length > 0) {
-                    parsedData.new_flags.forEach(flag => {
-                        if(!currentFlags.includes(flag)) {
-                            currentFlags.push(flag);
-                            createSystemAlert(`— 已永久解鎖狀態標籤 [ ${flag} ] —`);
-                        }
-                    });
-                }
-
+                if(parsedData.new_items && Array.isArray(parsedData.new_items) && parsedData.new_items.length > 0) { parsedData.new_items.forEach(item => { if(!currentItems.includes(item)) { currentItems.push(item); createSystemAlert(`— 獲得道具 [ ${item} ] —`); } }); }
+                if(parsedData.lost_items && Array.isArray(parsedData.lost_items) && parsedData.lost_items.length > 0) { parsedData.lost_items.forEach(item => { const idx = currentItems.indexOf(item); if(idx > -1) { currentItems.splice(idx, 1); createSystemAlert(`— 失去/消耗道具 [ ${item} ] —`); } }); }
+                if(parsedData.new_flags && Array.isArray(parsedData.new_flags) && parsedData.new_flags.length > 0) { parsedData.new_flags.forEach(flag => { if(!currentFlags.includes(flag)) { currentFlags.push(flag); createSystemAlert(`— 已永久解鎖狀態標籤 [ ${flag} ] —`); } }); }
                 if(parsedData.narrative && parsedData.narrative.trim() !== "") { let navText = parsedData.narrative.trim(); chatScript.push(`【旁白】：${navText}`); appendNarrative(navText); }
                 
                 if(parsedData.dialogues && Array.isArray(parsedData.dialogues)) {
-                    parsedData.dialogues.forEach(d => {
-                        if (d.text && d.text.trim() !== "") {
-                            let reply = d.text.trim();
-                            chatScript.push(`${d.speaker}：${reply}`);
-                            appendMessage(d.speaker, reply);
-                        }
-                    });
+                    parsedData.dialogues.forEach(d => { if (d.text && d.text.trim() !== "") { let reply = d.text.trim(); chatScript.push(`${d.speaker}：${reply}`); appendMessage(d.speaker, reply); } });
                 } else if(parsedData.dialogue && parsedData.dialogue !== "null" && typeof parsedData.dialogue === "string" && parsedData.dialogue.trim() !== "") {
-                    let reply = parsedData.dialogue.trim();
-                    let speaker = currentScenario.npcs.length > 0 ? currentScenario.npcs[0].name : "NPC";
-                    
-                    let colonIdx = reply.indexOf('：');
-                    if(colonIdx === -1) colonIdx = reply.indexOf(':');
-                    
-                    if (colonIdx > 0 && colonIdx < 10) {
-                        let possibleSpeaker = reply.substring(0, colonIdx).trim();
-                        let matchedNpc = currentScenario.npcs.find(n => n.name.includes(possibleSpeaker) || possibleSpeaker.includes(n.name));
-                        if (matchedNpc) {
-                            speaker = matchedNpc.name;
-                            reply = reply.substring(colonIdx + 1).trim();
-                        }
-                    }
-                    chatScript.push(`${speaker}：${reply}`); 
-                    appendMessage(speaker, reply);
+                    let reply = parsedData.dialogue.trim(); let speaker = currentScenario.npcs.length > 0 ? currentScenario.npcs[0].name : "NPC"; let colonIdx = reply.indexOf('：'); if(colonIdx === -1) colonIdx = reply.indexOf(':');
+                    if (colonIdx > 0 && colonIdx < 10) { let possibleSpeaker = reply.substring(0, colonIdx).trim(); let matchedNpc = currentScenario.npcs.find(n => n.name.includes(possibleSpeaker) || possibleSpeaker.includes(n.name)); if (matchedNpc) { speaker = matchedNpc.name; reply = reply.substring(colonIdx + 1).trim(); } }
+                    chatScript.push(`${speaker}：${reply}`); appendMessage(speaker, reply);
                 }
 
                 if(parsedData.options && Array.isArray(parsedData.options)) {
@@ -1491,7 +1304,6 @@ ${flagsText}
                 if(chatScript.length > 0 && (chatScript[chatScript.length-1].startsWith(currentScenario.playerName) || chatScript[chatScript.length-1].startsWith("【旁白】：玩家行動"))) {
                     const lastPlayerText = chatScript.pop(); let restoreText = "";
                     if(lastPlayerText.startsWith("【旁白】：玩家行動 - ")) { restoreText = lastPlayerText.replace("【旁白】：玩家行動 - \n", "").replace("【旁白】：玩家行動 - ", ""); } else { restoreText = lastPlayerText.replace(`${currentScenario.playerName}：`, ""); }
-                    
                     restoreText = restoreText.replace(new RegExp("\\n\\(系統判定：玩家進行了 D20 檢定，擲出 \\d+ 點\\)"), "");
                     const playerInput = document.getElementById('player-input'); if (playerInput) playerInput.value = restoreText;
                     const dialogueBox = document.getElementById('dialogue-box'); if (dialogueBox && dialogueBox.lastChild) { dialogueBox.removeChild(dialogueBox.lastChild); }
@@ -1499,6 +1311,5 @@ ${flagsText}
             }
         }
     </script>
-    <!-- 🚨 確保複製到這行結束 🚨 -->
 </body>
 </html>
