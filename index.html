@@ -57,7 +57,7 @@
         .avatar-preview { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border-dark); background: #eee; transition: all 0.2s; box-shadow: 2px 2px 0px var(--accent-neon); }
         .avatar-label { font-size: 12px; font-weight: 800; color: var(--text-main); background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-dark);}
 
-        /* ===== 全新摺疊面板 UI ======= */
+        /* 大廳用的摺疊面板 */
         details.foldable-card { background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; margin-bottom: 15px; transition: all 0.2s; }
         details.foldable-card summary { background: var(--border-dark); color: #fff; padding: 12px 15px; font-size: 14px; font-weight: 800; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; user-select: none; border-radius: 6px;}
         details.foldable-card[open] summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
@@ -66,10 +66,33 @@
         details.foldable-card[open] summary::after { content: "▲ 收起"; color: #fff; background: rgba(255,255,255,0.2); }
         details.foldable-card[open] { box-shadow: 4px 4px 0px var(--border-dark); transform: translate(-2px, -2px); }
         .foldable-content { padding: 15px; position: relative; display: flex; flex-direction: column; gap: 8px;}
+
+        /* ======= 遊戲內：新版深色卡片 UI ======= */
+        details.dark-card { background: #fff; border: 2px solid var(--border-dark); border-radius: 8px; margin-bottom: 12px; overflow: hidden; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+        details.dark-card summary { background: #333; color: #fff; padding: 12px 15px; font-size: 15px; font-weight: 800; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: background 0.2s; }
+        details.dark-card summary::-webkit-details-marker { display: none; }
+        details.dark-card[open] summary { background: #222; }
+        
+        .summary-left { display: flex; align-items: center; gap: 15px; flex-grow: 1;}
+        .summary-name { font-size: 15px; font-weight: 900;}
+        .summary-tag { color: var(--accent-neon); font-size: 12px; font-weight: 900; letter-spacing: 1px;}
+        
+        details.dark-card summary::after { content: "▼ 展開"; font-size: 12px; color: var(--border-dark); background: var(--accent-neon); padding: 6px 12px; border-radius: 6px; font-weight: 900; margin-left: 10px; transition: all 0.2s;}
+        details.dark-card[open] summary::after { content: "▲ 收起"; color: #fff; background: #666; }
+        
+        .dark-card-content { padding: 15px; background: #fff; position: relative; }
+
+        .section-header-flex { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--border-dark); padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
+        .section-header-flex h4 { font-size: 14px; margin: 0; color: var(--text-main); font-weight: 900;}
+        .section-add-btn { background: #333; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s;}
+        .section-add-btn:hover { background: var(--border-dark); box-shadow: 2px 2px 0px var(--accent-neon); transform: translate(-1px,-1px); }
+
+        .delete-btn-red { background: #ff4444; color: #fff; border: 2px solid var(--border-dark); border-radius: 6px; font-size: 11px; padding: 4px 12px; cursor: pointer; font-weight: bold; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); transition: all 0.2s;}
+        .delete-btn-red:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0px var(--border-dark); }
+        /* ======================================= */
         
         .delete-scen-btn { position: absolute; top: 15px; right: 10px; background: #ff4444; color: #fff; border: 2px solid var(--border-dark); border-radius: 6px; font-size: 11px; padding: 2px 8px; cursor: pointer; font-weight: bold; z-index: 5;}
 
-        /* 動漫人物設定集 專屬格狀排版 */
         .anime-sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #e8e8e8; padding: 12px; border-radius: 8px; border: 2px solid var(--border-dark); margin-top: 5px; margin-bottom: 10px; }
         .anime-sheet .full { grid-column: 1 / -1; }
         .anime-sheet label { font-size: 11px; font-weight: 900; color: var(--border-dark); display: block; margin-bottom: 2px; }
@@ -162,7 +185,6 @@
         
         select.btn-location, .game-model-select { white-space: nowrap; flex-shrink: 0; background: #ffffff; padding: 6px 12px; border-radius: 8px; border: 2px solid var(--border-dark); font-size: 12px; font-weight: 800; color: var(--text-main); cursor: pointer; }
         
-        /* 加入限制長度與自動刪節號的樣式 */
         .game-model-select { max-width: 130px; text-overflow: ellipsis; overflow: hidden; }
 
         .mini-add-btn { background: #fff; border: 2px solid var(--border-dark); padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: 900; cursor: pointer; color: var(--text-main); transition: all 0.2s; flex-shrink: 0; white-space: nowrap; }
@@ -187,7 +209,7 @@
         .alert-msg { background-color: var(--border-dark); color: var(--accent-neon); text-align: center; font-weight: 800; font-size: 13px; padding: 10px 15px; border-radius: 8px; margin: 10px 10px; letter-spacing: 1px; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); animation: fadeIn 0.4s ease-out; font-style: italic;}
 
         #options-area { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; padding-right: 5px; flex-shrink: 0; }
-        .opt-btn { background: #ffffff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 14px 18px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 800; text-align: left; transition: all 0.2s; line-height: 1.4; border-left: 6px solid var(--accent-neon); }
+        .opt-btn { background: #ffffff; border: 2px solid var(--border-dark); color: var(--text-main); padding: 7px 10px; border-radius: 10px; cursor: pointer; font-size: 14px; font-weight: 800; text-align: left; transition: all 0.2s; line-height: 1.4; border-left: 6px solid var(--accent-neon); }
         .opt-btn:hover { background: var(--accent-neon); box-shadow: var(--hard-shadow); transform: translate(-3px, -3px); }
 
         #input-area { display: flex; gap: 10px; border-top: 2px dashed #a0a0a0; padding-top: 15px; align-items: flex-end; flex-shrink: 0; }
@@ -307,8 +329,12 @@
         <div id="status-modal-content">
             <div class="modal-header-sticky">
                 <h3 style="border:none; margin:0; padding:0;">玩家狀態與面板</h3>
-                <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px;">儲存並返回</button>
+                <div style="display:flex; gap: 10px;">
+                    <button class="btn" onclick="saveAsNewPresetFromModal()" style="background: #fff; color: var(--border-dark); padding: 6px 12px; font-size: 13px; border-width: 2px;">另存新配置</button>
+                    <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px;">儲存並返回</button>
+                </div>
             </div>
+            
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; margin-top:5px;">永久事件標籤 (長期記憶 Flag)</p>
             <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行給自己掛Buff/Debuff！</p>
             <div id="ui-flags-container"></div>
@@ -316,14 +342,17 @@
                 <input type="text" id="new-flag-input" placeholder="輸入你想植入的狀態 (如: 右臂骨折)...">
                 <button class="btn" onclick="manualAddFlag()" style="padding:6px 12px; font-size:12px;">寫入</button>
             </div>
+            
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">玩家背包與道具</p>
             <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">遊戲過程中獲得或消耗的物品會顯示於此。</p>
             <div id="ui-items-container"></div>
+            
             <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">事件日誌 (AI 條列式記憶)</p>
             <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。</p>
             <textarea id="ui-adventure-log" oninput="autoResize(this)"></textarea>
-            <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:8px;">當前劇本角色資料預覽 <span style="color:var(--text-sub); font-size:11px;">(可直接手動覆寫 AI 設定)</span></p>
-            <div id="ui-stats-display" style="font-size:13px; color:var(--text-main); line-height:1.6; white-space: pre-wrap; font-weight:600; padding:12px; background:#e2e2e2; border-radius:8px; display: flex; flex-direction: column; gap: 10px;"></div>
+            
+            <div id="ui-stats-display" style="margin-top: 10px;">
+                </div>
         </div>
     </div>
 
@@ -332,17 +361,34 @@
             <div class="modal-header-sticky">
                 <h3 style="border:none; margin:0; padding:0;">系統指南與遊玩須知</h3>
             </div>
+            
             <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">1. 核心啟動 (API Key)</p>
             <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">請至 Google AI Studio 申請金鑰。系統完全在你的設備上運行，金鑰不會傳輸至外部。</p>
+            
             <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">2. 多重宇宙與情境切換</p>
             <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">你可以建立多個情境分頁（如「艾歐澤亞」與「現實生活」）。切換分頁時，AI 會自動調整身份定位與環境法則。即使世界觀改變，你的核心人設與記憶依然持續累積。</p>
+            
             <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">3. 自由行動與擲骰判定</p>
             <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">直接輸入對話或動作指令（如 <code>(嘗試說服對方)</code>）。若行動伴隨風險，請善用「擲骰」按鈕，系統將自動根據你的六圍屬性進行檢定。</p>
+            
             <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">4. 角色面板與事件記憶 (Flags)</p>
             <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">透過「角色面板」查看道具與好感度。重大決策將轉化為「永久事件標籤」，影響後續世界的發展。</p>
-            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">💡 提示：若感覺情境錯亂</p>
-            <p style="font-size:12px; color:var(--text-sub); margin-bottom:20px; font-weight:600; line-height:1.5;">如果 AI 混淆了空間設定，試著在「事件日誌」中手動補充當下的環境限制，或透過切換分頁重置對話上下文，這能幫助 AI 迅速找回當下劇本的焦點。</p>
-            <button class="btn" onclick="closeTutorialModal()" style="background: var(--border-dark); color: #fff; width: 100%; font-size: 14px; padding: 12px;">我瞭解了，開始冒險</button>
+
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">5. 生存機制 (HP 與 SAN)</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">遊戲過程中沒有絕對的 Game Over，但遭遇攻擊或精神打擊時，會扣除生命 (HP) 或理智 (SAN) 值。若數值歸零，可能會觸發昏迷、崩潰或隊友救援等特殊劇情。</p>
+
+            <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:12px;">6. 存檔與命運重鑄</p>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">遊戲進度會自動儲存於獨立的紀錄檔中，不會蓋掉你大廳的初始劇本配置。若對開局的六圍屬性不滿意，在遊戲內面板中，每個存檔都有 3 次找「守墓人」重新洗點的機會。</p>
+
+            <div style="background: var(--card-bg); border: 2px dashed var(--border-dark); border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">💡 提示：玩家即是神 (手動覆寫)</p>
+                <p style="font-size:12px; color:var(--text-sub); margin-bottom:10px; font-weight:600; line-height:1.5;">如果 AI 忘記了某個設定，或是你想強行推進劇情，隨時可以打開「角色面板」，手動修改事件日誌、增刪背包道具，甚至直接改寫 NPC 的好感度與人設背景。</p>
+                
+                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">💡 提示：若感覺情境錯亂</p>
+                <p style="font-size:12px; color:var(--text-sub); margin-bottom:0; font-weight:600; line-height:1.5;">如果 AI 混淆了空間設定，試著在「事件日誌」中手動補充當下的環境限制，或透過切換分頁重置對話上下文，這能幫助 AI 迅速找回當下劇本的焦點。</p>
+            </div>
+
+            <button class="btn" onclick="closeTutorialModal()" style="background: var(--border-dark); color: #fff; width: 100%; font-size: 14px; padding: 12px; font-weight: 900; letter-spacing: 1px;">我瞭解了</button>
         </div>
     </div>
 
@@ -387,12 +433,15 @@
         <h2>劇本與創角配置</h2>
         
         <div style="width: 100%; display: flex; gap: 10px; margin-bottom: 15px; max-width: 550px;">
-            <select id="preset-selector" class="model-select" style="margin-bottom: 0; flex-grow: 1; text-align: left; padding-left: 10px;" onchange="loadPresetToForm(this.value)"></select>
+            <select id="preset-selector" class="model-select" style="margin-bottom: 0; flex-grow: 1; text-align: left; padding-left: 10px; max-width: 100%;" onchange="loadPresetToForm(this.value)"></select>
             <button class="btn" onclick="createNewPreset()" style="padding: 10px 15px; flex-shrink: 0; background: var(--border-dark); color: #fff;">新增</button>
         </div>
 
         <div id="edit-scenario-container">
-            <div class="scenario-label" style="color: #c5a059;">配置檔案名稱</div>
+            <div class="scenario-label" style="color: #c5a059; display: flex; justify-content: space-between; align-items: center;">
+                <span>配置檔案名稱</span>
+                <span id="preset-lock-toggle" style="cursor:pointer; font-size: 16px; transition: transform 0.2s;" onclick="togglePresetLock()" title="點擊切換鎖定狀態">🔓</span>
+            </div>
             <input type="text" id="input-preset-name" class="scenario-input">
 
             <div style="border: 2px solid var(--border-dark); border-radius: 8px; padding: 15px; background: #fff; margin-bottom: 10px;">
@@ -411,7 +460,7 @@
                     <div class="scenario-label" style="margin:0;">基礎六圍屬性</div>
                     <div id="stat-controls">
                         <button class="btn" id="btn-roll-stats" onclick="rollPlayerStats()" style="padding:4px 8px; font-size:11px; background:var(--accent-neon); color:var(--border-dark);">🎲 隨機骰點 (4d6)</button>
-                        <button class="btn" id="btn-respec-stats" onclick="respecStats()" style="display:none; padding:4px 8px; font-size:11px; background:var(--border-dark); color:#fff;">💀 找守墓人洗點</button>
+                        <button class="btn" id="btn-respec-stats" onclick="respecStats()" style="display:none; padding:4px 8px; font-size:11px; background:var(--border-dark); color:#fff; box-shadow: 2px 2px 0px rgba(0,0,0,0.2);">💀 找守墓人洗點</button>
                     </div>
                 </div>
                 <div class="stat-grid">
@@ -423,15 +472,17 @@
                     <div class="stat-box"><span class="stat-label">CHA 魅力</span><input type="number" id="stat-cha" class="stat-input"></div>
                 </div>
 
-                <details class="foldable-card" style="margin-top:15px; border:none; box-shadow:none; margin-bottom:0;">
+                 <details class="foldable-card" style="margin-top:15px; border:none; box-shadow:none; margin-bottom:0;">
                     <summary style="border-radius:8px;">詳細人物設定</summary>
-                    <div class="foldable-content anime-sheet" style="padding: 15px 0 0 0; background:transparent;">
-                        <div><label>年齡 / 身高 / 體型</label><input type="text" id="p-age"></div>
-                        <div><label>說話習慣 / 語氣</label><input type="text" id="p-speech"></div>
-                        <div><label>喜歡的事物</label><input type="text" id="p-likes"></div>
-                        <div><label>討厭的事物</label><input type="text" id="p-dislikes"></div>
-                        <div class="full"><label>外貌特徵 / 常見穿搭</label><textarea id="p-app" rows="1" oninput="autoResize(this)"></textarea></div>
-                        <div class="full"><label>核心性格 / 背景故事 (專長等)</label><textarea id="p-bg" rows="1" oninput="autoResize(this)"></textarea></div>
+                    <div class="foldable-content" style="padding: 10px 0 0 0;">
+                        <div class="anime-sheet" style="margin: 0; background:transparent; padding: 0; border: none;">
+                            <div><label>年齡 / 身高 / 體型</label><input type="text" id="p-age"></div>
+                            <div><label>說話習慣 / 語氣</label><input type="text" id="p-speech"></div>
+                            <div><label>喜歡的事物</label><input type="text" id="p-likes"></div>
+                            <div><label>討厭的事物</label><input type="text" id="p-dislikes"></div>
+                            <div class="full"><label>外貌特徵 / 常見穿搭</label><textarea id="p-app" rows="1" oninput="autoResize(this)"></textarea></div>
+                            <div class="full"><label>核心性格 / 背景故事 (專長等)</label><textarea id="p-bg" rows="1" oninput="autoResize(this)"></textarea></div>
+                        </div>
                     </div>
                 </details>
             </div>
@@ -454,7 +505,7 @@
             <button class="btn" onclick="restoreDefaultPreset()">恢復預設</button>
         </div>
         <div class="action-buttons" style="width: 100%; margin-top: 10px;">
-            <button class="btn" onclick="saveCurrentPreset()" style="background: var(--accent-neon);">儲存 (鎖定數值)</button>
+            <button class="btn" onclick="saveCurrentPreset()" style="background: var(--accent-neon);">儲存變更</button>
             <button class="btn" onclick="saveAsNewPreset()">另存新檔</button>
         </div>
         <div class="action-buttons" style="width: 100%; margin-top: 10px; margin-bottom: 40px;">
@@ -538,6 +589,7 @@
             playerName: '小島秀芙',
             playerAvatar: emptyAvatar,
             playerStats: { str: 8, dex: 13, con: 15, int: 13, wis: 14, cha: 15 },
+            isLocked: false, 
             statsLocked: true, 
             playerDetails: { age: '24歲 / 152cm', speech: '直率、偶爾會吐槽。', likes: '薪水、睡眠、PVP打架。', dislikes: '加班、高難度副本機制。', app: '在艾歐澤亞內是白髮貓魅族，喜歡待在係船廠。', bg: '打架很凶但PVE常迷路。現實生活是被死線追殺的社畜設計師，經常穿無彩度寬鬆的休閒服。專長：說服、威嚇、洞察。' },
             npcs: [
@@ -600,9 +652,12 @@
                         if(!scenarioPresets[k].playerStats) {
                             scenarioPresets[k].playerStats = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
                         }
-                        if(scenarioPresets[k].statsLocked === undefined) scenarioPresets[k].statsLocked = true;
                         
-                        // 舊存檔相容：將舊的 playerPersona 塞入 playerDetails.bg
+                        // 相容鎖定設定：將預設防刪鎖與數值鎖分開
+                        if(scenarioPresets[k].isLocked === undefined) { scenarioPresets[k].isLocked = false; }
+                        if(scenarioPresets[k].statsLocked === undefined) { scenarioPresets[k].statsLocked = true; }
+                        
+                        // 舊存檔相容
                         if(!scenarioPresets[k].playerDetails) {
                             scenarioPresets[k].playerDetails = { age: '', speech: '', likes: '', dislikes: '', app: '', bg: scenarioPresets[k].playerPersona || '' };
                         }
@@ -618,7 +673,6 @@
                         } else {
                             scenarioPresets[k].npcs.forEach(n => { 
                                 if (n.affection === undefined) n.affection = 0; 
-                                // 舊 NPC 相容
                                 if (!n.details) n.details = { age: '', speech: '', likes: '', dislikes: '', app: '', bg: n.persona || '' };
                             });
                         }
@@ -700,7 +754,19 @@
         }
 
         function respecStats() {
+            // ----- 新增的鎖頭防護機制 -----
+            let p = scenarioPresets[activePresetId];
+            if (p && p.isLocked) {
+                alert("🔒 此配置已受玩家保護，無法洗點！請先點擊上方解鎖。");
+                return;
+            }
+            // ------------------------------
+
             if(confirm("【系統提示：靈魂重鑄】\n\n「命運的絲線又糾纏在一起了嗎...？」\n\n確定要重新洗點嗎？原本被鎖定的基礎六圍將會強制解鎖！")) {
+                if (p) {
+                    p.statsLocked = false;
+                    localStorage.setItem('sanko_scenario_presets_v2', JSON.stringify(scenarioPresets));
+                }
                 const statInputs = document.querySelectorAll('.stat-input');
                 statInputs.forEach(input => input.disabled = false);
                 document.getElementById('btn-roll-stats').style.display = 'inline-block';
@@ -784,9 +850,26 @@
         function renderPresetSelector() {
             const selector = document.getElementById('preset-selector'); selector.innerHTML = '';
             for (const id in scenarioPresets) {
-                const opt = document.createElement('option'); opt.value = id; opt.textContent = scenarioPresets[id].presetName;
+                const opt = document.createElement('option'); opt.value = id;
+                const lockStatus = scenarioPresets[id].isLocked ? " 🔒" : "";
+                opt.textContent = scenarioPresets[id].presetName + lockStatus;
                 if (id === activePresetId) opt.selected = true; selector.appendChild(opt);
             }
+        }
+
+        function updatePresetLockUI() {
+            const p = scenarioPresets[activePresetId];
+            const isLocked = p ? p.isLocked : false;
+            document.getElementById('preset-lock-toggle').innerText = isLocked ? "🔒" : "🔓";
+            renderPresetSelector();
+        }
+
+        function togglePresetLock() {
+            let p = scenarioPresets[activePresetId];
+            if (!p) return;
+            p.isLocked = !p.isLocked;
+            localStorage.setItem('sanko_scenario_presets_v2', JSON.stringify(scenarioPresets));
+            updatePresetLockUI();
         }
 
         let forceOpenNpcIndex = -1;
@@ -930,11 +1013,13 @@
             document.getElementById('stat-con').value = ps.con; document.getElementById('stat-int').value = ps.int;
             document.getElementById('stat-wis').value = ps.wis; document.getElementById('stat-cha').value = ps.cha;
 
-            const isLocked = p.statsLocked === true;
+            updatePresetLockUI();
+
+            const isStatsLocked = p.statsLocked === true;
             const statInputs = document.querySelectorAll('.stat-input');
-            statInputs.forEach(input => input.disabled = isLocked);
+            statInputs.forEach(input => input.disabled = isStatsLocked);
             
-            if(isLocked) {
+            if(isStatsLocked) {
                 document.getElementById('btn-roll-stats').style.display = 'none';
                 document.getElementById('btn-respec-stats').style.display = 'inline-block';
             } else {
@@ -966,7 +1051,8 @@
             scenarioPresets[newId] = { 
                 id: newId, presetName: '新劇本配置', playerName: '玩家', playerAvatar: emptyAvatar, playerDetails: { age: '', speech: '', likes: '', dislikes: '', app: '', bg: '' },
                 playerStats: {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10},
-                statsLocked: false, 
+                isLocked: false, 
+                statsLocked: false,
                 npcs: [{ id: 'npc_1', name: '新角色', avatar: emptyAvatar, details: { age: '', speech: '', likes: '', dislikes: '', app: '', bg: '' }, affection: 0 }],
                 scenarios: [{name: '主情境', lore: '', npcRoles: '', playerRole: ''}] 
             };
@@ -975,6 +1061,11 @@
 
         function deleteCurrentPreset() {
             if (Object.keys(scenarioPresets).length <= 1) { alert("系統至少需要保留一組配置喔！"); return; }
+            const pOld = scenarioPresets[activePresetId];
+            if (pOld && pOld.isLocked) {
+                alert("🔒 此配置已受玩家保護，為防誤刪無法進行操作！\n若確定要刪除，請先點擊上方解鎖。");
+                return;
+            }
             if (confirm(`確定要刪除「${scenarioPresets[activePresetId].presetName}」這個配置嗎？`)) {
                 delete scenarioPresets[activePresetId]; activePresetId = Object.keys(scenarioPresets)[0];
                 renderPresetSelector(); loadPresetToForm(activePresetId);
@@ -1000,7 +1091,7 @@
                     con: parseInt(document.getElementById('stat-con').value) || 10, int: parseInt(document.getElementById('stat-int').value) || 10,
                     wis: parseInt(document.getElementById('stat-wis').value) || 10, cha: parseInt(document.getElementById('stat-cha').value) || 10
                 },
-                statsLocked: document.getElementById('stat-str').disabled,
+                isLocked: scenarioPresets[activePresetId] ? scenarioPresets[activePresetId].isLocked : false,
                 playerDetails: {
                     age: document.getElementById('p-age').value.trim(),
                     speech: document.getElementById('p-speech').value.trim(),
@@ -1015,6 +1106,12 @@
         }
 
         function saveCurrentPreset() {
+            const pOld = scenarioPresets[activePresetId];
+            if (pOld && pOld.isLocked) {
+                alert("🔒 此配置已受玩家保護，無法進行覆蓋儲存！\n若要修改，請先點擊上方解鎖。");
+                return;
+            }
+            
             const presetName = document.getElementById('input-preset-name').value.trim() || '未命名配置'; 
             const p = gatherPresetData(activePresetId, presetName);
             p.statsLocked = true; 
@@ -1029,7 +1126,7 @@
             document.getElementById('btn-roll-stats').style.display = 'none';
             document.getElementById('btn-respec-stats').style.display = 'inline-block';
             
-            alert("當前配置已成功儲存！基礎屬性已被鎖定！");
+            alert("當前配置變更已成功儲存！基礎屬性已被鎖定！");
         }
 
         function saveAsNewPreset() {
@@ -1044,7 +1141,8 @@
             document.getElementById('input-preset-name').value = newPresetName;
 
             const p = gatherPresetData(newId, newPresetName); 
-            p.statsLocked = true; 
+            p.isLocked = false; 
+            p.statsLocked = true;
             scenarioPresets[newId] = p; activePresetId = newId;
             localStorage.setItem('sanko_scenario_presets_v2', JSON.stringify(scenarioPresets)); localStorage.setItem('sanko_active_preset_id', activePresetId);
             currentScenario = { ...p }; renderPresetSelector(); loadPresetToForm(newId); alert(`已另存新檔為「${newPresetName}」！基礎屬性已被鎖定！`);
@@ -1060,19 +1158,189 @@
             if(confirm("警告：這將會清除設備上儲存的 API 金鑰、照片設定與所有劇本存檔！\n此操作無法復原！")) { localStorage.clear(); location.reload(); }
         }
 
+        /* ==== 遊戲內面板功能模組化 ==== */
+        function syncDomToCurrentScenario() {
+            currentAdventureLog = document.getElementById('ui-adventure-log').value.trim() || "無紀錄，故事剛開始。";
+            
+            // 同步 Player Details
+            if (!currentScenario.playerDetails) currentScenario.playerDetails = {};
+            const ePage = document.getElementById('edit-p-age');
+            if (ePage) currentScenario.playerDetails.age = ePage.value;
+            const ePspeech = document.getElementById('edit-p-speech');
+            if (ePspeech) currentScenario.playerDetails.speech = ePspeech.value;
+            const ePlikes = document.getElementById('edit-p-likes');
+            if (ePlikes) currentScenario.playerDetails.likes = ePlikes.value;
+            const ePdislikes = document.getElementById('edit-p-dislikes');
+            if (ePdislikes) currentScenario.playerDetails.dislikes = ePdislikes.value;
+            const ePapp = document.getElementById('edit-p-app');
+            if (ePapp) currentScenario.playerDetails.app = ePapp.value;
+            const ePbg = document.getElementById('edit-p-bg');
+            if (ePbg) currentScenario.playerDetails.bg = ePbg.value;
+
+            // 同步 NPCs
+            currentScenario.npcs.forEach((n, idx) => {
+                if (!n.details) n.details = {};
+                const eNname = document.getElementById(`edit-n-name-${idx}`);
+                if (eNname) n.name = eNname.value;
+                const eNage = document.getElementById(`edit-n-age-${idx}`);
+                if (eNage) n.details.age = eNage.value;
+                const eNspeech = document.getElementById(`edit-n-speech-${idx}`);
+                if (eNspeech) n.details.speech = eNspeech.value;
+                const eNlikes = document.getElementById(`edit-n-likes-${idx}`);
+                if (eNlikes) n.details.likes = eNlikes.value;
+                const eNdislikes = document.getElementById(`edit-n-dislikes-${idx}`);
+                if (eNdislikes) n.details.dislikes = eNdislikes.value;
+                const eNapp = document.getElementById(`edit-n-app-${idx}`);
+                if (eNapp) n.details.app = eNapp.value;
+                const eNbg = document.getElementById(`edit-n-bg-${idx}`);
+                if (eNbg) n.details.bg = eNbg.value;
+            });
+
+            // 同步 Scenarios
+            currentScenario.scenarios.forEach((sc, idx) => {
+                const eSName = document.getElementById(`edit-scen-name-${idx}`);
+                if(eSName) sc.name = eSName.value;
+                const eSLore = document.getElementById(`edit-scen-lore-${idx}`);
+                if(eSLore) sc.lore = eSLore.value;
+                const eSNpcs = document.getElementById(`edit-scen-npcs-${idx}`);
+                if(eSNpcs) sc.npcRoles = eSNpcs.value;
+            });
+        }
+
+        function modalAddNpc() {
+            syncDomToCurrentScenario();
+            currentScenario.npcs.push({ id: 'npc_' + Date.now(), name: '新角色', avatar: emptyAvatar, affection: 0, details: { age: '', speech: '', likes: '', dislikes: '', app: '', bg: '' } });
+            openStatusModal();
+        }
+
+        function modalDeleteNpc(idx) {
+            if(currentScenario.npcs.length <= 1) { alert("至少要保留一位 NPC 喔！"); return; }
+            if(confirm("確定要刪除這位 NPC 嗎？")) {
+                syncDomToCurrentScenario();
+                currentScenario.npcs.splice(idx, 1);
+                openStatusModal();
+            }
+        }
+
+        function modalAddScenario() {
+            syncDomToCurrentScenario();
+            currentScenario.scenarios.push({name: '新情境', lore: '', npcRoles: '', playerRole: ''});
+            chatScripts.push([]);
+            openStatusModal();
+        }
+
+        function modalDeleteScenario(idx) {
+            if(currentScenario.scenarios.length <= 1) { alert("至少要保留一個情境喔！"); return; }
+            if(idx === currentScenarioIndex) { alert("無法刪除當前所在的情境！請先返回遊戲切換到其他情境後，再來進行刪除。"); return; }
+            
+            if(confirm("確定要刪除這個情境嗎？對應的對話紀錄也會被連帶刪除！")) {
+                syncDomToCurrentScenario();
+                currentScenario.scenarios.splice(idx, 1);
+                chatScripts.splice(idx, 1);
+                
+                if (currentScenarioIndex > idx) {
+                    currentScenarioIndex--;
+                    currentChatPageIndex--;
+                }
+                openStatusModal();
+            }
+        }
+
+        function modalRespecStats() {
+            let rCount = savesData[currentSaveId].respecCount !== undefined ? savesData[currentSaveId].respecCount : 3;
+            if (rCount <= 0) return;
+            
+            if(confirm(`【系統提示：靈魂重鑄】\n\n確定要重新隨機洗點嗎？\n注意：此存檔目前剩餘 ${rCount} 次洗點機會！`)) {
+                syncDomToCurrentScenario();
+                const roll4d6DropLowest = () => {
+                    let rolls = [Math.floor(Math.random()*6)+1, Math.floor(Math.random()*6)+1, Math.floor(Math.random()*6)+1, Math.floor(Math.random()*6)+1];
+                    rolls.sort((a,b) => a - b);
+                    return rolls[1] + rolls[2] + rolls[3];
+                };
+                
+                if (!currentScenario.playerStats) currentScenario.playerStats = {};
+                currentScenario.playerStats.str = roll4d6DropLowest();
+                currentScenario.playerStats.dex = roll4d6DropLowest();
+                currentScenario.playerStats.con = roll4d6DropLowest();
+                currentScenario.playerStats.int = roll4d6DropLowest();
+                currentScenario.playerStats.wis = roll4d6DropLowest();
+                currentScenario.playerStats.cha = roll4d6DropLowest();
+                
+                savesData[currentSaveId].respecCount = rCount - 1;
+                saveCurrentProgress();
+                openStatusModal();
+                alert("洗點成功！你的能力值已重新分配。");
+            }
+        }
+
+        function saveAsNewPresetFromModal() {
+            try {
+                syncDomToCurrentScenario(); 
+                const currentName = currentScenario.presetName || "未命名配置";
+                const defaultName = currentName + ' (新進度另存)';
+                const userInput = prompt("請為這份新的系統大廳配置命名：", defaultName);
+                if (userInput === null) return; 
+                
+                const newPresetName = userInput.trim() || defaultName;
+                const newId = 'preset_' + Date.now();
+                
+                let newPreset = JSON.parse(JSON.stringify(currentScenario));
+                newPreset.id = newId;
+                newPreset.presetName = newPresetName;
+                newPreset.isLocked = false;
+                newPreset.statsLocked = true;
+                
+                scenarioPresets[newId] = newPreset;
+                localStorage.setItem('sanko_scenario_presets_v2', JSON.stringify(scenarioPresets));
+                
+                // 將當前遊戲數據綁定到新配置 ID
+                currentScenario.sourcePresetId = newId;
+                currentScenario.presetName = newPresetName;
+                
+                saveCurrentProgress(); 
+                alert(`已成功將當前的角色與情境狀態，同步另存為系統新配置「${newPresetName}」！\n(接下來的儲存都會自動同步至這個新配置中)`);
+            } catch (e) {
+                console.error(e);
+                alert("儲存時發生錯誤：" + e.message);
+            }
+        }
+
         function openStatusModal() {
             if(!currentSaveId) return;
             document.getElementById('ui-adventure-log').value = currentAdventureLog;
             
             const pStats = currentScenario.playerStats || {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
             let pDet = currentScenario.playerDetails || { age: '', speech: '', likes: '', dislikes: '', app: '', bg: currentScenario.playerPersona || '' };
+
+            let rCount = savesData[currentSaveId].respecCount !== undefined ? savesData[currentSaveId].respecCount : 3;
+            let respecBtnHtml = rCount > 0 
+                ? `<button class="btn" onclick="modalRespecStats()" style="background: var(--border-dark); color: #fff; padding: 5px 13px; font-size: 12px; border-radius: 8px; border:none; cursor:pointer; font-weight:900; letter-spacing:1px; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); transition: all 0.2s;">💀 守墓人洗點 (剩餘 ${rCount} 次)</button>` 
+                : `<span style="font-size:12px; color:var(--text-sub); font-weight:bold;">💀 洗點次數已用盡</span>`;
+
+            // Player Section 完美還原圖3排版
+            let statsHtml = `
+            <div style="background: #e6e6e6; border-radius: 8px; padding: 18px; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding-bottom: 12px;">
+                    <span style="font-size: 16px; font-weight: 900; color: var(--text-main); letter-spacing: 1px;">玩家：${currentScenario.playerName}</span>
+                    ${respecBtnHtml}
+                </div>
+                <div style="font-size:12px; letter-spacing:1px; font-weight: 400; display: grid; grid-template-columns: auto auto auto; gap: 4px 15px; justify-content: start;">
+                    <span>[力量STR: ${pStats.str}]</span>
+                    <span>[敏捷DEX: ${pStats.dex}]</span>
+                    <span>[體質CON: ${pStats.con}]</span>
+                    <span>[智力INT: ${pStats.int}]</span>
+                    <span>[感知WIS: ${pStats.wis}]</span>
+                    <span>[魅力CHA: ${pStats.cha}]</span>
+                </div>
+            </div>
             
-            let statsHtml = `<b>玩家：${currentScenario.playerName}</b>\n[力量STR:${pStats.str}] [敏捷DEX:${pStats.dex}] [體質CON:${pStats.con}]\n[智力INT:${pStats.int}] [感知WIS:${pStats.wis}] [魅力CHA:${pStats.cha}]\n`;
-            
-            statsHtml += `
-            <details class="foldable-card" style="margin-top:10px;">
-                <summary>編輯玩家設定</summary>
-                <div class="foldable-content anime-sheet" style="padding:15px; margin:0; border:none; background:transparent;">
+            <details class="dark-card" style="margin-top:10px; border-color: var(--text-sub);">
+                <summary>
+                    <div class="summary-left">
+                        <span class="summary-name">編輯玩家細節設定</span>
+                    </div>
+                </summary>
+                <div class="dark-card-content anime-sheet" style="padding:15px; margin:0; border:none; background:transparent;">
                     <div><label>年齡 / 身高 / 體型</label><input type="text" id="edit-p-age" value="${pDet.age}"></div>
                     <div><label>說話習慣 / 語氣</label><input type="text" id="edit-p-speech" value="${pDet.speech}"></div>
                     <div><label>喜歡的事物</label><input type="text" id="edit-p-likes" value="${pDet.likes}"></div>
@@ -1082,28 +1350,73 @@
                 </div>
             </details>\n`;
             
+            // NPC Section
+            statsHtml += `
+            <div class="section-header-flex">
+                <h4>登場 NPC 管理</h4>
+                <button class="section-add-btn" onclick="modalAddNpc()">+ 新增 NPC</button>
+            </div>`;
+
             currentScenario.npcs.forEach((n, idx) => {
                 const aff = n.affection !== undefined ? n.affection : 0;
                 let nDet = n.details || { age: '', speech: '', likes: '', dislikes: '', app: '', bg: n.persona || '' };
                 
                 statsHtml += `
-                <details class="foldable-card" style="margin-top:5px;">
+                <details class="dark-card">
                     <summary>
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <span>NPC：${n.name}</span>
-                            <span style="color:var(--accent-neon); background:var(--border-dark); padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold; letter-spacing:1px;">♥ 好感: ${aff}</span>
+                        <div class="summary-left">
+                            <span class="summary-name">${n.name}</span>
+                            <span class="summary-tag">♥好感: ${aff}</span>
                         </div>
                     </summary>
-                    <div class="foldable-content anime-sheet" style="padding:15px; margin:0; border:none; background:transparent;">
-                        <div><label>年齡 / 身高 / 體型</label><input type="text" id="edit-n-age-${idx}" value="${nDet.age}"></div>
-                        <div><label>說話習慣 / 語氣</label><input type="text" id="edit-n-speech-${idx}" value="${nDet.speech}"></div>
-                        <div><label>喜歡的事物</label><input type="text" id="edit-n-likes-${idx}" value="${nDet.likes}"></div>
-                        <div><label>討厭的事物</label><input type="text" id="edit-n-dislikes-${idx}" value="${nDet.dislikes}"></div>
-                        <div class="full"><label>外貌特徵 / 常見穿搭</label><textarea id="edit-n-app-${idx}" rows="1" oninput="autoResize(this)">${nDet.app}</textarea></div>
-                        <div class="full"><label>核心性格 / 背景故事</label><textarea id="edit-n-bg-${idx}" rows="1" oninput="autoResize(this)">${nDet.bg}</textarea></div>
+                    <div class="dark-card-content">
+                        <div style="text-align: right; margin-bottom: 5px;">
+                            <button class="delete-btn-red" onclick="modalDeleteNpc(${idx}); event.stopPropagation();">刪除</button>
+                        </div>
+                        <div class="anime-sheet" style="padding:0; margin:0; border:none; background:transparent;">
+                            <div class="full"><label>角色名稱</label><input type="text" id="edit-n-name-${idx}" value="${n.name}" oninput="this.closest('details').querySelector('.summary-name').innerText = this.value || '未命名';"></div>
+                            <div><label>年齡 / 身高 / 體型</label><input type="text" id="edit-n-age-${idx}" value="${nDet.age}"></div>
+                            <div><label>說話習慣 / 語氣</label><input type="text" id="edit-n-speech-${idx}" value="${nDet.speech}"></div>
+                            <div><label>喜歡的事物</label><input type="text" id="edit-n-likes-${idx}" value="${nDet.likes}"></div>
+                            <div><label>討厭的事物</label><input type="text" id="edit-n-dislikes-${idx}" value="${nDet.dislikes}"></div>
+                            <div class="full"><label>外貌特徵 / 常見穿搭</label><textarea id="edit-n-app-${idx}" rows="1" oninput="autoResize(this)">${nDet.app}</textarea></div>
+                            <div class="full"><label>核心性格 / 背景故事</label><textarea id="edit-n-bg-${idx}" rows="1" oninput="autoResize(this)">${nDet.bg}</textarea></div>
+                        </div>
                     </div>
                 </details>\n`;
             });
+
+            // Scenario Section
+            statsHtml += `
+            <div class="section-header-flex">
+                <h4>情境空間管理</h4>
+                <button class="section-add-btn" onclick="modalAddScenario()">+ 新增情境</button>
+            </div>`;
+
+            currentScenario.scenarios.forEach((sc, idx) => {
+                const isCurrent = idx === currentScenarioIndex ? `<span class="summary-tag">當前</span>` : '';
+                statsHtml += `
+                <details class="dark-card">
+                    <summary>
+                        <div class="summary-left">
+                            <span class="summary-name">情境：${sc.name || '未命名'}</span>
+                            ${isCurrent}
+                        </div>
+                    </summary>
+                    <div class="dark-card-content">
+                        <div style="text-align: right; margin-bottom: 5px;">
+                            <button class="delete-btn-red" onclick="modalDeleteScenario(${idx}); event.stopPropagation();">刪除</button>
+                        </div>
+                        <div class="scenario-label">情境名稱</div>
+                        <input type="text" id="edit-scen-name-${idx}" class="scenario-input" style="margin-bottom:10px;" value="${sc.name}" oninput="this.closest('details').querySelector('.summary-name').innerText = '情境：' + (this.value || '未命名');">
+                        <div class="scenario-label">環境法則與世界觀</div>
+                        <textarea id="edit-scen-lore-${idx}" class="scenario-input" style="margin-bottom:10px;" oninput="autoResize(this)">${sc.lore}</textarea>
+                        <div class="scenario-label">NPC 們在此的身分/狀態</div>
+                        <textarea id="edit-scen-npcs-${idx}" class="scenario-input" style="margin-bottom:10px;" oninput="autoResize(this)">${sc.npcRoles || ''}</textarea>
+                    </div>
+                </details>`;
+            });
+
             document.getElementById('ui-stats-display').innerHTML = statsHtml;
             
             renderFlags(); renderItems(); document.getElementById('status-modal').style.display = 'block'; 
@@ -1111,34 +1424,41 @@
         }
 
         function saveStatusModal() {
-            currentAdventureLog = document.getElementById('ui-adventure-log').value.trim() || "無紀錄，故事剛開始。";
-            
-            if (!currentScenario.playerDetails) currentScenario.playerDetails = {};
-            const ePage = document.getElementById('edit-p-age');
-            if (ePage) {
-                currentScenario.playerDetails.age = ePage.value;
-                currentScenario.playerDetails.speech = document.getElementById('edit-p-speech').value;
-                currentScenario.playerDetails.likes = document.getElementById('edit-p-likes').value;
-                currentScenario.playerDetails.dislikes = document.getElementById('edit-p-dislikes').value;
-                currentScenario.playerDetails.app = document.getElementById('edit-p-app').value;
-                currentScenario.playerDetails.bg = document.getElementById('edit-p-bg').value;
-            }
-
-            currentScenario.npcs.forEach((n, idx) => {
-                if (!n.details) n.details = {};
-                const eNage = document.getElementById(`edit-n-age-${idx}`);
-                if (eNage) {
-                    n.details.age = eNage.value;
-                    n.details.speech = document.getElementById(`edit-n-speech-${idx}`).value;
-                    n.details.likes = document.getElementById(`edit-n-likes-${idx}`).value;
-                    n.details.dislikes = document.getElementById(`edit-n-dislikes-${idx}`).value;
-                    n.details.app = document.getElementById(`edit-n-app-${idx}`).value;
-                    n.details.bg = document.getElementById(`edit-n-bg-${idx}`).value;
+            try {
+                syncDomToCurrentScenario();
+                saveCurrentProgress(); // 儲存至當前遊戲紀錄
+                
+                // 雙向同步：覆寫回大廳的原始配置檔
+                let sourceId = currentScenario.sourcePresetId || currentScenario.id;
+                if (sourceId && scenarioPresets[sourceId]) {
+                    if (scenarioPresets[sourceId].isLocked) {
+                        alert(`【系統提醒】\n因為大廳的配置 [${scenarioPresets[sourceId].presetName}] 已上鎖 (🔒)，\n本次變更僅儲存於「當前遊戲紀錄」中，不會覆蓋回大廳。\n(若要覆蓋回大廳，請先至大廳解鎖，或使用另存新配置)`);
+                    } else {
+                        let syncPreset = JSON.parse(JSON.stringify(currentScenario));
+                        syncPreset.id = sourceId;
+                        syncPreset.presetName = scenarioPresets[sourceId].presetName; 
+                        syncPreset.isLocked = false; 
+                        syncPreset.statsLocked = scenarioPresets[sourceId].statsLocked !== undefined ? scenarioPresets[sourceId].statsLocked : true;
+                        scenarioPresets[sourceId] = syncPreset;
+                        localStorage.setItem('sanko_scenario_presets_v2', JSON.stringify(scenarioPresets));
+                    }
                 }
-            });
+                
+                // 同步更新選擇框中的情境名稱與選單
+                const locSelect = document.getElementById('btn-location');
+                if(locSelect) {
+                    locSelect.innerHTML = '';
+                    currentScenario.scenarios.forEach((sc, i) => {
+                        const opt = document.createElement('option'); opt.value = i; opt.innerText = `📍 ${sc.name}`;
+                        if(i === currentScenarioIndex) opt.selected = true; locSelect.appendChild(opt);
+                    });
+                }
 
-            saveCurrentProgress();
-            document.getElementById('status-modal').style.display = 'none';
+                document.getElementById('status-modal').style.display = 'none';
+            } catch (e) {
+                console.error(e);
+                alert("儲存時發生錯誤：" + e.message);
+            }
         }
 
         function renderFlags() {
@@ -1201,7 +1521,11 @@
 
             const saveName = userInput.trim() || defaultName;
             const id = Date.now().toString();
-            const newSave = { title: saveName, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, chatPageIndex: 0, scripts: [[]], log: "1. 故事剛開始，目前尚無重大事件發生。", flags: [], scenario: JSON.parse(JSON.stringify(currentScenario)) };
+            const newSave = { title: saveName, date: new Date().toLocaleString(), hp: 100, san: 100, items: [], scenIndex: 0, chatPageIndex: 0, scripts: [[]], log: "1. 故事剛開始，目前尚無重大事件發生。", flags: [], respecCount: 3, scenario: JSON.parse(JSON.stringify(currentScenario)) };
+            
+            // 綁定資料來源 ID
+            newSave.scenario.sourcePresetId = activePresetId;
+            
             savesData[id] = newSave; localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); loadGame(id); 
         }
 
@@ -1288,9 +1612,9 @@
 你是一個「TRPG 沉浸式群像劇引擎」與「DM(地下城主)」。
 
 【語言風格核心守則：拒絕直譯、追求日系翻譯文學感】
-1. 【嚴格禁止】使用中國大陸網遊用語（如：牛逼、爽、給力、這波、穩了、打卡、攻略組、YYDS、小姐姐、小哥哥）。必須嚴格使用台灣在地慣用語與繁體中文。
+1. 【口吻要求】對話台詞保持日文語感，依照日本人說話的習慣與邏輯。
 2. 【口吻轉換】：
-   - 角色說話時，請融入「日文輕小說/日系翻譯文學」的優雅與留白。
+   - 角色說話時，請融入「日文文學/日系翻譯文學」的優雅與留白。
    - 避免直接把英文直譯。例如，不用「我感覺到很憤怒」，改用「一股燥熱在胸口蔓延」。
    - NPC 的語氣要體現層次：冷靜的角色用詞精簡、帶有距離感；活潑的角色語氣要自然，絕對不要像生硬的 NPC 公告。
 3. 【修辭調整】：
@@ -1443,7 +1767,7 @@ ${flagsText}
             } else {
                 const systemMsg = document.createElement('div'); systemMsg.className = 'system-msg'; systemMsg.innerHTML = "<i>— 此情境/支線尚無對話。請輸入動作，或讓 AI 生成開場 —</i>"; msgBox.appendChild(systemMsg); msgBox.scrollTop = msgBox.scrollHeight;
                 
-                const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.style.borderColor = 'var(--accent-neon)'; btn.innerHTML = '🎲 讓 AI 根據「情境設定」隨機生成開場事件';
+                const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.style.borderColor = 'var(--accent-neon)'; btn.style.width = 'fit-content'; btn.style.alignSelf = 'center'; btn.innerHTML = '🎲 讓 AI 根據「情境設定」隨機生成開場事件';
                 btn.onclick = () => { 
                     optArea.innerHTML = ''; 
                     document.getElementById('loading').style.display = 'block'; 
