@@ -156,11 +156,17 @@
 }
 
         .modal-header-sticky {
-            position: sticky; top: -20px; 
-            background: var(--bg-main); z-index: 10;
-            margin: -20px -20px 15px -20px; padding: 15px 20px;
-            border-bottom: 2px solid var(--border-dark); border-radius: 10px 10px 0 0;
-            display: flex; justify-content: space-between; align-items: center;
+            position: sticky;
+            top: -20px;
+            background: var(--bg-main);
+            z-index: 10;
+            margin: -20px -20px -20px -20px;
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--border-dark);
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .modal-header-sticky h3 { font-size: 16px; color: var(--text-main); font-weight: 900; margin: 0; border: none; padding: 0;}
         #status-modal-content h3 { font-size: 14px; margin-bottom: 8px; color: var(--text-main); font-weight: 900; letter-spacing: 0.5px; }
@@ -1738,7 +1744,7 @@ ${flagsText}
 - "new_flags": 字串陣列 [Array]。若玩家獲得長期 Buff/Debuff 或解鎖重要承諾/事件寫入此處。(注意：標籤名稱不要加「狀態：」前綴，直接寫名稱即可)
 - "npc_persona_updates": 物件陣列 [Array of Objects]。若劇情導致某個NPC的心態、裝備、外觀發生【永久性重大改變】，請回傳更新後的人設。格式範例：[{"name": "宮崎三高", "new_persona": "原本的屬性... 新增：右眼受傷，對玩家極度信任..."}]。無改變請回傳 []。
 - "player_persona_update": 字串 (String)。若玩家角色設定發生永久轉變，回傳更新後的完整人設文字。無改變請回傳 ""。
-- "adventure_log": 字串 (String)。請以字串格式回傳，利用 \\n 換行。保留舊有重要日誌，並往下新增最新進展，上限 200 字。
+- "adventure_log": 字串 (String)。請以字串格式回傳，利用 \\n 換行。保留舊有重要日誌，並往下新增最新進展，上限 1000 字。
 - "narrative": 第三方旁白視角。進行情境描寫、NPC之間的動作、判定結果宣告。
 - "dialogues": 物件陣列 (Array of Objects)。只有真正開口說話的 NPC 才列入此陣列！名稱必須完全符合上述 NPC 列表。格式範例：[{"speaker": "宮崎三高", "text": "退後。"}]。如果沒人講話，回傳 []。
 - "options": 3 個玩家可採取的行動選項。
