@@ -312,6 +312,198 @@
             #options-area { gap: 6px; margin-bottom: 6px; }
             .opt-btn { padding: 10px 12px; font-size: 13px; }
         }
+    
+        input[type="file"].hidden-file-input,
+        #pic-input,
+        #upload-player,
+        #import-input,
+        input[id^="upload-npc-"] {
+            display: none !important;
+            position: absolute !important;
+            left: -9999px !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .status-tabs { display: flex; gap: 8px; margin: 12px 0 14px; border-bottom: 2px solid var(--border-dark); padding-bottom: 8px; }
+        .status-tab-btn { flex: 1; background: #fff; border: 2px solid var(--border-dark); border-radius: 8px; padding: 8px 10px; font-size: 12px; font-weight: 900; cursor: pointer; color: var(--text-main); }
+        .status-tab-btn.active { background: var(--accent-neon); box-shadow: 2px 2px 0 var(--border-dark); }
+        .status-page { display: none; }
+        .status-page.active { display: block; }
+        .api-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+        .api-stat-box { background: #fff; border: 2px solid var(--border-dark); border-radius: 8px; padding: 10px; box-shadow: 2px 2px 0 var(--accent-neon); }
+        .api-stat-label { font-size: 11px; color: var(--text-sub); font-weight: 900; margin-bottom: 4px; }
+        .api-stat-value { font-size: 18px; color: var(--text-main); font-weight: 900; word-break: break-word; }
+        .api-stat-note { font-size: 12px; color: var(--text-sub); line-height: 1.6; font-weight: 700; margin: 10px 0; }
+        .api-stat-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+        #status-modal-content { padding: 0; }
+        #status-modal-content > .modal-header-sticky {
+            position: static;
+            top: auto;
+            margin: 0;
+            padding: 16px 20px;
+            flex-shrink: 0;
+            border-radius: 10px 10px 0 0;
+        }
+        #status-modal-content > .u-inline-012 {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 14px 20px 18px;
+        }
+        #status-modal-content .status-tabs {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: var(--bg-main);
+            margin: 0 0 14px;
+            padding: 0 0 10px;
+        }
+        #status-modal-content .status-tab-btn {
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media screen and (max-width: 600px) {
+            #status-modal-content {
+                width: 96%;
+                max-height: 92vh;
+                margin: 8px auto;
+            }
+            #status-modal-content > .modal-header-sticky {
+                padding: 12px 12px;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            #status-modal-content > .modal-header-sticky .u-inline-009 {
+                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            #status-modal-content > .u-inline-012 {
+                padding: 10px 12px 14px;
+            }
+            #status-modal-content .status-tabs {
+                gap: 6px;
+            }
+            #status-modal-content .status-tab-btn {
+                padding: 8px 6px;
+                font-size: 12px;
+            }
+            .api-stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Consolidated former inline styles ===== */
+        .u-inline-001 { display:flex; flex-direction:column; align-items:center; width:100%; margin:auto; }
+        .u-inline-002 { color: #fff; margin-bottom: 15px; font-weight:800; letter-spacing:1px; border: none; }
+        #crop-scale { width: 100%; }
+        .u-inline-003 { background: var(--accent-neon); width: 100%; }
+        .u-inline-004 { background: var(--border-dark); color: #fff; width: 100%; }
+        #mid-modal-content { max-width: 400px; margin-top: 10vh; }
+        .u-inline-005 { border:none; margin:0; padding:0; }
+        .u-inline-006 { margin-top:30px; }
+        .u-inline-007 { background:var(--accent-neon); width:100%; margin-top:10px; }
+        .u-inline-008 { width:100%; margin-top:10px; background:var(--border-dark); color:#fff; }
+        .u-inline-009 { display:flex; gap: 10px; }
+        .u-inline-010 { background: #fff; color: var(--border-dark); padding: 6px 12px; font-size: 13px; border-width: 2px; }
+        .u-inline-011 { background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px; }
+        .u-inline-012 { flex: 1; overflow-y: auto; padding-right: 5px; min-height: 0; }
+        .u-inline-013 { font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; margin-top:5px; }
+        .u-inline-014 { font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800; }
+        .u-inline-015 { padding:6px 12px; font-size:12px; }
+        .u-inline-016 { font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; }
+        #ui-stats-display { margin-top: 10px; }
+        #tutorial-modal { display: none; align-items: center; justify-content: center; }
+        #tutorial-modal-content { max-width: 500px; width: 90%; max-height: 85vh; margin: auto; padding: 20px 20px 15px 20px; display: flex; flex-direction: column; overflow: hidden; border-radius: 12px; }
+        .u-inline-017 { margin-bottom: 10px; }
+        .u-inline-018 { flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; min-height: 0; }
+        .u-inline-019 { font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px; }
+        .u-inline-020 { font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5; }
+        .u-inline-021 { background: #f9f9f9; border: 2px dashed #ccc; border-radius: 8px; padding: 12px; margin-bottom: 5px; }
+        .u-inline-022 { font-size:12px; color:var(--text-sub); margin-bottom:10px; font-weight:600; line-height:1.5; }
+        .u-inline-023 { font-size:12px; color:var(--text-sub); margin-bottom:0; font-weight:600; line-height:1.5; }
+        .u-inline-024 { flex-shrink: 0; border-top: 1px solid #ddd; padding-top: 12px; }
+        .u-inline-025 { background: var(--border-dark); color: #fff; width: 100%; font-size: 14px; padding: 12px; font-weight: 900; letter-spacing: 1px; }
+        #setup-screen { display: flex; position: relative; }
+        #pic-input { display:none; }
+        .u-inline-026 { color: var(--text-sub); text-align: center; font-size: 11px; margin-bottom: 25px; letter-spacing: 2px; font-weight: 800; }
+        .u-inline-027 { display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin: 0 auto 15px auto; }
+        #verify-btn { flex: 1; background: var(--border-dark); color: #fff; }
+        .u-inline-028 { font-size: 11px; color: var(--text-main); text-align: left; font-weight: 800; margin-bottom: 15px; line-height: 1.6; background: #e2e2e2; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-neon); }
+        .u-inline-029 { color: var(--text-main); font-weight: 900; font-size: 13px; margin-bottom: 12px; }
+        #start-btn { background: var(--border-dark); color: #fff; }
+        .u-inline-030 { text-align: center; margin-top: 25px; }
+        .u-inline-031 { background: transparent; border: none; color: var(--text-main); font-size: 13px; font-weight: 800; cursor: pointer; text-decoration: underline; }
+        .u-inline-032 { text-align: center; margin-top: 35px; }
+        #delete-key-btn { background: transparent; border: none; color: #ff4444; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: underline; display: none; }
+        .u-inline-033 { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; max-width: 550px; }
+        #preset-selector { margin-bottom: 0; flex-grow: 1; text-align: left; padding-left: 10px; max-width: 100%; }
+        .u-inline-034 { padding: 10px 15px; flex-shrink: 0; background: var(--border-dark); color: #fff; }
+        .u-inline-035 { color: #c5a059; display: flex; justify-content: space-between; align-items: center; }
+        #preset-lock-toggle { cursor:pointer; font-size: 16px; transition: transform 0.2s; }
+        .u-inline-036 { border: 2px solid var(--border-dark); border-radius: 8px; padding: 15px; background: #fff; margin-bottom: 10px; }
+        .u-inline-037 { margin-bottom: 10px; font-size: 14px; color: #fff; background: var(--border-dark); padding: 4px 8px; border-radius: 4px; display: inline-block; }
+        .u-inline-038 { justify-content: center; }
+        #upload-player { display:none; }
+        .u-inline-039 { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+        .u-inline-040 { margin:0; }
+        #btn-roll-stats { padding:4px 8px; font-size:11px; background:var(--accent-neon); color:var(--border-dark); }
+        #btn-respec-stats { display:none; padding:4px 8px; font-size:11px; background:var(--border-dark); color:#fff; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); }
+        .u-inline-041 { margin-top:15px; border:none; box-shadow:none; margin-bottom:0; }
+        .u-inline-042 { border-radius:8px; }
+        .u-inline-043 { padding: 10px 0 0 0; }
+        .u-inline-044 { margin: 0; background:transparent; padding: 0; border: none; }
+        .u-inline-045 { display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px; }
+        .u-inline-046 { font-size:16px; }
+        .u-inline-047 { padding:6px 12px; font-size:12px; background:var(--accent-neon); color:var(--border-dark); }
+        #npc-list-container { margin-bottom: 15px; }
+        .u-inline-048 { padding:6px 12px; font-size:12px; background:var(--border-dark); color:#fff; }
+        .u-inline-049 { width: 100%; margin-top: 15px; }
+        .u-inline-050 { border-color: #ff4444; color: #ff4444; }
+        .u-inline-051 { width: 100%; margin-top: 10px; }
+        .u-inline-052 { background: var(--accent-neon); }
+        .u-inline-053 { width: 100%; margin-top: 10px; margin-bottom: 40px; }
+        .u-inline-054 { flex-grow: 1; background: var(--border-dark); color: #fff; }
+        .u-inline-055 { margin-bottom: 40px; }
+        #import-input { display:none; }
+        .u-inline-056 { width: 100%; background: var(--border-dark); color: #fff; }
+        .u-inline-057 { padding: 6px 12px; font-size: 12px; }
+        .u-inline-058 { font-size: 13px; font-weight: 900; color: var(--text-main); display:flex; gap:10px; align-items:center; }
+        .u-inline-059 { color:var(--text-sub); font-size:11px; margin-right:5px; }
+        #ui-tokens { display: none; }
+        #npc-title-\24 \7b index\7d  { margin-left:8px; flex-grow:1; text-align:left; }
+        .u-inline-060 { margin-bottom:10px; justify-content:center; border:none; background:transparent; }
+        #upload-npc-\24 \7b index\7d  { display:none; }
+        .u-inline-061 { display:flex; gap:10px; }
+        .u-inline-062 { flex:1; }
+        .u-inline-063 { width:100px; }
+        #npc-aff-\24 \7b index\7d  { text-align:center; padding: 14px 5px; }
+        .u-inline-064 { border-bottom:1px solid #ccc; padding-bottom:5px; }
+        #scen-title-\24 \7b index\7d  { margin-left:8px; flex-grow:1; text-align:left; }
+        .u-inline-065 { background: var(--border-dark); color: #fff; padding: 4px 10px; font-size: 15px; border-radius: 8px; border:none; cursor:pointer; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); transition: all 0.2s; }
+        .u-inline-066 { font-size: 18px; filter: grayscale(100%); opacity: 0.4; cursor: not-allowed; }
+        .u-inline-067 { background: #e6e6e6; border-radius: 8px; padding: 18px; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .u-inline-068 { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom: 12px; border-bottom: 1px dashed #ccc; }
+        .u-inline-069 { font-size: 16px; font-weight: 900; color: var(--text-main); letter-spacing: 1px; word-break: break-all; flex: 1; }
+        .u-inline-070 { flex-shrink: 0; }
+        .u-inline-071 { font-size:11px; font-weight: 400; color: var(--text-main); display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; letter-spacing: 0.5px; }
+        .u-inline-072 { margin-top:10px; }
+        .u-inline-073 { padding:15px; margin:0; border:none; background:transparent; }
+        .u-inline-074 { text-align: right; margin-bottom: 5px; }
+        .u-inline-075 { padding:0; margin:0; border:none; background:transparent; }
+        #edit-scen-name-\24 \7b idx\7d  { margin-bottom:10px; }
+        #edit-scen-lore-\24 \7b idx\7d  { margin-bottom:10px; }
+        #edit-scen-npcs-\24 \7b idx\7d  { margin-bottom:10px; }
+        .u-inline-076 { font-size:12px; color:#888; }
+        .u-inline-077 { text-align:center; color:var(--text-sub); font-size:13px; font-weight:bold; }
+        .u-inline-078 { margin-top:5px; }
+        /* ===== End consolidated inline styles ===== */
     </style>
 </head>
 <body>
@@ -341,25 +533,25 @@
     </script>
 
     <div id="crop-modal" class="modal-overlay">
-        <div style="display:flex; flex-direction:column; align-items:center; width:100%; margin:auto;">
-            <h3 style="color: #fff; margin-bottom: 15px; font-weight:800; letter-spacing:1px; border: none;">拖拉照片位置</h3>
+        <div class="u-inline-001">
+            <h3 class="u-inline-002">拖拉照片位置</h3>
             <div id="crop-container">
                 <img id="crop-img" src="">
             </div>
             <div class="crop-controls">
-                <input type="range" id="crop-scale" min="0.1" max="3" step="0.05" value="1" style="width: 100%;">
-                <button class="btn" onclick="confirmCrop()" style="background: var(--accent-neon); width: 100%;">確認</button>
-                <button class="btn" onclick="closeCropModal()" style="background: var(--border-dark); color: #fff; width: 100%;">取消</button>
+                <input type="range" id="crop-scale" min="0.1" max="3" step="0.05" value="1">
+                <button class="btn u-inline-003" onclick="confirmCrop()">確認</button>
+                <button class="btn u-inline-004" onclick="closeCropModal()">取消</button>
             </div>
         </div>
     </div>
 
     <div id="midgame-scen-modal" class="modal-overlay">
-        <div id="mid-modal-content" style="max-width: 400px; margin-top: 10vh;">
+        <div id="mid-modal-content">
             <div class="modal-header-sticky">
-                <h3 style="border:none; margin:0; padding:0;">🗺️ 發現新情境 / 切換空間</h3>
+                <h3 class="u-inline-005">🗺️ 發現新情境 / 切換空間</h3>
             </div>
-            <div class="scenario-label" style="margin-top:30px;">新情境名稱 (如: 某人的夢境)</div>
+            <div class="scenario-label u-inline-006">新情境名稱 (如: 某人的夢境)</div>
             <input type="text" id="mid-scen-name" class="scenario-input">
             <div class="scenario-label">環境法則與世界觀</div>
             <textarea id="mid-scen-lore" class="scenario-input" oninput="autoResize(this)"></textarea>
@@ -367,119 +559,138 @@
             <textarea id="mid-scen-npcs" class="scenario-input" oninput="autoResize(this)"></textarea>
             <div class="scenario-label">玩家專屬身分</div>
             <input type="text" id="mid-scen-player" class="scenario-input">
-            <button class="btn" onclick="confirmMidGameScenario()" style="background:var(--accent-neon); width:100%; margin-top:10px;">確認建立並傳送</button>
-            <button class="btn" onclick="document.getElementById('midgame-scen-modal').style.display='none'" style="width:100%; margin-top:10px; background:var(--border-dark); color:#fff;">取消</button>
+            <button class="btn u-inline-007" onclick="confirmMidGameScenario()">確認建立並傳送</button>
+            <button class="btn u-inline-008" onclick="document.getElementById('midgame-scen-modal').style.display='none'">取消</button>
         </div>
     </div>
 
     <div id="status-modal" class="modal-overlay">
                 <div id="status-modal-content">
             <div class="modal-header-sticky">
-                <h3 style="border:none; margin:0; padding:0;">玩家狀態與面板</h3>
-                <div style="display:flex; gap: 10px;">
-                    <button class="btn" onclick="saveAsNewPresetFromModal()" style="background: #fff; color: var(--border-dark); padding: 6px 12px; font-size: 13px; border-width: 2px;">另存新配置</button>
-                    <button class="btn" onclick="saveStatusModal()" style="background: var(--accent-neon); padding: 6px 12px; font-size: 13px; border-width: 2px;">儲存並返回</button>
+                <h3 class="u-inline-005">玩家狀態與面板</h3>
+                <div class="u-inline-009">
+                    <button class="btn u-inline-010" onclick="saveAsNewPresetFromModal()">另存新配置</button>
+                    <button class="btn u-inline-011" onclick="saveStatusModal()">儲存並返回</button>
                 </div>
             </div>
             
-            ⁠<div style="flex: 1; overflow-y: auto; padding-right: 5px; min-height: 0;">⁠
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px; margin-top:5px;">永久事件標籤 (長期記憶 Flag)</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">達成特定成就時，AI會自動解鎖。你也可以手動增刪，強行給自己掛Buff/Debuff！</p>
-                <div id="ui-flags-container"></div>
-                <div id="flag-input-area">
-                    <input type="text" id="new-flag-input" placeholder="輸入你想植入的狀態 (如: 右臂骨折)...">
-                    <button class="btn" onclick="manualAddFlag()" style="padding:6px 12px; font-size:12px;">寫入</button>
+            <div class="u-inline-012">
+                <div class="status-tabs">
+                    <button class="status-tab-btn active" data-status-tab="state" onclick="switchStatusTab('state')">狀態</button>
+                    <button class="status-tab-btn" data-status-tab="log" onclick="switchStatusTab('log')">紀錄</button>
+                    <button class="status-tab-btn" data-status-tab="api" onclick="switchStatusTab('api')">API</button>
                 </div>
-                
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">玩家背包與道具</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">遊戲過程中獲得或消耗的物品會顯示於此。</p>
-                <div id="ui-items-container"></div>
-                
-                <p style="font-size:12px; color:var(--text-main); font-weight:900; margin-bottom:4px;">事件日誌 (AI 條列式記憶)</p>
-                <p style="font-size:11px; color:var(--text-sub); margin-bottom:8px; font-weight:800;">AI 每次行動都會更新此欄位。若 AI 遺忘了小細節，你可以直接手動修改並儲存。</p>
-                <textarea id="ui-adventure-log" oninput="autoResize(this)"></textarea>
-                
-                <div id="ui-stats-display" style="margin-top: 10px;"></div>
-            </div>
-        </div>
-    </div>
 
-        <div id="tutorial-modal" class="modal-overlay" style="display: none; align-items: center; justify-content: center;">
-        
-        <div id="tutorial-modal-content" style="max-width: 500px; width: 90%; max-height: 85vh; margin: auto; padding: 20px 20px 15px 20px; display: flex; flex-direction: column; overflow: hidden; border-radius: 12px;">
-            
-            <div class="modal-header-sticky" style="margin-bottom: 10px;">
-                <h3 style="border:none; margin:0; padding:0;">系統指南與遊玩須知</h3>
-            </div>
-            
-            <div style="flex: 1; overflow-y: auto; padding-right: 5px; margin-bottom: 15px; min-height: 0;">⁠
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">1. 核心啟動 (API Key)</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">請至 Google AI Studio 申請金鑰。系統完全在你的設備上運行，金鑰不會傳輸至外部。</p>
-                
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">2. 多重宇宙與情境切換</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">你可以建立多個情境分頁（如「艾歐澤亞」與「現實生活」）。切換分頁時，AI 會自動調整身份定位與環境法則。即使世界觀改變，你的核心人設與記憶依然持續累積。</p>
-                
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">3. 自由行動與擲骰判定</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">直接輸入對話或動作指令（如 <code>(嘗試說服對方)</code>）。若行動伴隨風險，請善用「擲骰」按鈕，系統將自動根據你的六圍屬性進行檢定。</p>
-                
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">4. 角色面板與事件記憶 (Flags)</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">透過「角色面板」查看道具與好感度。重大決策將轉化為「永久事件標籤」，影響後續世界的發展。</p>
-
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">5. 生存機制 (HP 與 SAN)</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">遊戲過程中沒有絕對的 Game Over，但遭遇攻擊或精神打擊時，會扣除生命 (HP) 或理智 (SAN) 值。若數值歸零，可能會觸發昏迷、崩潰或隊友救援等特殊劇情。</p>
-
-                <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">6. 存檔與命運重鑄</p>
-                <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; font-weight:600; line-height:1.5;">遊戲進度會自動儲存於獨立的紀錄檔中，不會蓋掉你大廳的初始劇本配置。若對開局的六圍屬性不滿意，在遊戲內面板中，每個存檔都有 3 次找「守墓人」重新洗點的機會。</p>
-
-                <div style="background: #f9f9f9; border: 2px dashed #ccc; border-radius: 8px; padding: 12px; margin-bottom: 5px;">
-                    <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">💡 提示：玩家即是神 (手動覆寫)</p>
-                    <p style="font-size:12px; color:var(--text-sub); margin-bottom:10px; font-weight:600; line-height:1.5;">如果 AI 忘記了某個設定，或是你想強行推進劇情，隨時可以打開「角色面板」，手動修改事件日誌、增刪背包道具，甚至直接改寫 NPC 的好感度與人設背景。</p>
+                <div id="status-page-state" class="status-page active">
+                    <p class="u-inline-013">狀態旗標 / Flags</p>
+                    <p class="u-inline-014">AI 會依據這些狀態銜接劇情、Buff/Debuff 與長期影響。</p>
+                    <div id="ui-flags-container"></div>
+                    <div id="flag-input-area">
+                        <input type="text" id="new-flag-input" placeholder="新增狀態或旗標...">
+                        <button class="btn u-inline-015" onclick="manualAddFlag()">加入</button>
+                    </div>
                     
-                    <p style="font-size:13px; color:var(--text-main); font-weight:900; margin-bottom:4px;">💡 提示：若感覺情境錯亂</p>
-                    <p style="font-size:12px; color:var(--text-sub); margin-bottom:0; font-weight:600; line-height:1.5;">如果 AI 混淆了空間設定，試著在「事件日誌」中手動補充當下的環境限制，或透過切換分頁重置對話上下文，這能幫助 AI 迅速找回當下劇本的焦點。</p>
+                    <p class="u-inline-016">玩家道具</p>
+                    <p class="u-inline-014">目前持有、失去或劇情產生的重要物品。</p>
+                    <div id="ui-items-container"></div>
+                    <div id="ui-stats-display"></div>
+                </div>
+
+                <div id="status-page-log" class="status-page">
+                    <p class="u-inline-016">冒險紀錄 / 長期記憶</p>
+                    <p class="u-inline-014">AI 會優先依據這裡、Flags 與角色狀態銜接長篇劇情。</p>
+                    <textarea id="ui-adventure-log" oninput="autoResize(this)"></textarea>
+                </div>
+
+                <div id="status-page-api" class="status-page">
+                    <p class="u-inline-016">API 使用追蹤</p>
+                    <p class="api-stat-note">只儲存在本機瀏覽器。匯出存檔時會一起保存，匯入時可恢復；清除瀏覽器資料或清除設備資料會刪除。</p>
+                    <div id="api-usage-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div id="tutorial-modal" class="modal-overlay">
+        
+        <div id="tutorial-modal-content">
+            
+            <div class="modal-header-sticky u-inline-017">
+                <h3 class="u-inline-005">系統指南與遊玩須知</h3>
+            </div>
+            
+            <div class="u-inline-018">⁠
+                <p class="u-inline-019">1. 核心啟動 (API Key)</p>
+                <p class="u-inline-020">請至 Google AI Studio 申請金鑰。系統完全在你的設備上運行，金鑰不會傳輸至外部。</p>
+                
+                <p class="u-inline-019">2. 多重宇宙與情境切換</p>
+                <p class="u-inline-020">你可以建立多個情境分頁（如「艾歐澤亞」與「現實生活」）。切換分頁時，AI 會自動調整身份定位與環境法則。即使世界觀改變，你的核心人設與記憶依然持續累積。</p>
+                
+                <p class="u-inline-019">3. 自由行動與擲骰判定</p>
+                <p class="u-inline-020">直接輸入對話或動作指令（如 <code>(嘗試說服對方)</code>）。若行動伴隨風險，請善用「擲骰」按鈕，系統將自動根據你的六圍屬性進行檢定。</p>
+                
+                <p class="u-inline-019">4. 角色面板與事件記憶 (Flags)</p>
+                <p class="u-inline-020">透過「角色面板」查看道具與好感度。重大決策將轉化為「永久事件標籤」，影響後續世界的發展。</p>
+
+                <p class="u-inline-019">5. 生存機制 (HP 與 SAN)</p>
+                <p class="u-inline-020">遊戲過程中沒有絕對的 Game Over，但遭遇攻擊或精神打擊時，會扣除生命 (HP) 或理智 (SAN) 值。若數值歸零，可能會觸發昏迷、崩潰或隊友救援等特殊劇情。</p>
+
+                <p class="u-inline-019">6. 存檔與命運重鑄</p>
+                <p class="u-inline-020">遊戲進度會自動儲存於獨立的紀錄檔中，不會蓋掉你大廳的初始劇本配置。若對開局的六圍屬性不滿意，在遊戲內面板中，每個存檔都有 3 次找「守墓人」重新洗點的機會。</p>
+
+                <div class="u-inline-021">
+                    <p class="u-inline-019">💡 提示：玩家即是神 (手動覆寫)</p>
+                    <p class="u-inline-022">如果 AI 忘記了某個設定，或是你想強行推進劇情，隨時可以打開「角色面板」，手動修改事件日誌、增刪背包道具，甚至直接改寫 NPC 的好感度與人設背景。</p>
+                    
+                    <p class="u-inline-019">💡 提示：若感覺情境錯亂</p>
+                    <p class="u-inline-023">如果 AI 混淆了空間設定，試著在「事件日誌」中手動補充當下的環境限制，或透過切換分頁重置對話上下文，這能幫助 AI 迅速找回當下劇本的焦點。</p>
                 </div>
             </div>
 
-            <div style="flex-shrink: 0; border-top: 1px solid #ddd; padding-top: 12px;">
-                <button class="btn" onclick="closeTutorialModal()" style="background: var(--border-dark); color: #fff; width: 100%; font-size: 14px; padding: 12px; font-weight: 900; letter-spacing: 1px;">我瞭解了</button>
+            <div class="u-inline-024">
+                <button class="btn u-inline-025" onclick="closeTutorialModal()">我瞭解了</button>
             </div>
             
         </div>
     </div>
 
-    <div id="setup-screen" style="display: flex; position: relative;">
+    <div id="setup-screen">
         <img id="setup-pic" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" title="點擊上傳首頁照片" onclick="document.getElementById('pic-input').click();">
-        <input type="file" id="pic-input" accept="image/*" style="display:none" onchange="loadPic(this)">
+        <input type="file" id="pic-input" accept="image/*" onchange="loadPic(this)" hidden class="hidden-file-input">
 
         <h2>TRPG模擬器 (測試)</h2>
-        <p style="color: var(--text-sub); text-align: center; font-size: 11px; margin-bottom: 25px; letter-spacing: 2px; font-weight: 800;">W H I S P E R</p>
+        <p class="u-inline-026">W H I S P E R</p>
         
+        <select id="api-provider" class="model-select" onchange="changeApiProvider(this.value)">
+            <option value="google">Google Gemini</option>
+            <option value="openrouter">OpenRouter</option>
+        </select>
         <input type="password" id="api-key" class="key-input" placeholder="請貼上你的 API Key">
         
-        <div style="display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin: 0 auto 15px auto;">
-            <button class="btn" id="verify-btn" onclick="fetchAvailableModels()" style="flex: 1; background: var(--border-dark); color: #fff;">驗證金鑰</button>
+        <div class="u-inline-027">
+            <button class="btn" id="verify-btn" onclick="fetchAvailableModels()">驗證金鑰</button>
         </div>
 
-        <p style="font-size: 11px; color: var(--text-main); text-align: left; font-weight: 800; margin-bottom: 15px; line-height: 1.6; background: #e2e2e2; padding: 12px; border-radius: 8px; border-left: 4px solid var(--accent-neon);">
+        <p class="u-inline-028">
             🔒 <b>隱私保證</b>：API Key、設定、照片與對話進度，均僅儲存於設備本地端。<br>
             ⚠️ <b>免責聲明</b>：本工具僅提供介面，請妥善保管 API Key 並留意使用額度。AI 生成內容屬隨機演算，不代表開發者立場。存檔依賴瀏覽器，清除快取將導致資料遺失。
         </p>
         
         <div id="model-selection-area">
-            <p style="color: var(--text-main); font-weight: 900; font-size: 13px; margin-bottom: 12px;">驗證成功。請選擇大腦核心：</p>
+            <p class="u-inline-029">驗證成功。請選擇大腦核心：</p>
             <select id="model-choice" class="model-select" onchange="syncModelSelection(this.value)"></select>
             
             <div class="action-buttons">
                 <button class="btn" onclick="openEditScenario()">管理劇本與創角</button>
-                <button class="btn" id="start-btn" onclick="openSaveMenu()" style="background: var(--border-dark); color: #fff;">進入存檔選單</button>
+                <button class="btn" id="start-btn" onclick="openSaveMenu()">進入存檔選單</button>
             </div>
             
-            <div style="text-align: center; margin-top: 25px;">
-                <button onclick="openTutorialModal()" style="background: transparent; border: none; color: var(--text-main); font-size: 13px; font-weight: 800; cursor: pointer; text-decoration: underline;">閱讀新手教學與系統指南</button>
+            <div class="u-inline-030">
+                <button onclick="openTutorialModal()" class="u-inline-031">閱讀新手教學與系統指南</button>
             </div>
             
-            <div style="text-align: center; margin-top: 35px;">
-                <button id="delete-key-btn" onclick="deleteAllData()" style="background: transparent; border: none; color: #ff4444; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: underline; display: none;">清除設備所有資料</button>
+            <div class="u-inline-032">
+                <button id="delete-key-btn" onclick="deleteAllData()">清除設備所有資料</button>
             </div>
         </div>
     </div>
@@ -487,35 +698,35 @@
     <div id="edit-scenario-screen">
         <h2>劇本與創角配置</h2>
         
-        <div style="width: 100%; display: flex; gap: 10px; margin-bottom: 15px; max-width: 550px;">
-            <select id="preset-selector" class="model-select" style="margin-bottom: 0; flex-grow: 1; text-align: left; padding-left: 10px; max-width: 100%;" onchange="loadPresetToForm(this.value)"></select>
-            <button class="btn" onclick="createNewPreset()" style="padding: 10px 15px; flex-shrink: 0; background: var(--border-dark); color: #fff;">新增</button>
+        <div class="u-inline-033">
+            <select id="preset-selector" class="model-select" onchange="loadPresetToForm(this.value)"></select>
+            <button class="btn u-inline-034" onclick="createNewPreset()">新增</button>
         </div>
 
         <div id="edit-scenario-container">
-            <div class="scenario-label" style="color: #c5a059; display: flex; justify-content: space-between; align-items: center;">
+            <div class="scenario-label u-inline-035">
                 <span>配置檔案名稱</span>
-                <span id="preset-lock-toggle" style="cursor:pointer; font-size: 16px; transition: transform 0.2s;" onclick="togglePresetLock()" title="點擊切換鎖定狀態">🔓</span>
+                <span id="preset-lock-toggle" onclick="togglePresetLock()" title="點擊切換鎖定狀態">🔓</span>
             </div>
             <input type="text" id="input-preset-name" class="scenario-input">
 
-            <div style="border: 2px solid var(--border-dark); border-radius: 8px; padding: 15px; background: #fff; margin-bottom: 10px;">
-                <h4 style="margin-bottom: 10px; font-size: 14px; color: #fff; background: var(--border-dark); padding: 4px 8px; border-radius: 4px; display: inline-block;">玩家自己設定</h4>
-                <div class="avatar-setup-area" style="justify-content: center;">
+            <div class="u-inline-036">
+                <h4 class="u-inline-037">玩家自己設定</h4>
+                <div class="avatar-setup-area u-inline-038">
                     <div class="avatar-box" onclick="document.getElementById('upload-player').click();">
                         <img id="preview-player" class="avatar-preview" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
                         <div class="avatar-label">點擊更換頭像</div>
-                        <input type="file" id="upload-player" accept="image/*" style="display:none" onchange="triggerCrop(this, 'player')">
+                        <input type="file" id="upload-player" accept="image/*" onchange="triggerCrop(this, 'player')" hidden class="hidden-file-input">
                     </div>
                 </div>
                 <div class="scenario-label">玩家名稱</div>
                 <input type="text" id="input-player-name" class="scenario-input">
                 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                    <div class="scenario-label" style="margin:0;">基礎六圍屬性</div>
+                <div class="u-inline-039">
+                    <div class="scenario-label u-inline-040">基礎六圍屬性</div>
                     <div id="stat-controls">
-                        <button class="btn" id="btn-roll-stats" onclick="rollPlayerStats()" style="padding:4px 8px; font-size:11px; background:var(--accent-neon); color:var(--border-dark);">🎲 隨機骰點 (4d6)</button>
-                        <button class="btn" id="btn-respec-stats" onclick="respecStats()" style="display:none; padding:4px 8px; font-size:11px; background:var(--border-dark); color:#fff; box-shadow: 2px 2px 0px rgba(0,0,0,0.2);">💀 找守墓人洗點</button>
+                        <button class="btn" id="btn-roll-stats" onclick="rollPlayerStats()">🎲 隨機骰點 (4d6)</button>
+                        <button class="btn" id="btn-respec-stats" onclick="respecStats()">💀 找守墓人洗點</button>
                     </div>
                 </div>
                 <div class="stat-grid">
@@ -527,10 +738,10 @@
                     <div class="stat-box"><span class="stat-label">CHA 魅力</span><input type="number" id="stat-cha" class="stat-input"></div>
                 </div>
 
-                 <details class="foldable-card" style="margin-top:15px; border:none; box-shadow:none; margin-bottom:0;">
-                    <summary style="border-radius:8px;">詳細人物設定</summary>
-                    <div class="foldable-content" style="padding: 10px 0 0 0;">
-                        <div class="anime-sheet" style="margin: 0; background:transparent; padding: 0; border: none;">
+                 <details class="foldable-card u-inline-041">
+                    <summary class="u-inline-042">詳細人物設定</summary>
+                    <div class="foldable-content u-inline-043">
+                        <div class="anime-sheet u-inline-044">
                             <div><label>年齡 / 身高 / 體型</label><input type="text" id="p-age"></div>
                             <div><label>說話習慣 / 語氣</label><input type="text" id="p-speech"></div>
                             <div><label>喜歡的事物</label><input type="text" id="p-likes"></div>
@@ -542,41 +753,41 @@
                 </details>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px;">
-                <h3 style="font-size:16px;">登場 NPC 列表</h3>
-                <button class="btn" onclick="addNpcBlock()" style="padding:6px 12px; font-size:12px; background:var(--accent-neon); color:var(--border-dark);">+ 新增 NPC</button>
+            <div class="u-inline-045">
+                <h3 class="u-inline-046">登場 NPC 列表</h3>
+                <button class="btn u-inline-047" onclick="addNpcBlock()">+ 新增 NPC</button>
             </div>
-            <div id="npc-list-container" style="margin-bottom: 15px;"></div>
+            <div id="npc-list-container"></div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-bottom: 2px solid var(--border-dark); padding-bottom: 10px;">
-                <h3 style="font-size:16px;">動態情境列表</h3>
-                <button class="btn" onclick="addScenarioBlock()" style="padding:6px 12px; font-size:12px; background:var(--border-dark); color:#fff;">+ 新增情境</button>
+            <div class="u-inline-045">
+                <h3 class="u-inline-046">動態情境列表</h3>
+                <button class="btn u-inline-048" onclick="addScenarioBlock()">+ 新增情境</button>
             </div>
             <div id="scenario-list-container"></div>
         </div>
         
-        <div class="action-buttons" style="width: 100%; margin-top: 15px;">
-            <button class="btn" onclick="deleteCurrentPreset()" style="border-color: #ff4444; color: #ff4444;">刪除配置</button>
+        <div class="action-buttons u-inline-049">
+            <button class="btn u-inline-050" onclick="deleteCurrentPreset()">刪除配置</button>
             <button class="btn" onclick="restoreDefaultPreset()">清空欄位</button>
         </div>
-        <div class="action-buttons" style="width: 100%; margin-top: 10px;">
-            <button class="btn" onclick="saveCurrentPreset()" style="background: var(--accent-neon);">儲存變更</button>
+        <div class="action-buttons u-inline-051">
+            <button class="btn u-inline-052" onclick="saveCurrentPreset()">儲存變更</button>
             <button class="btn" onclick="saveAsNewPreset()">另存新檔</button>
         </div>
-        <div class="action-buttons" style="width: 100%; margin-top: 10px; margin-bottom: 40px;">
-            <button class="btn" onclick="cancelEdit()" style="flex-grow: 1; background: var(--border-dark); color: #fff;">返回選單</button>
+        <div class="action-buttons u-inline-053">
+            <button class="btn u-inline-054" onclick="cancelEdit()">返回選單</button>
         </div>
     </div>
 
     <div id="save-menu-screen">
         <h2>選擇記憶紀錄</h2>
         <div id="save-list"></div>
-        <div class="action-buttons" style="margin-bottom: 40px;">
-            <button class="btn" onclick="createNewSave()" style="background: var(--accent-neon);">創建新紀錄</button>
+        <div class="action-buttons u-inline-055">
+            <button class="btn u-inline-052" onclick="createNewSave()">創建新紀錄</button>
             <button class="btn" onclick="exportSaves()">匯出</button>
             <button class="btn" onclick="document.getElementById('import-input').click()">匯入</button>
-            <input type="file" id="import-input" accept=".json" style="display:none" onchange="importSaves(this)">
-            <button class="btn" onclick="backToSetup()" style="width: 100%; background: var(--border-dark); color: #fff;">返回大廳</button>
+            <input type="file" id="import-input" accept=".json" onchange="importSaves(this)" hidden class="hidden-file-input">
+            <button class="btn u-inline-056" onclick="backToSetup()">返回大廳</button>
         </div>
     </div>
 
@@ -586,9 +797,9 @@
 
         <div id="status-bar">
             <div class="top-row">
-                <button class="btn" onclick="backToSaveMenu()" style="padding: 6px 12px; font-size: 12px;">離開</button>
-                <div style="font-size: 13px; font-weight: 900; color: var(--text-main); display:flex; gap:10px; align-items:center;">
-                    <span style="color:var(--text-sub); font-size:11px; margin-right:5px;">(隊友狀態請見面板)</span>
+                <button class="btn u-inline-057" onclick="backToSaveMenu()">離開</button>
+                <div class="u-inline-058">
+                    <span class="u-inline-059">(隊友狀態請見面板)</span>
                     <span>HP: <span id="ui-hp" class="red-accent">100</span></span>
                     <span>SAN: <span id="ui-san" class="purple-accent">100</span></span>
                 </div>
@@ -602,7 +813,7 @@
                     <option value="">核心切換</option>
                 </select>
             </div>
-            <span id="ui-tokens" style="display: none;">0</span>
+            <span id="ui-tokens">0</span>
         </div>
 
         <div id="dialogue-box"></div>
@@ -618,8 +829,10 @@
     
     <script>
         /* ======= 系統核心變數 ======= */
+        let apiProvider = "google";
         let apiKey = "";
         let selectedModel = "";
+        const MAX_RECENT_CHAT_LINES = 40;
         
         let currentHp = 100;
         let currentSan = 100;
@@ -634,6 +847,8 @@
         let currentSaveId = null; 
         let savesData = {}; 
         let pendingMetaPrompt = ""; 
+        let activeStatusTab = "state";
+        let apiUsageStats = loadApiUsageStats(); 
 
         const emptyAvatar = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
@@ -688,11 +903,16 @@
 
         window.onload = () => {
             try {
-                const savedKey = localStorage.getItem('sanko_api_key');
+                apiProvider = localStorage.getItem('sanko_api_provider') || 'google';
+                const providerSelect = document.getElementById('api-provider');
+                if (providerSelect) providerSelect.value = apiProvider;
+
+                const savedKey = getStoredApiKey(apiProvider);
                 if (savedKey) { 
                     document.getElementById('api-key').value = savedKey; 
                     document.getElementById('delete-key-btn').style.display = 'inline-block';
                 }
+                selectedModel = localStorage.getItem(getModelStorageKey(apiProvider)) || '';
                 
                 const savedPic = localStorage.getItem('sanko_home_pic');
                 if (savedPic) { document.getElementById('setup-pic').src = savedPic; }
@@ -891,10 +1111,133 @@
         }
         function closeCropModal() { document.getElementById('crop-modal').style.display = 'none'; }
 
+
+        function getTodayKey() { return new Date().toISOString().slice(0, 10); }
+        function getMonthKey() { return new Date().toISOString().slice(0, 7); }
+        function loadApiUsageStats() {
+            try {
+                return JSON.parse(localStorage.getItem('sanko_api_usage_stats_v1')) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+        function saveApiUsageStats() {
+            localStorage.setItem('sanko_api_usage_stats_v1', JSON.stringify(apiUsageStats));
+        }
+        function ensureApiUsageBucket() {
+            const today = getTodayKey();
+            const month = getMonthKey();
+            if (!apiUsageStats.totals) apiUsageStats.totals = { requests: 0, repairRequests: 0 };
+            if (!apiUsageStats.days) apiUsageStats.days = {};
+            if (!apiUsageStats.months) apiUsageStats.months = {};
+            if (!apiUsageStats.days[today]) apiUsageStats.days[today] = { requests: 0, repairRequests: 0 };
+            if (!apiUsageStats.months[month]) apiUsageStats.months[month] = { requests: 0, repairRequests: 0 };
+            return { today, month };
+        }
+        function trackApiRequest(kind = "normal") {
+            const { today, month } = ensureApiUsageBucket();
+            apiUsageStats.totals.requests += 1;
+            apiUsageStats.days[today].requests += 1;
+            apiUsageStats.months[month].requests += 1;
+            if (kind === "repair") {
+                apiUsageStats.totals.repairRequests += 1;
+                apiUsageStats.days[today].repairRequests += 1;
+                apiUsageStats.months[month].repairRequests += 1;
+            }
+            apiUsageStats.lastUsedAt = new Date().toLocaleString();
+            apiUsageStats.lastProvider = apiProvider;
+            apiUsageStats.lastModel = selectedModel;
+            saveApiUsageStats();
+            renderApiUsageStats();
+        }
+        function renderApiUsageStats() {
+            const target = document.getElementById('api-usage-display');
+            if (!target) return;
+            const { today, month } = ensureApiUsageBucket();
+            const day = apiUsageStats.days[today];
+            const mon = apiUsageStats.months[month];
+            const total = apiUsageStats.totals;
+            const providerText = apiProvider === 'openrouter' ? 'OpenRouter' : 'Google Gemini';
+            target.innerHTML = `
+                <div class="api-stat-grid">
+                    <div class="api-stat-box"><div class="api-stat-label">今日呼叫</div><div class="api-stat-value">${day.requests}</div></div>
+                    <div class="api-stat-box"><div class="api-stat-label">本月呼叫</div><div class="api-stat-value">${mon.requests}</div></div>
+                    <div class="api-stat-box"><div class="api-stat-label">JSON 修復</div><div class="api-stat-value">${mon.repairRequests}</div></div>
+                    <div class="api-stat-box"><div class="api-stat-label">總呼叫</div><div class="api-stat-value">${total.requests}</div></div>
+                </div>
+                <p class="api-stat-note">目前供應商：${providerText}<br>目前模型：${selectedModel || '尚未選擇'}<br>最後使用：${apiUsageStats.lastUsedAt || '尚未使用'}</p>
+                <div class="api-stat-actions">
+                    <button class="btn u-inline-057" onclick="resetApiUsageStats()">重設統計</button>
+                </div>
+            `;
+        }
+        function resetApiUsageStats() {
+            if (!confirm("確定要清除本機 API 使用統計嗎？遊戲存檔不會被刪除。")) return;
+            apiUsageStats = {};
+            saveApiUsageStats();
+            renderApiUsageStats();
+        }
+        function switchStatusTab(tabName) {
+            activeStatusTab = tabName || "state";
+            document.querySelectorAll('.status-tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.statusTab === activeStatusTab));
+            document.querySelectorAll('.status-page').forEach(page => page.classList.toggle('active', page.id === `status-page-${activeStatusTab}`));
+            if (activeStatusTab === "api") renderApiUsageStats();
+            if (activeStatusTab === "log") autoResize(document.getElementById('ui-adventure-log'));
+        }
+
+        function getKeyStorageKey(provider = apiProvider) { return `sanko_api_key_${provider}`; }
+        function getModelStorageKey(provider = apiProvider) { return `sanko_selected_model_${provider}`; }
+        function getStoredApiKey(provider = apiProvider) {
+            return localStorage.getItem(getKeyStorageKey(provider)) || (provider === 'google' ? localStorage.getItem('sanko_api_key') : '');
+        }
+
+        function changeApiProvider(provider) {
+            apiProvider = provider || 'google';
+            localStorage.setItem('sanko_api_provider', apiProvider);
+            apiKey = getStoredApiKey(apiProvider);
+            selectedModel = localStorage.getItem(getModelStorageKey(apiProvider)) || '';
+
+            document.getElementById('api-key').value = apiKey || '';
+            document.getElementById('model-choice').innerHTML = '';
+            document.getElementById('game-model-choice').innerHTML = '';
+            document.getElementById('model-selection-area').style.display = selectedModel ? 'block' : 'none';
+            document.getElementById('verify-btn').style.display = 'inline-block';
+            document.getElementById('verify-btn').disabled = false;
+            document.getElementById('verify-btn').innerText = '驗證金鑰';
+            document.getElementById('delete-key-btn').style.display = apiKey ? 'inline-block' : 'none';
+        }
+
         function syncModelSelection(modelName) {
             if(!modelName) return; selectedModel = modelName;
+            localStorage.setItem(getModelStorageKey(apiProvider), modelName);
             document.getElementById('model-choice').value = modelName; document.getElementById('game-model-choice').value = modelName;
         }
+
+        function getRecentChatText(pageIndex = currentChatPageIndex) {
+            const log = chatScripts[pageIndex] || [];
+            if (log.length <= MAX_RECENT_CHAT_LINES) return log.join('\n\n');
+            const omitted = log.length - MAX_RECENT_CHAT_LINES;
+            return `（系統摘要提示：較早的 ${omitted} 則對話已省略，請以「先前的事件日誌」、Flags、角色狀態作為長期記憶。）\n\n` + log.slice(-MAX_RECENT_CHAT_LINES).join('\n\n');
+        }
+
+        function scoreModelForTRPG(model) {
+            const id = (model.id || '').toLowerCase();
+            const name = (model.name || '').toLowerCase();
+            const haystack = `${id} ${name}`;
+            let score = 0;
+            if (haystack.includes('gpt-4.1') || haystack.includes('gpt-4o') || haystack.includes('o4')) score += 120;
+            if (haystack.includes('claude') && (haystack.includes('sonnet') || haystack.includes('opus'))) score += 110;
+            if (haystack.includes('gemini') && (haystack.includes('pro') || haystack.includes('flash'))) score += 100;
+            if (haystack.includes('mistral') || haystack.includes('qwen')) score += 35;
+            if (haystack.includes('free') || haystack.includes('preview') || haystack.includes('experimental')) score -= 20;
+            if (model.context_length) score += Math.min(40, Math.floor(model.context_length / 8000));
+            return score;
+        }
+
+        function sortModelsForTRPG(models) {
+            return [...models].sort((a, b) => scoreModelForTRPG(b) - scoreModelForTRPG(a));
+        }
+
 
         function openEditScenario() {
             document.getElementById('setup-screen').style.display = 'none'; 
@@ -937,29 +1280,29 @@
                 if (index === forceOpenNpcIndex) details.open = true; 
                 
                 details.innerHTML = `
-                    <summary>NPC: <span id="npc-title-${index}" style="margin-left:8px; flex-grow:1; text-align:left;">${npc.name || '新角色'}</span></summary>
+                    <summary>NPC: <span id="npc-title-${index}">${npc.name || '新角色'}</span></summary>
                     <div class="foldable-content">
                         <button class="delete-scen-btn" onclick="removeNpcBlock(${index})">刪除</button>
-                        <div class="avatar-setup-area" style="margin-bottom:10px; justify-content:center; border:none; background:transparent;">
+                        <div class="avatar-setup-area u-inline-060">
                             <div class="avatar-box" onclick="document.getElementById('upload-npc-${index}').click();">
                                 <img id="preview-npc-${index}" class="avatar-preview" src="${npc.avatar}">
                                 <div class="avatar-label">點擊更換頭像</div>
-                                <input type="file" id="upload-npc-${index}" accept="image/*" style="display:none" onchange="triggerCrop(this, 'npc-${index}')">
+                                <input type="file" id="upload-npc-${index}" accept="image/*" onchange="triggerCrop(this, 'npc-${index}')" hidden class="hidden-file-input">
                             </div>
                         </div>
                         
-                        <div style="display:flex; gap:10px;">
-                            <div style="flex:1;">
+                        <div class="u-inline-061">
+                            <div class="u-inline-062">
                                 <div class="scenario-label">NPC 名稱</div>
                                 <input type="text" class="scenario-input" id="npc-name-${index}" value="${npc.name}" oninput="document.getElementById('npc-title-${index}').innerText = this.value || '新角色';">
                             </div>
-                            <div style="width:100px;">
+                            <div class="u-inline-063">
                                 <div class="scenario-label">開局好感</div>
-                                <input type="number" class="scenario-input" id="npc-aff-${index}" value="${npc.affection !== undefined ? npc.affection : 0}" style="text-align:center; padding: 14px 5px;">
+                                <input type="number" class="scenario-input" id="npc-aff-${index}" value="${npc.affection !== undefined ? npc.affection : 0}">
                             </div>
                         </div>
 
-                        <div class="scenario-label" style="border-bottom:1px solid #ccc; padding-bottom:5px;">詳細設定</div>
+                        <div class="scenario-label u-inline-064">詳細設定</div>
                         <div class="anime-sheet">
                             <div><label>年齡 / 身高 / 體型</label><input type="text" id="npc-age-${index}" value="${npc.details?.age || ''}"></div>
                             <div><label>說話習慣 / 語氣</label><input type="text" id="npc-speech-${index}" value="${npc.details?.speech || ''}"></div>
@@ -986,7 +1329,7 @@
                 if (index === forceOpenScenIndex) details.open = true;
 
                 details.innerHTML = `
-                    <summary>情境: <span id="scen-title-${index}" style="margin-left:8px; flex-grow:1; text-align:left;">${scen.name || '未命名'}</span></summary>
+                    <summary>情境: <span id="scen-title-${index}">${scen.name || '未命名'}</span></summary>
                     <div class="foldable-content">
                         <button class="delete-scen-btn" onclick="removeScenarioBlock(${index})">刪除</button>
                         <div class="scenario-label">情境名稱</div>
@@ -1384,18 +1727,18 @@
                         let rCount = savesData[currentSaveId].respecCount !== undefined ? savesData[currentSaveId].respecCount : 3;
             // 改為單純的骷髏頭按鈕，長按或游標懸停會顯示剩餘次數
             let respecBtnHtml = rCount > 0 
-                ? `<button onclick="modalRespecStats()" title="找守墓人洗點 (剩餘 ${rCount} 次)" style="background: var(--border-dark); color: #fff; padding: 4px 10px; font-size: 15px; border-radius: 8px; border:none; cursor:pointer; box-shadow: 2px 2px 0px rgba(0,0,0,0.2); transition: all 0.2s;">💀</button>` 
-                : `<span title="洗點次數已用盡" style="font-size: 18px; filter: grayscale(100%); opacity: 0.4; cursor: not-allowed;">💀</span>`;
+                ? `<button onclick="modalRespecStats()" title="找守墓人洗點 (剩餘 ${rCount} 次)" class="u-inline-065">💀</button>` 
+                : `<span title="洗點次數已用盡" class="u-inline-066">💀</span>`;
 
                         // Player Section 完美還原圖3排版
             let statsHtml = `
-            <div style="background: #e6e6e6; border-radius: 8px; padding: 18px; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:12px; padding-bottom: 12px; border-bottom: 1px dashed #ccc;">
-                    <span style="font-size: 16px; font-weight: 900; color: var(--text-main); letter-spacing: 1px; word-break: break-all; flex: 1;">玩家：${currentScenario.playerName}</span>
-                    <span style="flex-shrink: 0;">${respecBtnHtml}</span>
+            <div class="u-inline-067">
+                <div class="u-inline-068">
+                    <span class="u-inline-069">玩家：${currentScenario.playerName}</span>
+                    <span class="u-inline-070">${respecBtnHtml}</span>
                 </div>
 
-                <div style="font-size:11px; font-weight: 400; color: var(--text-main); display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; letter-spacing: 0.5px;">
+                <div class="u-inline-071">
                     <span>[力量STR: ${pStats.str}]</span>
                     <span>[敏捷DEX: ${pStats.dex}]</span>
                     <span>[體質CON: ${pStats.con}]</span>
@@ -1405,13 +1748,13 @@
                 </div>
             </div>
             
-            <details class="dark-card" style="margin-top:10px;">
+            <details class="dark-card u-inline-072">
                 <summary>
                     <div class="summary-left">
                         <span class="summary-name">編輯玩家細節設定</span>
                     </div>
                 </summary>
-                <div class="dark-card-content anime-sheet" style="padding:15px; margin:0; border:none; background:transparent;">
+                <div class="dark-card-content anime-sheet u-inline-073">
                     <div><label>年齡 / 身高 / 體型</label><input type="text" id="edit-p-age" value="${pDet.age}"></div>
                     <div><label>說話習慣 / 語氣</label><input type="text" id="edit-p-speech" value="${pDet.speech}"></div>
                     <div><label>喜歡的事物</label><input type="text" id="edit-p-likes" value="${pDet.likes}"></div>
@@ -1441,10 +1784,10 @@
                         </div>
                     </summary>
                     <div class="dark-card-content">
-                        <div style="text-align: right; margin-bottom: 5px;">
+                        <div class="u-inline-074">
                             <button class="delete-btn-red" onclick="modalDeleteNpc(${idx}); event.stopPropagation();">刪除</button>
                         </div>
-                        <div class="anime-sheet" style="padding:0; margin:0; border:none; background:transparent;">
+                        <div class="anime-sheet u-inline-075">
                             <div class="full"><label>角色名稱</label><input type="text" id="edit-n-name-${idx}" value="${n.name}" oninput="this.closest('details').querySelector('.summary-name').innerText = this.value || '未命名';"></div>
                             <div><label>年齡 / 身高 / 體型</label><input type="text" id="edit-n-age-${idx}" value="${nDet.age}"></div>
                             <div><label>說話習慣 / 語氣</label><input type="text" id="edit-n-speech-${idx}" value="${nDet.speech}"></div>
@@ -1475,22 +1818,23 @@
                         </div>
                     </summary>
                     <div class="dark-card-content">
-                        <div style="text-align: right; margin-bottom: 5px;">
+                        <div class="u-inline-074">
                             <button class="delete-btn-red" onclick="modalDeleteScenario(${idx}); event.stopPropagation();">刪除</button>
                         </div>
                         <div class="scenario-label">情境名稱</div>
-                        <input type="text" id="edit-scen-name-${idx}" class="scenario-input" style="margin-bottom:10px;" value="${sc.name}" oninput="this.closest('details').querySelector('.summary-name').innerText = '情境：' + (this.value || '未命名');">
+                        <input type="text" id="edit-scen-name-${idx}" class="scenario-input" value="${sc.name}" oninput="this.closest('details').querySelector('.summary-name').innerText = '情境：' + (this.value || '未命名');">
                         <div class="scenario-label">環境法則與世界觀</div>
-                        <textarea id="edit-scen-lore-${idx}" class="scenario-input" style="margin-bottom:10px;" oninput="autoResize(this)">${sc.lore}</textarea>
+                        <textarea id="edit-scen-lore-${idx}" class="scenario-input" oninput="autoResize(this)">${sc.lore}</textarea>
                         <div class="scenario-label">NPC 們在此的身分/狀態</div>
-                        <textarea id="edit-scen-npcs-${idx}" class="scenario-input" style="margin-bottom:10px;" oninput="autoResize(this)">${sc.npcRoles || ''}</textarea>
+                        <textarea id="edit-scen-npcs-${idx}" class="scenario-input" oninput="autoResize(this)">${sc.npcRoles || ''}</textarea>
                     </div>
                 </details>`;
             });
 
             document.getElementById('ui-stats-display').innerHTML = statsHtml;
             
-            renderFlags(); renderItems(); document.getElementById('status-modal').style.display = 'block'; 
+            renderFlags(); renderItems(); renderApiUsageStats(); document.getElementById('status-modal').style.display = 'block'; 
+            switchStatusTab(activeStatusTab);
             initTextareas();
         }
 
@@ -1534,7 +1878,7 @@
 
         function renderFlags() {
             const container = document.getElementById('ui-flags-container'); container.innerHTML = '';
-            if(currentFlags.length === 0) { container.innerHTML = '<span style="font-size:12px; color:#888;">尚未解鎖任何標籤...</span>'; return; }
+            if(currentFlags.length === 0) { container.innerHTML = '<span class="u-inline-076">尚未解鎖任何標籤...</span>'; return; }
             currentFlags.forEach((flag, index) => {
                 let cleanFlag = flag.replace(/^狀態[：:]\s*/, '');
                 currentFlags[index] = cleanFlag; 
@@ -1553,7 +1897,7 @@
 
         function renderItems() {
             const container = document.getElementById('ui-items-container'); container.innerHTML = '';
-            if(currentItems.length === 0) { container.innerHTML = '<span style="font-size:12px; color:#888;">背包空空如也...</span>'; return; }
+            if(currentItems.length === 0) { container.innerHTML = '<span class="u-inline-076">背包空空如也...</span>'; return; }
             currentItems.forEach((item, index) => {
                 const tag = document.createElement('div'); tag.className = 'item-tag'; tag.innerText = item; container.appendChild(tag);
             });
@@ -1570,7 +1914,7 @@
 
         function renderSaveList() {
             const listDiv = document.getElementById('save-list'); listDiv.innerHTML = ''; const saveKeys = Object.keys(savesData).sort((a, b) => b - a);
-            if (saveKeys.length === 0) { listDiv.innerHTML = '<p style="text-align:center; color:var(--text-sub); font-size:13px; font-weight:bold;">目前沒有任何存檔紀錄。</p>'; return; }
+            if (saveKeys.length === 0) { listDiv.innerHTML = '<p class="u-inline-077">目前沒有任何存檔紀錄。</p>'; return; }
             saveKeys.forEach(id => {
                 const saveData = savesData[id]; 
                 const pName = saveData.scenario ? saveData.scenario.playerName : "玩家";
@@ -1579,7 +1923,7 @@
                 else if(saveData.scenario && saveData.scenario.targetName) tName = saveData.scenario.targetName;
 
                 const slotDiv = document.createElement('div'); slotDiv.className = 'save-slot';
-                slotDiv.innerHTML = `<button class="delete-save-btn" onclick="event.stopPropagation(); deleteSave('${id}')">刪除</button><div class="save-title">${saveData.title}</div><div class="save-info">代表NPC: ${tName} | 玩家: ${pName}</div><div class="save-info" style="margin-top:5px;">最後遊玩：${saveData.date}</div>`;
+                slotDiv.innerHTML = `<button class="delete-save-btn" onclick="event.stopPropagation(); deleteSave('${id}')">刪除</button><div class="save-title">${saveData.title}</div><div class="save-info">代表NPC: ${tName} | 玩家: ${pName}</div><div class="save-info u-inline-078">最後遊玩：${saveData.date}</div>`;
                 slotDiv.onclick = () => loadGame(id); listDiv.appendChild(slotDiv);
             });
         }
@@ -1608,14 +1952,26 @@
 
         function exportSaves() {
             if (Object.keys(savesData).length === 0) { alert("目前沒有存檔可以匯出。"); return; }
-            const dataStr = JSON.stringify(savesData); const blob = new Blob([dataStr], { type: "application/json" }); const url = URL.createObjectURL(blob);
+            const exportPayload = { version: 2, saves: savesData, apiUsageStats };
+            const dataStr = JSON.stringify(exportPayload); const blob = new Blob([dataStr], { type: "application/json" }); const url = URL.createObjectURL(blob);
             const a = document.createElement('a'); a.href = url; a.download = `AVG_Engine_Saves_${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(url);
         }
 
         function importSaves(input) {
             if (!input.files || !input.files[0]) return; const file = input.files[0]; const reader = new FileReader();
             reader.onload = (e) => {
-                try { const importedData = JSON.parse(e.target.result); Object.assign(savesData, importedData); localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData)); renderSaveList(); alert("存檔匯入成功！"); }
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    const importedSaves = importedData.saves || importedData;
+                    Object.assign(savesData, importedSaves);
+                    if (importedData.apiUsageStats) {
+                        apiUsageStats = importedData.apiUsageStats;
+                        saveApiUsageStats();
+                    }
+                    localStorage.setItem('sanko_saves_v8', JSON.stringify(savesData));
+                    renderSaveList();
+                    alert("匯入完成。");
+                }
                 catch (err) { alert("匯入失敗：檔案格式不正確或已損毀。"); } input.value = ""; 
             }; reader.readAsText(file);
         }
@@ -1755,35 +2111,82 @@ ${flagsText}
 `;
         }
 
+        function populateModelSelects(models, preferredModel = "") {
+            const select = document.getElementById('model-choice');
+            const gameSelect = document.getElementById('game-model-choice');
+            select.innerHTML = '';
+            gameSelect.innerHTML = '';
+
+            const sortedModels = sortModelsForTRPG(models);
+            sortedModels.forEach(model => {
+                const recommended = scoreModelForTRPG(model) >= 100 ? '★ ' : '';
+                const opt = document.createElement('option');
+                opt.value = model.id;
+                opt.textContent = recommended + (model.name || model.id);
+                const optGame = document.createElement('option');
+                optGame.value = model.id;
+                optGame.textContent = recommended + (model.name || model.id);
+                select.appendChild(opt);
+                gameSelect.appendChild(optGame);
+            });
+
+            const fallback = sortedModels[0] ? sortedModels[0].id : "";
+            const nextModel = sortedModels.some(model => model.id === preferredModel) ? preferredModel : fallback;
+            if (nextModel) syncModelSelection(nextModel);
+        }
+
+        async function fetchGoogleModels() {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message || "Google API 金鑰驗證失敗。");
+
+            const validModels = data.models
+                .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && !m.name.includes("-tts") && !m.name.includes("-vision"))
+                .map(m => ({ id: m.name, name: m.displayName || m.name, context_length: m.inputTokenLimit || 0 }));
+            if(validModels.length === 0) throw new Error("找不到可用的文字生成模型。");
+            return validModels;
+        }
+
+        async function fetchOpenRouterModels() {
+            const res = await fetch('https://openrouter.ai/api/v1/models?output_modalities=text&sort=most-popular', {
+                headers: { 'Authorization': `Bearer ${apiKey}` }
+            });
+            const data = await res.json();
+            if (!res.ok || data.error) throw new Error(data.error?.message || "OpenRouter API 金鑰驗證失敗。");
+
+            const validModels = (data.data || [])
+                .filter(m => !m.architecture || !m.architecture.output_modalities || m.architecture.output_modalities.includes('text'))
+                .map(m => ({
+                    id: m.id,
+                    name: `${m.name || m.id}${m.context_length ? ` (${Math.round(m.context_length / 1000)}k)` : ''}`,
+                    context_length: m.context_length || 0
+                }));
+            if(validModels.length === 0) throw new Error("找不到可用的 OpenRouter 文字模型。");
+            return validModels;
+        }
+
         async function fetchAvailableModels() {
+            apiProvider = document.getElementById('api-provider')?.value || 'google';
             apiKey = document.getElementById('api-key').value.trim();
             if(!apiKey) { alert("請貼上你的 API Key！"); return; }
             const verifyBtn = document.getElementById('verify-btn');
             verifyBtn.innerText = "驗證中..."; verifyBtn.disabled = true;
 
             try {
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
-                const data = await res.json();
-                if (data.error) throw new Error(data.error.message || "無效的金鑰或網路錯誤。");
-                localStorage.setItem('sanko_api_key', apiKey);
-                document.getElementById('delete-key-btn').style.display = 'inline-block';
-                const select = document.getElementById('model-choice'); const gameSelect = document.getElementById('game-model-choice');
-                select.innerHTML = ''; gameSelect.innerHTML = ''; 
-                
-                const validModels = data.models.filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && !m.name.includes("-tts") && !m.name.includes("-vision"));
-                if(validModels.length === 0) throw new Error("無可用純文字模型。");
-                
-                validModels.forEach(m => {
-                    const opt = document.createElement('option'); opt.value = m.name; opt.textContent = m.displayName || m.name;
-                    const optGame = document.createElement('option'); optGame.value = m.name; optGame.textContent = m.displayName || m.name;
-                    if (m.name.includes('gemini-3.5-flash') || (m.name.includes('gemini-1.5-flash') && !m.name.includes('8b'))) { opt.selected = true; optGame.selected = true; }
-                    select.appendChild(opt); gameSelect.appendChild(optGame);
-                });
+                localStorage.setItem('sanko_api_provider', apiProvider);
+                localStorage.setItem(getKeyStorageKey(apiProvider), apiKey);
+                if (apiProvider === 'google') localStorage.setItem('sanko_api_key', apiKey);
 
-                selectedModel = select.value; document.getElementById('model-selection-area').style.display = 'block'; verifyBtn.style.display = 'none';
+                const preferredModel = localStorage.getItem(getModelStorageKey(apiProvider)) || selectedModel || '';
+                const models = apiProvider === 'openrouter' ? await fetchOpenRouterModels() : await fetchGoogleModels();
+                populateModelSelects(models, preferredModel);
+
+                document.getElementById('delete-key-btn').style.display = 'inline-block';
+                document.getElementById('model-selection-area').style.display = 'block';
+                verifyBtn.style.display = 'none';
             } catch (error) {
-                alert("QC 未通過：\n\n" + error.message);
-                const verifyBtn = document.getElementById('verify-btn'); verifyBtn.innerText = "驗證金鑰"; verifyBtn.disabled = false;
+                alert("API 驗證失敗：\n\n" + error.message);
+                verifyBtn.innerText = "驗證金鑰"; verifyBtn.disabled = false;
             }
         }
 
@@ -1966,40 +2369,95 @@ ${flagsText}
             msgBox.appendChild(alertDiv); msgBox.scrollTop = msgBox.scrollHeight;
         }
 
-        async function callAI_JSON(extraPrompt = "", isOpening = false) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${apiKey}`;
+        function buildAIRequest(fullPrompt) {
+            if (apiProvider === 'openrouter') {
+                return {
+                    url: 'https://openrouter.ai/api/v1/chat/completions',
+                    options: {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${apiKey}`,
+                            'Content-Type': 'application/json',
+                            'X-Title': 'TRPG Whisper'
+                        },
+                        body: JSON.stringify({
+                            model: selectedModel,
+                            messages: [{ role: 'user', content: fullPrompt }],
+                            response_format: { type: 'json_object' },
+                            temperature: 0.8
+                        })
+                    }
+                };
+            }
+
             const safetySettings = [{ category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }];
-            const fullPrompt = `${getSystemInstruction()}\n\n【目前的劇情與對話流水帳】\n${chatScripts[currentChatPageIndex].join('\n\n')}\n\n${extraPrompt}`;
-            const requestBody = { contents: [{ role: "user", parts: [{ text: fullPrompt }] }], safetySettings: safetySettings, generationConfig: { responseMimeType: "application/json" } };
+            return {
+                url: `https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${apiKey}`,
+                options: {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: fullPrompt }] }], safetySettings: safetySettings, generationConfig: { responseMimeType: "application/json" } })
+                }
+            };
+        }
+
+        function getAIResponseText(data) {
+            if (apiProvider === 'openrouter') {
+                return data.choices?.[0]?.message?.content || data.choices?.[0]?.text || "";
+            }
+            if (data.candidates?.[0]?.finishReason === 'SAFETY') {
+                throw new Error("AI 回覆被安全系統阻擋，請調整輸入內容後再試。");
+            }
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        }
+
+        async function requestAIText(fullPrompt) {
+            const request = buildAIRequest(fullPrompt);
+            const response = await fetch(request.url, request.options);
+            trackApiRequest(fullPrompt.includes('?閬耨甇????') ? 'repair' : 'normal');
+            const data = await response.json();
+            if (!response.ok || data.error) {
+                const errMsg = data.error ? (data.error.message || JSON.stringify(data.error)) : "未知錯誤";
+                if (response.status === 429 || errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('rate limit')) {
+                    throw new Error("API 額度或頻率限制已達上限，請稍後再試。");
+                }
+                throw new Error(`API 錯誤：${errMsg}`);
+            }
+            if (apiProvider === 'google' && (!data.candidates || data.candidates.length === 0)) {
+                throw new Error("AI 沒有回傳候選內容，可能是模型或安全設定拒絕。");
+            }
+            const text = getAIResponseText(data);
+            if (!text) throw new Error("AI 這次回傳了空白內容，可能是 API 暫時異常，請重新發送一次。");
+            return text;
+        }
+
+        function extractJsonText(rawText) {
+            const jsonMatch = rawText.match(new RegExp("\\{[\\s\\S]*\\}"));
+            if(jsonMatch) return jsonMatch[0];
+            return rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+        }
+
+        async function parseAIJsonWithRepair(rawText, fullPrompt) {
+            try {
+                return JSON.parse(extractJsonText(rawText));
+            } catch (firstError) {
+                const repairPrompt = `請把以下 AI 回覆修正成「合法 JSON 物件」。不要新增解釋，不要使用 Markdown，只輸出 JSON。必須保留這些欄位名稱：hp_change, san_change, npc_love_change, new_items, lost_items, new_flags, npc_persona_updates, player_persona_update, adventure_log, narrative, dialogues, options。\n\n原始任務摘要：\n${fullPrompt.slice(0, 3500)}\n\n需要修正的回覆：\n${rawText.slice(0, 12000)}`;
+                const repairedText = await requestAIText(repairPrompt);
+                try {
+                    return JSON.parse(extractJsonText(repairedText));
+                } catch (secondError) {
+                    throw new Error(`AI 回傳的 JSON 格式不正確，已自動修復一次仍失敗：${secondError.message}`);
+                }
+            }
+        }
+
+        async function callAI_JSON(extraPrompt = "", isOpening = false) {
+            const recentChatText = getRecentChatText(currentChatPageIndex);
+            const fullPrompt = `${getSystemInstruction()}\n\n目前對話紀錄（僅保留最近 ${MAX_RECENT_CHAT_LINES} 則，長期記憶請以事件日誌與 Flags 為準）：\n${recentChatText}\n\n${extraPrompt}`;
 
             try {
-                const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
-                const data = await response.json();
-                if (!response.ok || data.error) {
-                    const errMsg = data.error ? data.error.message : "未知錯誤";
-                    if (response.status === 429 || errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('rate limit')) { throw new Error("【點擊發送太快囉】\nAPI 限制每分鐘大約只能連續對話 15 次。\n請等待大約 10 秒後再次點擊發送即可！\n(系統已幫你保留剛才的輸入)"); }
-                    throw new Error(`伺服器錯誤: ${errMsg}`);
-                }
-                
-                if (!data.candidates || data.candidates.length === 0) { throw new Error(`伺服器拒絕回覆。可能觸發了API限制，或模型無法理解輸入。`); }
-
-                if (data.candidates[0].finishReason === 'SAFETY') {
-                    throw new Error("【系統警告：安全審查】\nAI 判定剛剛的行動太過火（涉及血腥/暴力/違規），拒絕回覆！\n請稍微修改用詞後再試一次喔。");
-                }
-
-                let rawText = data.candidates[0].content?.parts?.[0]?.text; 
-                if (!rawText) {
-                    throw new Error("AI 這次回傳了空白內容，可能是 API 暫時異常，請重新發送一次。");
-                }
-                
-                const jsonMatch = rawText.match(new RegExp("\\{[\\s\\S]*\\}"));
-                if(jsonMatch) {
-                    rawText = jsonMatch[0];
-                } else {
-                    rawText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
-                }
-                
-                const parsedData = JSON.parse(rawText);
+                const rawText = await requestAIText(fullPrompt);
+                const parsedData = await parseAIJsonWithRepair(rawText, fullPrompt);
                 
                 if(parsedData.npc_love_change && typeof parsedData.npc_love_change === 'object') {
                     for (const npcName in parsedData.npc_love_change) {
