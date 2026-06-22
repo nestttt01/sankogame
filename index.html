@@ -351,8 +351,8 @@
         
         #loading { display: none; color: var(--text-sub); font-style: italic; font-weight: bold; font-size: 12px; text-align: center; padding: 10px 0; animation: pulse 1.5s infinite; }
 
-        #crop-container { width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--accent-neon); overflow: hidden; position: relative; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5); touch-action: none; margin-top: 20px;}
-        #crop-img { position: absolute; transform-origin: top left; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+        #crop-container { box-sizing: content-box; width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--accent-neon); overflow: hidden; position: relative; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5); touch-action: none; margin-top: 20px;}
+        #crop-img { position: absolute; left: 0; top: 0; width: auto; height: auto; max-width: none !important; max-height: none !important; transform-origin: top left; pointer-events: none; user-select: none; -webkit-user-drag: none; will-change: transform; }
         .crop-controls { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; width: min(320px, calc(100vw - 32px)); margin-bottom: 20px;}
         .crop-zoom-row { display: grid; grid-template-columns: 42px minmax(0, 1fr) 42px; align-items: center; gap: 10px; }
         .crop-zoom-btn { width: 42px; height: 38px; padding: 0; border: 2px solid var(--border-dark); border-radius: 7px; background: #fff; color: var(--text-main); font-size: 22px; font-weight: 900; line-height: 1; cursor: pointer; }
@@ -2323,6 +2323,7 @@
 
         let cropTargetRole = '';
         let pendingGameAvatarTarget = null;
+        const CROP_VIEW_SIZE = 250;
         let cropImgObj = document.getElementById('crop-img');
         let cropContainer = document.getElementById('crop-container');
         let scaleSlider = document.getElementById('crop-scale');
@@ -2342,17 +2343,21 @@
                     cropImgObj.onload = () => {
                         const width = cropImgObj.naturalWidth || cropImgObj.width;
                         const height = cropImgObj.naturalHeight || cropImgObj.height;
-                        const containScale = Math.min(250 / width, 250 / height);
-                        const coverScale = Math.max(250 / width, 250 / height);
-                        cropState.minScale = Math.max(0.005, containScale * 0.5);
-                        cropState.maxScale = Math.max(coverScale * 4, cropState.minScale * 8);
+                        cropImgObj.style.width = `${width}px`;
+                        cropImgObj.style.height = `${height}px`;
+                        cropImgObj.style.maxWidth = 'none';
+                        cropImgObj.style.maxHeight = 'none';
+                        const coverScale = Math.max(CROP_VIEW_SIZE / width, CROP_VIEW_SIZE / height);
+                        cropState.minScale = Math.max(0.005, coverScale);
+                        cropState.maxScale = Math.max(coverScale * 6, cropState.minScale * 2);
                         cropState.scale = coverScale;
-                        cropState.imgX = (250 - width * cropState.scale) / 2;
-                        cropState.imgY = (250 - height * cropState.scale) / 2;
+                        cropState.imgX = (CROP_VIEW_SIZE - width * cropState.scale) / 2;
+                        cropState.imgY = (CROP_VIEW_SIZE - height * cropState.scale) / 2;
                         scaleSlider.min = cropState.minScale;
                         scaleSlider.max = cropState.maxScale;
-                        scaleSlider.step = (cropState.maxScale - cropState.minScale) / 200;
+                        scaleSlider.step = Math.max((cropState.maxScale - cropState.minScale) / 240, 0.0001);
                         scaleSlider.value = cropState.scale;
+                        clampCropPosition();
                         updateCropTransform();
                         document.getElementById('crop-modal').style.display = 'flex';
                     };
@@ -2366,7 +2371,19 @@
             return Math.min(cropState.maxScale, Math.max(cropState.minScale, value));
         }
 
-        function setCropScale(nextScale, centerX = 125, centerY = 125) {
+        function clampCropPosition() {
+            const width = (cropImgObj.naturalWidth || 0) * cropState.scale;
+            const height = (cropImgObj.naturalHeight || 0) * cropState.scale;
+            if (!width || !height) return;
+            cropState.imgX = width <= CROP_VIEW_SIZE
+                ? (CROP_VIEW_SIZE - width) / 2
+                : Math.min(0, Math.max(CROP_VIEW_SIZE - width, cropState.imgX));
+            cropState.imgY = height <= CROP_VIEW_SIZE
+                ? (CROP_VIEW_SIZE - height) / 2
+                : Math.min(0, Math.max(CROP_VIEW_SIZE - height, cropState.imgY));
+        }
+
+        function setCropScale(nextScale, centerX = CROP_VIEW_SIZE / 2, centerY = CROP_VIEW_SIZE / 2) {
             const oldScale = cropState.scale || 1;
             const newScale = clampCropScale(nextScale);
             const imagePointX = (centerX - cropState.imgX) / oldScale;
@@ -2375,6 +2392,7 @@
             cropState.imgY = centerY - imagePointY * newScale;
             cropState.scale = newScale;
             scaleSlider.value = newScale;
+            clampCropPosition();
             updateCropTransform();
         }
 
@@ -2383,8 +2401,8 @@
         }
 
         function updateCropTransform() {
-            cropImgObj.style.transform = `translate(${cropState.imgX}px, ${cropState.imgY}px) scale(${cropState.scale})`;
-            const baseScale = Math.max(250 / (cropImgObj.naturalWidth || 250), 250 / (cropImgObj.naturalHeight || 250));
+            cropImgObj.style.transform = `translate3d(${cropState.imgX}px, ${cropState.imgY}px, 0) scale(${cropState.scale})`;
+            const baseScale = Math.max(CROP_VIEW_SIZE / (cropImgObj.naturalWidth || CROP_VIEW_SIZE), CROP_VIEW_SIZE / (cropImgObj.naturalHeight || CROP_VIEW_SIZE));
             cropScaleLabel.textContent = `${Math.round((cropState.scale / baseScale) * 100)}%`;
         }
 
@@ -2412,8 +2430,8 @@
             if (e.touches && e.touches.length === 2) {
                 e.preventDefault();
                 const rect = cropContainer.getBoundingClientRect();
-                const centerX = ((e.touches[0].clientX + e.touches[1].clientX) / 2) - rect.left;
-                const centerY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - rect.top;
+                const centerX = ((e.touches[0].clientX + e.touches[1].clientX) / 2) - rect.left - cropContainer.clientLeft;
+                const centerY = ((e.touches[0].clientY + e.touches[1].clientY) / 2) - rect.top - cropContainer.clientTop;
                 setCropScale(cropState.pinchScale * touchDistance(e.touches) / cropState.pinchDistance, centerX, centerY);
                 return;
             }
@@ -2422,6 +2440,7 @@
             const point = e.touches ? e.touches[0] : e;
             cropState.imgX = point.clientX - cropState.startX;
             cropState.imgY = point.clientY - cropState.startY;
+            clampCropPosition();
             updateCropTransform();
         }
 
@@ -2443,7 +2462,7 @@
             canvas.width = size;
             canvas.height = size;
             const ctx = canvas.getContext('2d');
-            const drawRatio = size / 250;
+            const drawRatio = size / CROP_VIEW_SIZE;
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, size, size);
             ctx.save();
@@ -2472,6 +2491,10 @@
         function closeCropModal() {
             document.getElementById('crop-modal').style.display = 'none';
             cropImgObj.onload = null;
+            cropImgObj.removeAttribute('src');
+            cropImgObj.style.width = '';
+            cropImgObj.style.height = '';
+            cropImgObj.style.transform = '';
         }
 
 
