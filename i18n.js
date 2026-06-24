@@ -151,7 +151,15 @@
         '尚未解鎖任何標籤...': ['No flags unlocked yet…', 'まだフラグはありません…'], '背包空空如也...': ['Inventory is empty…', '所持品は空です…'],
         '目前沒有任務。接到新委託時，會自動加在這裡。': ['No tasks yet. New tasks appear here automatically.', 'タスクはまだありません。新しい依頼は自動で追加されます。'],
         '目前沒有任何存檔紀錄。': ['No saves yet.', 'セーブデータはありません。'], '目前沒有存檔': ['No saves', 'セーブなし'],
-        '— 遊戲紀錄已載入 —': ['— Save Loaded —', '— セーブを読み込みました —']
+        '— 遊戲紀錄已載入 —': ['— Save Loaded —', '— セーブを読み込みました —'],
+        '遊戲紀錄已載入': ['Save Loaded', 'セーブを読み込みました'],
+        '輔助旁白': ['Narrator', 'ナレーター'], '創作者指令': ['Creator Instruction', '作者指示'],
+        '引擎 (DM)': ['Engine (GM)', 'エンジン (GM)'], '判定引擎': ['Check Engine', '判定エンジン'], '判定': ['Check', '判定'],
+        '此情境/支線尚無對話。請輸入動作，或讓 AI 生成開場': ['No dialogue in this scenario yet. Enter an action or let AI generate an opening.', 'このシナリオにはまだ会話がありません。行動を入力するか、AIに導入を生成させてください。'],
+        '🎲 讓 AI 根據「情境設定」隨機生成開場事件': ['🎲 Generate an Opening from the Scenario', '🎲 シナリオ設定から導入を生成'],
+        '力量': ['Strength', '筋力'], '敏捷': ['Dexterity', '敏捷'], '體質': ['Constitution', '体質'],
+        '智力': ['Intelligence', '知力'], '感知': ['Wisdom', '感知'], '魅力': ['Charisma', '魅力'],
+        '大成功': ['Critical Success', '大成功'], '成功': ['Success', '成功'], '失敗': ['Failure', '失敗'], '大失敗': ['Critical Failure', '大失敗']
     };
 
     const ATTR_M = {
@@ -175,7 +183,12 @@
         '切換持續創作者指令模式': ['Toggle persistent Creator mode', '継続「神」モード切替'],
         '輸入你的開局動作，或點選上方選項...': ['Enter your opening action or choose an option above…', '最初の行動を入力するか、上の選択肢を選んでください…'],
         '由 AI 判斷檢定屬性後隨機擲出 D20': ['AI chooses the ability, then rolls a D20', 'AIが能力を選びD20を振ります'],
-        '例如：從遊戲世界切回時視為登出並回到語音通話。': ['Example: returning from the game world logs out and returns to voice chat.', '例：ゲーム世界から戻るとログアウト扱いになり、ボイスチャットへ戻る。']
+        '例如：從遊戲世界切回時視為登出並回到語音通話。': ['Example: returning from the game world logs out and returns to voice chat.', '例：ゲーム世界から戻るとログアウト扱いになり、ボイスチャットへ戻る。'],
+        '輸入本回合的創作者指令...': ['Enter a Creator instruction for this turn…', 'このターンの作者指示を入力…'],
+        '輸入輔助旁白，或點「神」下達創作者指令...': ['Enter narrator direction, or use Creator for a stage instruction…', 'ナレーター指示を入力するか、「神」で作者指示を出してください…'],
+        '輸入角色行動，或點「神」下達創作者指令...': ['Enter your character’s action, or use Creator for a stage instruction…', 'キャラクターの行動を入力するか、「神」で作者指示を出してください…'],
+        '開啟持續創作者指令模式': ['Enable persistent Creator mode', '継続「神」モードをオン'],
+        '關閉持續創作者指令模式': ['Disable persistent Creator mode', '継続「神」モードをオフ']
     };
 
     const SYSTEM_M = {
@@ -202,12 +215,37 @@
         '已復原整理前的完整冒險紀錄。': ['The adventure log was restored.', '整理前の冒険記録を復元しました。'],
         '摘要與任務清單已整理完成。': ['Summary and task list organized.', 'サマリーとタスクリストを整理しました。'],
         '匯入失敗：備份檔超過 50MB。': ['Import failed: backup file exceeds 50 MB.', 'インポート失敗：バックアップが50MBを超えています。'],
+        '【系統提示：靈魂重鑄】\n\n「命運的絲線又糾纏在一起了嗎...？」\n\n確定要重新洗點嗎？原本被鎖定的基礎六圍將會強制解鎖！': ['[System: Soul Reforge]\n\n“Have the threads of fate tangled again…?”\n\nReroll your stats? This will unlock and replace the current base attributes.', '【システム：魂の再鋳造】\n\n「運命の糸がまた絡み合ったのですか……？」\n\n能力値を振り直しますか？ロック中の基本能力値は解除され、新しい値に置き換わります。'],
         '洗點成功！你的能力值已重新分配。': ['Stats successfully reassigned.', '能力値を再配分しました。'],
         '極限模式的死亡永久成立，無法嘗試復活。': ['Death is permanent in Nightmare mode.', '極限モードでは死亡は永続し、復活できません。'],
         '這名 NPC 的復活檢定已經失敗，不能再次嘗試。': ['This NPC already failed their revival check.', 'このNPCは復活判定に失敗しており、再挑戦できません。'],
         '困難模式不能由「神」直接復活；必須以角色行動進行一次復活檢定。': ['Hard mode requires a character action and revival check; Creator mode cannot revive directly.', 'ハードモードではキャラクター行動による復活判定が必要です。「神」で直接復活できません。'],
         '困難模式的復活必須檢定。請按「擲骰」，成功才能復活；失敗後將永久無法再嘗試。': ['Hard mode revival requires a roll. Success revives; failure is permanent.', 'ハードモードの復活には判定が必要です。成功で復活、失敗すると再挑戦できません。'],
-        '確定要清除本機 API 使用統計嗎？遊戲存檔不會被刪除。': ['Reset local API usage stats? Game saves will not be deleted.', 'ローカルのAPI使用統計をリセットしますか？セーブデータは削除されません。']
+        '確定要清除本機 API 使用統計嗎？遊戲存檔不會被刪除。': ['Reset local API usage stats? Game saves will not be deleted.', 'ローカルのAPI使用統計をリセットしますか？セーブデータは削除されません。'],
+        '🔒 此配置已受玩家保護，無法洗點！請先點擊上方解鎖。': ['🔒 This preset is locked. Unlock it before rerolling stats.', '🔒 この設定はロックされています。能力値を振り直す前にロックを解除してください。'],
+        '🔒 此配置已受玩家保護，為防誤刪無法進行操作！\n若確定要刪除，請先點擊上方解鎖。': ['🔒 This preset is locked to prevent accidental deletion. Unlock it first if you want to delete it.', '🔒 誤削除防止のため、この設定はロックされています。削除する場合は先にロックを解除してください。'],
+        '🔒 此配置已受玩家保護，無法進行覆蓋儲存！\n若要修改，請先點擊上方解鎖。': ['🔒 This preset is locked and cannot be overwritten. Unlock it before saving changes.', '🔒 この設定はロックされているため上書きできません。変更を保存する前にロックを解除してください。'],
+        '確定要清空當前所有輸入框的資料嗎？這將讓你獲得一張白紙來重新填寫！\n(尚未點擊儲存前，原本的配置不會被覆蓋)': ['Clear all current fields and start with a blank form? The saved preset will not be overwritten until you save.', '現在の入力欄をすべて消去して白紙から始めますか？保存するまで元の設定は上書きされません。'],
+        '已清空所有欄位！請開始創作；返回大廳時會自動儲存目前配置。': ['All fields cleared. Your current preset will be saved automatically when you return home.', 'すべての欄を消去しました。ホームへ戻ると現在の設定が自動保存されます。'],
+        '當前配置變更已成功儲存！基礎屬性已被鎖定！': ['Preset changes saved. Base attributes are now locked.', '設定を保存しました。基本能力値はロックされました。'],
+        '請輸入新的劇本配置名稱：': ['Enter a name for the new preset:', '新しい設定名を入力してください：'],
+        '請為這份新的系統大廳配置命名：': ['Name this new lobby preset:', '新しいホーム設定に名前を付けてください：'],
+        '準備進入遊戲！請為這次存檔命名：': ['Ready to play! Name this save:', 'ゲームを始めます。このセーブに名前を付けてください：'],
+        '警告：這將會清除設備上儲存的 API 金鑰、照片設定與所有劇本存檔！\n此操作無法復原！': ['Warning: this deletes saved API keys, image settings, and all saves on this device. This cannot be undone.', '警告：この端末のAPIキー、画像設定、すべてのセーブを削除します。元に戻せません。'],
+        '無法刪除當前所在的情境！請先返回遊戲切換到其他情境後，再來進行刪除。': ['The active scenario cannot be deleted. Return to the game and switch scenarios first.', '現在のシナリオは削除できません。ゲームに戻って別のシナリオへ切り替えてください。'],
+        '找不到這名角色，頭像未變更。': ['Character not found. Avatar unchanged.', 'キャラクターが見つかりません。画像は変更されませんでした。'],
+        '創作者指令後方沒有內容，尚未送出給 AI': ['The Creator instruction was empty and was not sent to AI.', '作者指示が空のため、AIには送信されませんでした。']
+        ,'整理完整冒險紀錄會合併重複事件。系統會先保留備份，確定要繼續嗎？': ['Organizing the full adventure log merges duplicate events. A backup will be kept. Continue?', '冒険記録全体を整理すると重複イベントを統合します。バックアップを保存して続行しますか？'],
+        'HP 歸零：極限模式 Game Over。': ['HP reached zero: Game Over in Nightmare mode.', 'HPが0になりました：極限モードはGame Overです。'],
+        'HP 歸零：困難模式進入致命結局判定。': ['HP reached zero: starting a fatal-outcome check in Hard mode.', 'HPが0になりました：ハードモードの致命的結末判定に入ります。'],
+        'HP 歸零：保護機制啟動，下一回合優先演出救援。': ['HP reached zero: safety protection activated; rescue takes priority next turn.', 'HPが0になりました：保護機能が作動し、次のターンは救助を優先します。'],
+        'SAN 歸零：極限模式 Game Over。': ['SAN reached zero: Game Over in Nightmare mode.', 'SANが0になりました：極限モードはGame Overです。'],
+        'SAN 歸零：困難模式進入致命結局判定。': ['SAN reached zero: starting a fatal-outcome check in Hard mode.', 'SANが0になりました：ハードモードの致命的結末判定に入ります。'],
+        'SAN 歸零：照護機制啟動，下一回合優先處理精神崩潰。': ['SAN reached zero: care protection activated; the breakdown takes priority next turn.', 'SANが0になりました：ケア機能が作動し、次のターンは精神崩壊への対処を優先します。'],
+        'HP 已進入重傷區間，後續行動與判定將受到影響。': ['HP is in the critical-injury range; later actions and checks will be affected.', 'HPが重傷域に入り、以後の行動と判定に影響します。'],
+        'SAN 已進入精神危機區間，後續感知與判定將受到影響。': ['SAN is in the mental-crisis range; later perception and checks will be affected.', 'SANが精神危機域に入り、以後の感知と判定に影響します。'],
+        'HP 已恢復至安全區間，重傷狀態解除。': ['HP returned to a safe range; critical injury removed.', 'HPが安全域に戻り、重傷状態を解除しました。'],
+        'SAN 已恢復至安全區間，精神危機狀態解除。': ['SAN returned to a safe range; mental crisis removed.', 'SANが安全域に戻り、精神危機状態を解除しました。']
     };
 
     const reverse = { en: new Map(), ja: new Map() };
@@ -247,6 +285,8 @@
 
     function translateDynamic(value, locale) {
         const rules = [
+            [/^系統捕捉到隱藏錯誤，請截圖這段文字：\n([\s\S]*)\n行號：(.*)$/, a => currentLanguage === 'en' ? `A hidden error was caught. Please screenshot this message:\n${a[1]}\nLine: ${a[2]}` : `非表示のエラーを検出しました。このメッセージをスクリーンショットしてください：\n${a[1]}\n行：${a[2]}`],
+            [/^(.+)無法寫入瀏覽器資料庫。請先匯出備份，並確認瀏覽器沒有封鎖本機儲存。$/, a => currentLanguage === 'en' ? `${a[1]} could not be written to browser storage. Export a backup and make sure browser storage is allowed.` : `${a[1]}をブラウザの保存領域に書き込めません。バックアップを出力し、ブラウザの保存が許可されているか確認してください。`],
             [/^總點數\s*(\d+)\s*\/\s*(\d+)$/, a => locale === 'en' ? `Total ${a[1]} / ${a[2]}` : locale === 'ja' ? `合計 ${a[1]} / ${a[2]}` : a[0]],
             [/^第\s*(\d+)\s*\/\s*(\d+)\s*頁$/, a => locale === 'en' ? `Page ${a[1]} / ${a[2]}` : locale === 'ja' ? `${a[1]} / ${a[2]} ページ` : a[0]],
             [/^最後遊玩：(.*)$/, a => locale === 'en' ? `Last played: ${a[1]}` : locale === 'ja' ? `最終プレイ：${a[1]}` : a[0]],
@@ -286,10 +326,51 @@
         if (exactKey) return translatedValue(exactKey, currentLanguage, SYSTEM_M[exactKey] ? SYSTEM_M : M);
         if (currentLanguage === 'zh-TW') return value;
         const rules = [
+            [/^確定要刪除「(.+)」這個配置嗎？$/, a => currentLanguage === 'en' ? `Delete the preset “${a[1]}”?` : `設定「${a[1]}」を削除しますか？`],
+            [/^無法刪除「(.+)」。\n\n目前仍有 (\d+) 份遊戲紀錄綁定這個配置：\n([\s\S]+)\n\n請先在對應遊戲中使用「另存新配置」切換綁定，再回來刪除。$/, a => currentLanguage === 'en' ? `Cannot delete “${a[1]}”.\n\n${a[2]} save(s) still use this preset:\n${a[3]}\n\nOpen those saves and use Save as New to change their preset before deleting it.` : `「${a[1]}」は削除できません。\n\nこの設定を使用中のセーブが${a[2]}件あります：\n${a[3]}\n\n各セーブで「別名で保存」を使って設定を切り替えてから削除してください。`],
+            [/^已另存新檔為「(.+)」！基礎屬性已被鎖定！$/, a => currentLanguage === 'en' ? `Saved as “${a[1]}”. Base attributes are now locked.` : `「${a[1]}」として保存しました。基本能力値はロックされました。`],
+            [/^已將目前的角色核心設定與情境資料另存為新配置「(.+)」！\n動態狀態與冒險進度只保留在目前存檔中。$/, a => currentLanguage === 'en' ? `Character and scenario settings were saved as “${a[1]}”.\nDynamic status and adventure progress remain only in this save.` : `キャラクターとシナリオ設定を「${a[1]}」として保存しました。\n動的状態と冒険進行は現在のセーブにのみ残ります。`],
+            [/^【系統提醒】\n因為大廳的配置 \[(.+)\] 已上鎖 \(🔒\)，\n本次變更僅儲存於「當前遊戲紀錄」中，不會覆蓋回大廳。\n\(若要覆蓋回大廳，請先至大廳解鎖，或使用另存新配置\)$/, a => currentLanguage === 'en' ? `[System Notice]\nThe lobby preset [${a[1]}] is locked (🔒).\nThese changes were saved only to the current game save and did not overwrite the lobby preset.\n(Unlock it in the lobby or use Save as New to overwrite a preset.)` : `【システム通知】\nホームの設定［${a[1]}］はロックされています（🔒）。\n今回の変更は現在のセーブにのみ保存され、ホームの設定には上書きされません。\n（上書きするにはホームでロックを解除するか、「別名で保存」を使用してください。）`],
+            [/^(.+)\n原本內容沒有被刪除。$/, a => currentLanguage === 'en' ? `${a[1]}\nThe original content was not deleted.` : `${a[1]}\n元の内容は削除されていません。`],
+            [/^(.+)\n原本的內容沒有被刪除。$/, a => currentLanguage === 'en' ? `${a[1]}\nThe original content was not deleted.` : `${a[1]}\n元の内容は削除されていません。`],
+            [/^要復原 (.+) 整理前的冒險紀錄嗎？$/, a => currentLanguage === 'en' ? `Restore the adventure log from before the ${a[1]} organization?` : `${a[1]}の整理前の冒険記録を復元しますか？`],
+            [/^要復原 (.+) 整理前的完整冒險紀錄嗎？$/, a => currentLanguage === 'en' ? `Restore the full adventure log from before the ${a[1]} organization?` : `${a[1]}の整理前の冒険記録全体を復元しますか？`],
+            [/^匯入完成：(\d+) 個存檔、(\d+) 個角色配置(?:，(\d+) 個同 ID 資料已自動改名)?。$/, a => currentLanguage === 'en' ? `Import complete: ${a[1]} save(s), ${a[2]} preset(s)${a[3] ? `; ${a[3]} duplicate ID(s) were renamed` : ''}.` : `インポート完了：セーブ${a[1]}件、設定${a[2]}件${a[3] ? `、同一IDのデータ${a[3]}件を自動改名` : ''}。`],
+            [/^頭像已存入目前遊戲紀錄。\n角色配置「(.+)」已上鎖，因此沒有覆寫配置。$/, a => currentLanguage === 'en' ? `The avatar was saved to the current game save.\nPreset “${a[1]}” is locked, so it was not overwritten.` : `画像を現在のセーブに保存しました。\n設定「${a[1]}」はロック中のため上書きされませんでした。`],
+            [/^無法寫入瀏覽器資料庫。/, a => currentLanguage === 'en' ? value.replace('無法寫入瀏覽器資料庫。', 'Could not write to browser storage.').replace('請先匯出備份，並確認瀏覽器沒有封鎖本機儲存。', 'Export a backup and make sure browser storage is allowed.') : value.replace('無法寫入瀏覽器資料庫。', 'ブラウザの保存領域に書き込めません。').replace('請先匯出備份，並確認瀏覽器沒有封鎖本機儲存。', 'バックアップを出力し、ブラウザの保存が許可されているか確認してください。')],
             [/^請先驗證 (.+) 金鑰並選擇模型。$/, a => currentLanguage === 'en' ? `Verify your ${a[1]} key and choose a model first.` : `先に${a[1]}キーを認証し、モデルを選択してください。`],
             [/^儲存時發生錯誤：(.*)$/, a => currentLanguage === 'en' ? `Save error: ${a[1]}` : `保存エラー：${a[1]}`],
             [/^匯入失敗：(.*)$/, a => currentLanguage === 'en' ? `Import failed: ${a[1]}` : `インポート失敗：${a[1]}`],
-            [/^Flags 已達 (\d+) 個，請先刪除或合併較舊項目再新增。$/, a => currentLanguage === 'en' ? `Flags reached ${a[1]}. Delete or merge older entries first.` : `フラグが${a[1]}件に達しました。古い項目を削除または統合してください。`]
+            [/^Flags 已達 (\d+) 個，請先刪除或合併較舊項目再新增。$/, a => currentLanguage === 'en' ? `Flags reached ${a[1]}. Delete or merge older entries first.` : `フラグが${a[1]}件に達しました。古い項目を削除または統合してください。`],
+            [/^【系統提示：靈魂重鑄】\n\n確定要重新隨機洗點嗎？\n注意：此存檔目前剩餘 (\d+) 次洗點機會！$/, a => currentLanguage === 'en' ? `[System: Soul Reforge]\n\nReroll your stats?\nRerolls remaining for this save: ${a[1]}.` : `【システム：魂の再鋳造】\n\n能力値を振り直しますか？\nこのセーブで残っている振り直し回数：${a[1]}回。`],
+            [/^— (.+) 的好感度 (-?\d+) → (-?\d+) —$/, a => currentLanguage === 'en' ? `— ${a[1]} Affection ${a[2]} → ${a[3]} —` : `— ${a[1]}の好感度 ${a[2]} → ${a[3]} —`],
+            [/^☠ (.+) 已死亡(?::|：)?(.*)$/, a => currentLanguage === 'en' ? `☠ ${a[1]} has died${a[2] ? `: ${a[2]}` : ''}` : `☠ ${a[1]}は死亡しました${a[2] ? `：${a[2]}` : ''}`],
+            [/^✦ (.+) 已恢復存活$/, a => currentLanguage === 'en' ? `✦ ${a[1]} has been revived` : `✦ ${a[1]}は復活しました`],
+            [/^— 新登場 NPC \[ (.+) \] 已加入角色面板 —$/, a => currentLanguage === 'en' ? `— New NPC [ ${a[1]} ] added to the Character Panel —` : `— 新しいNPC［${a[1]}］をキャラクターパネルに追加しました —`],
+            [/^獲得道具 \[ (.+) \]$/, a => currentLanguage === 'en' ? `Item obtained [ ${a[1]} ]` : `アイテム入手［${a[1]}］`],
+            [/^失去道具 \[ (.+) \]$/, a => currentLanguage === 'en' ? `Item lost [ ${a[1]} ]` : `アイテム喪失［${a[1]}］`],
+            [/^新增狀態 \[ (.+) \]$/, a => currentLanguage === 'en' ? `Status added [ ${a[1]} ]` : `状態を追加［${a[1]}］`],
+            [/^Flags 已達 (\d+) 個上限；新項目未加入，請至角色面板整理。$/, a => currentLanguage === 'en' ? `Flag limit (${a[1]}) reached. The new flag was not added; manage flags in the Character Panel.` : `フラグ上限（${a[1]}件）に達しました。新しい項目は追加されていません。キャラクターパネルで整理してください。`],
+            [/^已切換為輔助旁白模式；玩家角色 (.+) 不預設在場$/, a => currentLanguage === 'en' ? `Switched to Narrator mode; ${a[1]} is not assumed to be present.` : `ナレーターモードに切り替えました。プレイヤーキャラクター「${a[1]}」は不在扱いです。`],
+            [/^玩家角色 (.+) 已設為在場；後續普通輸入恢復角色行動模式$/, a => currentLanguage === 'en' ? `${a[1]} is now present; normal input has returned to Player mode.` : `プレイヤーキャラクター「${a[1]}」を登場状態にしました。通常入力はプレイヤーモードに戻ります。`],
+            [/^玩家角色 (.+) 已設為不在場；後續普通輸入採輔助旁白模式$/, a => currentLanguage === 'en' ? `${a[1]} is now absent; normal input will use Narrator mode.` : `プレイヤーキャラクター「${a[1]}」を不在状態にしました。通常入力はナレーターモードになります。`],
+            [/^操作者已轉換為「(.+)」引導身分；原玩家角色不預設在場$/, a => currentLanguage === 'en' ? `Operator role changed to “${a[1]}”; the player character is not assumed to be present.` : `操作役を「${a[1]}」に変更しました。プレイヤーキャラクターは不在扱いです。`],
+            [/^— GAME OVER：(.+)（極限模式）—$/, a => currentLanguage === 'en' ? `— GAME OVER: ${a[1]} (Nightmare mode) —` : `— GAME OVER：${a[1]}（極限モード）—`],
+            [/^— 生死檢定失敗：D20 (\d+)，GAME OVER —$/, a => currentLanguage === 'en' ? `— Survival check failed: D20 ${a[1]}, GAME OVER —` : `— 生死判定失敗：D20 ${a[1]}、GAME OVER —`],
+            [/^— 生死檢定成功：D20 (\d+)，(.+)後保留 1 點 —$/, a => currentLanguage === 'en' ? `— Survival check succeeded: D20 ${a[1]}; ${a[2]}, 1 point remains —` : `— 生死判定成功：D20 ${a[1]}、${a[2]}後に1点残ります —`],
+            [/^— 保護機制啟動：(.+)後保留 1 點 —$/, a => currentLanguage === 'en' ? `— Safety protection activated: ${a[1]}, 1 point remains —` : `— 保護機能作動：${a[1]}後に1点残ります —`],
+            [/^重要紀錄：已暫停 AI 自動追加（仍可在面板手動修改）$/, a => currentLanguage === 'en' ? 'Memory updates paused (manual editing remains available).' : '重要記録の自動追加を一時停止しました（手動編集は可能です）。'],
+            [/^重要紀錄：已恢復 AI 自動追加$/, a => currentLanguage === 'en' ? 'Memory updates resumed.' : '重要記録の自動追加を再開しました。'],
+            [/^— (.+) —$/, a => {
+                const inner = translateSystemText(a[1]);
+                return `— ${inner} —`;
+            }],
+            [/^(STR|DEX|CON|INT|WIS|CHA)\s+(力量|敏捷|體質|智力|感知|魅力)｜(大成功|成功|失敗|大失敗)｜(.+)$/, a => {
+                const stat = { 力量:['Strength','筋力'], 敏捷:['Dexterity','敏捷'], 體質:['Constitution','体質'], 智力:['Intelligence','知力'], 感知:['Wisdom','感知'], 魅力:['Charisma','魅力'] }[a[2]];
+                const result = { 大成功:['Critical Success','大成功'], 成功:['Success','成功'], 失敗:['Failure','失敗'], 大失敗:['Critical Failure','大失敗'] }[a[3]];
+                const index = currentLanguage === 'en' ? 0 : 1;
+                return `${a[1]} ${stat[index]} | ${result[index]} | ${a[4]}`;
+            }]
         ];
         for (const [pattern, format] of rules) {
             const match = value.match(pattern);
@@ -392,6 +473,7 @@
         Object.entries(params).forEach(([key, replacement]) => { value = value.replaceAll(`{${key}}`, replacement); });
         return value;
     };
+    window.uiSystemMessage = translateSystemText;
 
     const nativeAlert = window.alert.bind(window);
     const nativeConfirm = window.confirm.bind(window);
