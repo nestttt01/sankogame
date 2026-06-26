@@ -181,8 +181,8 @@
     <p class="u-inline-019">2. 建立角色、NPC 與情境</p>
     <p class="u-inline-020">進入「劇本創角」後，使用左側的「角色設定」、「情境設定」與「遊戲設定」切換不同內容。角色設定可編輯玩家與每一位 NPC 的頭像、名稱及人物資料；情境設定用來建立世界觀、身分與轉場規則。切換標籤時，尚未離開頁面的修改不會被重置。</p>
 
-    <p class="u-inline-019">3. 遊戲設定與隨機生成</p>
-    <p class="u-inline-020">遊戲設定集中管理配置名稱、輸出語言、遊戲難度與隨機生成。你可以保留人物只隨機產生情境，也可以讓 AI 將人物與情境全部隨機。生成結果會先讓你確認，不會在未套用前直接覆蓋目前內容；返回首頁時，系統會保存目前配置。</p>
+    <p class="u-inline-019">3. 情境生成與遊戲設定</p>
+    <p class="u-inline-020">情境設定集中管理世界觀與 AI 隨機生成；遊戲設定則管理配置名稱、輸出語言、遊戲難度與備份。你可以保留人物只隨機產生情境，也可以讓 AI 將人物與情境全部隨機。生成結果會先讓你確認，不會在未套用前直接覆蓋目前內容；返回首頁時，系統會保存目前配置。</p>
 
     <p class="u-inline-019">4. 怎麼玩？</p>
     <p class="u-inline-020">進入遊戲後，直接在下方輸入角色想說的話或想做的事。你也可以點選 AI 提供的選項。若行動具有風險，可以使用骰子按鈕進行 D20 判定；系統會依角色能力、難度與骰點決定成功或失敗。NPC 只有在劇情明確確認時才會死亡；標準模式可由劇情或「神」復活，困難模式每次死亡只有一次復活檢定，極限模式則永久死亡。</p>
@@ -249,6 +249,7 @@
 <div id="setup-screen">
 <div class="setup-home-frame">
 <nav class="setup-side-tabs" aria-label="首頁快捷選單">
+<button type="button" class="setup-side-tab setup-home-tab" data-home-tab="main" onclick="goHomeFromSetupNav()" aria-label="回到首頁" title="回到首頁"><img src="assets/icons/home.svg" alt="" aria-hidden="true"></button>
 <button type="button" class="setup-side-tab" data-home-tab="api" onclick="openApiGuideModal()">API說明</button>
 <button type="button" class="setup-side-tab" data-home-tab="guide" onclick="openTutorialModal()">遊戲玩法</button>
 <div class="setup-side-unlocked" aria-label="已驗證功能">
@@ -387,8 +388,8 @@
 <p>進入「劇本創角」後，使用左側的「角色設定」、「情境設定」與「遊戲設定」切換不同內容。角色設定可編輯玩家與每一位 NPC 的頭像、名稱及人物資料；情境設定用來建立世界觀、身分與轉場規則。切換標籤時，尚未離開頁面的修改不會被重置。</p>
 </article>
 <article>
-<h3>3. 遊戲設定與隨機生成</h3>
-<p>遊戲設定集中管理配置名稱、輸出語言、遊戲難度與隨機生成。你可以保留人物只隨機產生情境，也可以讓 AI 將人物與情境全部隨機。生成結果會先讓你確認，不會在未套用前直接覆蓋目前內容；返回首頁時，系統會保存目前配置。</p>
+<h3>3. 情境生成與遊戲設定</h3>
+<p>情境設定集中管理世界觀與 AI 隨機生成；遊戲設定則管理配置名稱、輸出語言、遊戲難度與備份。你可以保留人物只隨機產生情境，也可以讓 AI 將人物與情境全部隨機。生成結果會先讓你確認，不會在未套用前直接覆蓋目前內容；返回首頁時，系統會保存目前配置。</p>
 </article>
 <article>
 <h3>4. 怎麼玩？</h3>
@@ -430,6 +431,7 @@
     <div id="edit-scenario-screen">
         <aside id="desktop-config-overview" aria-label="角色配置總覽">
             <div class="desktop-config-tabs" aria-label="配置分類">
+                <button type="button" class="desktop-config-tab desktop-config-home-tab" onclick="cancelEdit()" aria-label="儲存並回到首頁" title="儲存並回到首頁"><img src="assets/icons/home.svg" alt="" aria-hidden="true"></button>
                 <button type="button" class="desktop-config-tab active" data-config-section="characters" onclick="switchDesktopConfigWorkspace('characters')">角色設定</button>
                 <button type="button" class="desktop-config-tab" data-config-section="scenarios" onclick="switchDesktopConfigWorkspace('scenarios')">情境設定</button>
                 <button type="button" class="desktop-config-tab" data-config-section="game" onclick="switchDesktopConfigWorkspace('game')">遊戲設定</button>
@@ -451,6 +453,13 @@
                         <h2>情境設定</h2>
                     </div>
                     <div id="desktop-scenario-card-list" class="desktop-overview-card-list"></div>
+                    <div class="desktop-scenario-random-panel" aria-label="AI 隨機生成">
+                        <strong>AI 隨機生成</strong>
+                        <div class="desktop-game-two-buttons desktop-scenario-random-actions">
+                            <button type="button" onclick="openRandomGenerator('world')">保留人物，隨機情境</button>
+                            <button type="button" onclick="openRandomGenerator('all')">人物與情境全部隨機</button>
+                        </div>
+                    </div>
                 </section>
 
                 <section class="desktop-workspace-view" data-workspace-view="game" aria-label="遊戲設定總覽">
@@ -460,10 +469,10 @@
                     <div class="desktop-game-settings-card">
                         <div class="desktop-game-setting-row desktop-game-preset-row">
                             <label for="desktop-preset-selector">目前配置</label>
-                            <div class="desktop-game-inline-control">
+                            <div class="desktop-game-inline-control desktop-game-preset-control">
                                 <select id="desktop-preset-selector" onchange="selectDesktopPreset(this.value)"></select>
-                                <button type="button" class="desktop-game-add-btn" onclick="createNewPreset()">＋ 新增</button>
                             </div>
+                            <p id="desktop-preset-binding-note" class="desktop-preset-binding-note"></p>
                         </div>
                         <div class="desktop-game-setting-row">
                             <div class="desktop-game-label-line">
@@ -471,13 +480,6 @@
                                 <button id="desktop-preset-lock-btn" type="button" onclick="togglePresetLock()" title="切換配置鎖定">🔓</button>
                             </div>
                             <input id="desktop-preset-name-input" type="text" oninput="updateDesktopPresetName(this.value)">
-                        </div>
-                        <div class="desktop-game-setting-row desktop-random-setting">
-                            <label>AI 隨機生成</label>
-                            <div class="desktop-game-two-buttons">
-                                <button type="button" onclick="openRandomGenerator('world')">保留人物，隨機情境</button>
-                                <button type="button" onclick="openRandomGenerator('all')">人物與情境全部隨機</button>
-                            </div>
                         </div>
                         <div class="desktop-game-setting-grid">
                             <label>介面語言
@@ -507,16 +509,32 @@
                         </div>
                         <p class="desktop-game-difficulty-note">困難模式：檢定 DC +2，NPC 每次死亡只有一次復活檢定。極限模式：檢定 DC +4，歸零必定 Game Over，NPC 死亡後無法復活。</p>
  <div class="desktop-game-management-actions">
+ <button type="button" onclick="saveCurrentPreset()">儲存配置</button>
  <button type="button" onclick="saveAsNewPreset()">另存新配置</button>
- <button type="button" onclick="exportCurrentPreset()">匯出目前配置</button>
- <button type="button" onclick="restoreDefaultPreset()">清空欄位</button>
- <button type="button" class="danger" onclick="deleteCurrentPreset()">刪除配置</button>
+ <div class="desktop-preset-bulk-toolbar">
+ <label><input type="checkbox" id="preset-delete-select-all" onchange="togglePresetDeleteSelectAll(this.checked)"> 全選</label>
+ <button type="button" class="danger" onclick="deleteSelectedPresets()">刪除選取配置</button>
+ </div>
+ </div>
+ <div class="desktop-preset-bulk-panel" aria-label="批次刪除配置">
+ <div id="preset-delete-list" class="desktop-preset-delete-list"></div>
+ </div>
+                    <div class="desktop-config-transfer-panel" aria-label="配置匯入匯出">
+                            <div class="desktop-config-export-options">
+                                <label><input type="checkbox" id="preset-export-characters" checked> 人物</label>
+                                <label><input type="checkbox" id="preset-export-scenarios" checked> 情境</label>
+                                <label><input type="checkbox" id="preset-export-both"> 人物/情境</label>
+                            </div>
+                            <div class="desktop-game-management-actions desktop-config-transfer-actions">
+                                <button type="button" onclick="exportCurrentPreset()">匯出目前配置</button>
+                                <button type="button" onclick="document.getElementById('preset-import-input').click()">匯入配置</button>
+                                <input type="file" id="preset-import-input" accept=".json,application/json" onchange="importPresetConfig(this)" hidden class="hidden-file-input">
+                            </div>
                         </div>
                         <p class="desktop-game-autosave-note">角色與情境的修改會保留，返回大廳時自動儲存目前配置。</p>
                     </div>
                 </section>
             </div>
-            <button type="button" class="desktop-config-back" onclick="cancelEdit()">返回</button>
         </aside>
 
         <div id="desktop-config-editor">
@@ -532,12 +550,8 @@
             </div>
             <input type="text" id="input-preset-name" class="scenario-input" oninput="renderDesktopPresetOverview()">
 
-            <div class="random-generator-actions">
-                <button class="btn" type="button" onclick="openRandomGenerator('world')">保留人物隨機情境</button>
-                <button class="btn" type="button" onclick="openRandomGenerator('all')">人物情境全部隨機</button>
-            </div>
-
             <div id="preset-player-editor" class="u-inline-036">
+                <button type="button" class="desktop-player-new-preset-btn" onclick="saveAsNewPreset()" aria-label="另存配置" title="另存配置">＋</button>
                 <h4 class="u-inline-037">玩家自己設定</h4>
                 <div class="avatar-setup-area u-inline-038">
                     <div class="avatar-box" onclick="document.getElementById('upload-player').click();">
@@ -633,6 +647,7 @@
             <button class="btn u-inline-052" onclick="saveCurrentPreset()">儲存變更</button>
             <button class="btn" onclick="saveAsNewPreset()">另存新檔</button>
             <button class="btn" onclick="exportCurrentPreset()">匯出目前配置</button>
+            <button class="btn" onclick="document.getElementById('preset-import-input').click()">匯入配置</button>
         </div>
         <div class="action-buttons u-inline-053">
             <button class="btn u-inline-054" onclick="cancelEdit()">返回選單</button>
@@ -659,6 +674,10 @@
 <div id="save-menu-screen">
 <h2>選擇記憶紀錄</h2>
 <p id="setup-current-preset" class="setup-current-preset setup-current-preset-save">目前配置：<span id="setup-current-preset-name">未命名配置</span></p>
+<div class="save-menu-toolbar">
+    <label class="save-select-all"><input type="checkbox" id="save-select-all" onchange="toggleAllSaveSelection(this.checked)"> 全選</label>
+    <button class="btn save-toolbar-delete" type="button" onclick="deleteSelectedSaves()">刪除</button>
+</div>
 <div id="save-list"></div>
         <div id="storage-health-card" class="storage-health-card">
             <div class="storage-health-head"><strong>本機資料狀態</strong><button type="button" onclick="updateStorageHealthDisplay()">重新計算</button></div>

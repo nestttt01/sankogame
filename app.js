@@ -1177,6 +1177,248 @@ ensureGameModelSelectReady();
         }
 
 
+
+/* ======= 2026-06 desktop export/save menu refinements ======= */
+window.journeySelectedSaveIds = window.journeySelectedSaveIds || new Set();
+
+function getJsonClone(value) {
+if (typeof clonePersistentValue === 'function') return clonePersistentValue(value);
+return value === undefined ? undefined : JSON.parse(JSON.stringify(value));
+}
+
+function isPrivateOrImageKey(key) {
+const normalized = String(key || '').toLowerCase();
+return normalized.includes('apikey')
+|| normalized === 'api_key'
+|| normalized === 'key'
+|| normalized.includes('token')
+|| normalized.includes('secret')
+|| normalized.includes('homepic')
+|| normalized.includes('image')
+|| normalized.includes('photo')
+|| normalized.includes('picture')
+|| normalized.includes('pic');
+}
+
+function isAvatarKey(key) {
+return String(key || '').toLowerCase().includes('avatar');
+}
+
+function stripImagesAndPrivateData(value, key = '') {
+if (value === null || value === undefined) return value;
+if (typeof value === 'string') {
+if (/^(data:image|blob:)/i.test(value.trim())) return isAvatarKey(key) ? value : '';
+return value;
+}
+if (Array.isArray(value)) return value.map(item => stripImagesAndPrivateData(item));
+if (typeof value === 'object') {
+const output = {};
+Object.entries(value).forEach(([childKey, childValue]) => {
+if (isPrivateOrImageKey(childKey) && !isAvatarKey(childKey)) return;
+output[childKey] = stripImagesAndPrivateData(childValue, childKey);
+});
+return output;
+}
+return value;
+}
+
+function getPresetExportSections() {
+const both = document.getElementById('preset-export-both')?.checked;
+const characters = both || document.getElementById('preset-export-characters')?.checked;
+const scenarios = both || document.getElementById('preset-export-scenarios')?.checked;
+return {
+characters: characters || (!characters && !scenarios),
+scenarios: scenarios || (!characters && !scenarios)
+};
+}
+
+function filterPresetForSections(preset, sections = { characters: true, scenarios: true }) {
+const safePreset = stripImagesAndPrivateData(getJsonClone(preset || {}));
+if (!sections.characters) {
+delete safePreset.playerAvatar;
+delete safePreset.playerName;
+delete safePreset.playerDetails;
+delete safePreset.playerStats;
+delete safePreset.statsLocked;
+delete safePreset.npcs;
+delete safePreset.targetName;
+delete safePreset.targetPersona;
+delete safePreset.targetAvatar;
+}
+if (!sections.scenarios) delete safePreset.scenarios;
+return safePreset;
+}
+
+function sanitizePresetCollection(presets, sections = { characters: true, scenarios: true }) {
+const output = {};
+Object.entries(presets || {}).forEach(([id, preset]) => {
+output[id] = filterPresetForSections(preset, sections);
+});
+return output;
+}
+
+function sanitizeSavesCollection(saves, ids = null) {
+const output = {};
+const allowed = ids ? new Set(ids.map(String)) : null;
+Object.entries(saves || {}).forEach(([id, save]) => {
+if (!allowed || allowed.has(String(id))) output[id] = stripImagesAndPrivateData(getJsonClone(save));
+});
+return output;
+}
+
+function buildBackupPayload(saveIds = null, presetSections = { characters: true, scenarios: true }) {
+saveCurrentProgress();
+return {
+version: 5,
+type: 'journey-notes-backup',
+exportedAt: new Date().toISOString(),
+saves: sanitizeSavesCollection(savesData, saveIds),
+scenarioPresets: sanitizePresetCollection(scenarioPresets, presetSections),
+activePresetId,
+uiTheme: stripImagesAndPrivateData(getJsonClone(uiTheme)),
+uiLanguage: window.getUiLanguage ? getUiLanguage() : 'zh-TW',
+privacy: {
+excludes: ['apiKeys', 'homePhoto', 'privateTokens']
+}
+};
+}
+
+function downloadJsonFile(payload, filename) {
+const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = filename;
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+}
+
+function goHomeFromSetupNav() {
+restoreSaveMenuFromSetupHome();
+restoreJournalFromSetupHome();
+const setupScreen = document.getElementById('setup-screen');
+if (setupScreen) setupScreen.style.display = 'flex';
+document.getElementById('save-menu-screen').style.display = 'none';
+document.getElementById('journal-screen').style.display = 'none';
+showHomeInfoView('main', { force: true });
+}
+
+function getSelectedSaveIds() {
+return Array.from(window.journeySelectedSaveIds || []).filter(id => savesData[id]);
+}
+
+function updateSaveSelectAllState() {
+const selectAll = document.getElementById('save-select-all');
+if (!selectAll) return;
+const ids = Object.keys(savesData || {});
+const selected = getSelectedSaveIds();
+selectAll.checked = ids.length > 0 && selected.length === ids.length;
+selectAll.indeterminate = selected.length > 0 && selected.length < ids.length;
+}
+
+function toggleSaveSelection(id, checked) {
+if (checked) window.journeySelectedSaveIds.add(String(id));
+else window.journeySelectedSaveIds.delete(String(id));
+updateSaveSelectAllState();
+}
+
+function toggleAllSaveSelection(checked) {
+window.journeySelectedSaveIds.clear();
+if (checked) Object.keys(savesData || {}).forEach(id => window.journeySelectedSaveIds.add(String(id)));
+renderSaveList();
+}
+
+function renameSaveTitle(id, value) {
+const save = savesData[id];
+if (!save) return;
+const nextTitle = valueToText(value, '未命名存檔').trim() || '未命名存檔';
+save.title = nextTitle;
+if (!persistSingleSave(id, '重新命名遊戲存檔')) renderSaveList();
+}
+
+function deleteSelectedSaves() {
+const ids = getSelectedSaveIds();
+if (!ids.length) {
+alert(uiText('請先勾選要刪除的記憶紀錄。'));
+return;
+}
+if (!confirm(uiText('確定要刪除 {count} 個記憶紀錄嗎？此操作無法復原。').replace('{count}', ids.length))) return;
+ids.forEach(id => {
+const removedSave = savesData[id];
+delete savesData[id];
+if (!removePersistedSave(id, '刪除遊戲存檔')) savesData[id] = removedSave;
+localStorage.removeItem(getInputDraftStorageKey(id));
+if (currentSaveId === id) currentSaveId = null;
+window.journeySelectedSaveIds.delete(String(id));
+});
+renderSaveList();
+}
+
+
+function getUniquePresetId(baseId = 'preset_imported') {
+let candidate = String(baseId || `preset_imported_${Date.now()}`).replace(/[^\w-]+/g, '_');
+if (!candidate || candidate === 'default') candidate = `preset_imported_${Date.now()}`;
+if (!scenarioPresets[candidate]) return candidate;
+let counter = 1;
+while (scenarioPresets[`${candidate}_${counter}`]) counter += 1;
+return `${candidate}_${counter}`;
+}
+
+function normalizeImportedPreset(rawPreset, sections = { characters: true, scenarios: true }) {
+const base = stripImagesAndPrivateData(getJsonClone(scenarioPresets[activePresetId] || defaultPreset || {}));
+const incoming = stripImagesAndPrivateData(getJsonClone(rawPreset || {}));
+const output = { ...base, ...incoming };
+if (!sections.characters) {
+output.playerName = base.playerName || '';
+output.playerDetails = base.playerDetails || {};
+output.playerStats = base.playerStats || {};
+output.npcs = base.npcs || [];
+}
+if (!sections.scenarios) output.scenarios = base.scenarios || [{ name: '主情境', lore: '', npcRoles: '', playerRole: '', transitionRule: '' }];
+output.id = getUniquePresetId(incoming.id || `preset_imported_${Date.now()}`);
+output.presetName = valueToText(incoming.presetName || output.presetName, '匯入配置');
+output.isLocked = false;
+return output;
+}
+
+function importPresetConfig(input) {
+const file = input.files?.[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = event => {
+try {
+const importedData = JSON.parse(event.target.result);
+const importedPresets = importedData.type === 'journey-notes-preset'
+? { imported: importedData.preset }
+: (importedData.scenarioPresets || importedData.presets || {});
+const sections = importedData.exportSections || { characters: true, scenarios: true };
+let count = 0;
+Object.values(importedPresets || {}).forEach(rawPreset => {
+if (!rawPreset || typeof rawPreset !== 'object' || Array.isArray(rawPreset)) return;
+const preset = normalizeImportedPreset(rawPreset, sections);
+scenarioPresets[preset.id] = preset;
+activePresetId = preset.id;
+count += 1;
+});
+if (!count) throw new Error('沒有找到可匯入的配置。');
+persistJson('sanko_scenario_presets_v2', scenarioPresets, '匯入角色配置');
+localStorage.setItem('sanko_active_preset_id', activePresetId);
+currentScenario = getJsonClone(scenarioPresets[activePresetId]);
+renderPresetSelector();
+loadPresetToForm(activePresetId);
+renderDesktopPresetOverview();
+alert(`匯入完成：${count} 個配置。圖片與私密資料已略過。`);
+} catch (error) {
+alert(`匯入配置失敗：${error.message || '檔案格式不正確或已損毀。'}`);
+} finally {
+input.value = '';
+}
+};
+reader.readAsText(file);
+}
+
         const LANGUAGE_MODE_LABELS = {
             "zh-tw": "繁體中文",
             "en": "English",
@@ -2671,11 +2913,116 @@ updateSetupCurrentPresetLabel();
             if (language) language.value = document.getElementById('input-language-mode')?.value || 'zh-tw';
             const difficulty = document.getElementById('desktop-game-difficulty');
             if (difficulty) difficulty.value = document.getElementById('input-game-difficulty')?.value || 'standard';
-            const lockButton = document.getElementById('desktop-preset-lock-btn');
-            if (lockButton) lockButton.textContent = scenarioPresets[activePresetId]?.isLocked ? '🔒' : '🔓';
-        }
+const lockButton = document.getElementById('desktop-preset-lock-btn');
+if (lockButton) lockButton.textContent = scenarioPresets[activePresetId]?.isLocked ? '🔒' : '🔓';
+const bindingNote = document.getElementById('desktop-preset-binding-note');
+if (bindingNote) {
+const sourceScenarios = Array.isArray(editingScenarios)
+? editingScenarios
+: (scenarioPresets[activePresetId]?.scenarios || []);
+const scenarioNames = sourceScenarios
+.map((scenario, index) => valueToText(scenario?.name, `${uiText('情境')} ${index + 1}`))
+.filter(Boolean);
+let bindingText = uiText('尚未建立情境');
+if (scenarioNames.length === 1) {
+bindingText = scenarioNames[0];
+} else if (scenarioNames.length > 1) {
+bindingText = `${scenarioNames[0]} +${scenarioNames.length - 1}`;
+}
+bindingNote.textContent = `${uiText('綁定情境')}：${bindingText}`;
+}
+renderPresetDeleteList();
+}
 
-        function selectDesktopPreset(id) {
+function getPresetDeleteBlockReason(id) {
+if (scenarioPresets[id]?.isLocked) return uiText('已上鎖');
+const boundSaves = getPresetBoundSaves(id);
+if (boundSaves.length) return `${uiText('綁定')} ${boundSaves.length} ${uiText('份紀錄')}`;
+return '';
+}
+
+function renderPresetDeleteList() {
+const list = document.getElementById('preset-delete-list');
+const selectAll = document.getElementById('preset-delete-select-all');
+if (!list) return;
+list.innerHTML = '';
+Object.entries(scenarioPresets || {}).forEach(([id, preset]) => {
+const reason = getPresetDeleteBlockReason(id);
+const row = document.createElement('label');
+row.className = `desktop-preset-delete-row${reason ? ' disabled' : ''}`;
+const checkbox = document.createElement('input');
+checkbox.type = 'checkbox';
+checkbox.className = 'preset-delete-checkbox';
+checkbox.value = id;
+checkbox.disabled = Boolean(reason);
+checkbox.onchange = syncPresetDeleteSelectAll;
+const name = document.createElement('span');
+name.className = 'desktop-preset-delete-name';
+name.textContent = `${valueToText(preset?.presetName, '未命名配置')}${reason ? `（${reason}）` : ''}`;
+row.title = name.textContent;
+row.appendChild(checkbox);
+row.appendChild(name);
+list.appendChild(row);
+});
+if (selectAll) {
+selectAll.checked = false;
+selectAll.indeterminate = false;
+selectAll.disabled = !list.querySelector('.preset-delete-checkbox:not(:disabled)');
+}
+}
+
+function syncPresetDeleteSelectAll() {
+const selectAll = document.getElementById('preset-delete-select-all');
+const boxes = Array.from(document.querySelectorAll('.preset-delete-checkbox:not(:disabled)'));
+if (!selectAll) return;
+const checked = boxes.filter(box => box.checked).length;
+selectAll.checked = boxes.length > 0 && checked === boxes.length;
+selectAll.indeterminate = checked > 0 && checked < boxes.length;
+}
+
+function togglePresetDeleteSelectAll(checked) {
+document.querySelectorAll('.preset-delete-checkbox:not(:disabled)').forEach(box => {
+box.checked = checked;
+});
+syncPresetDeleteSelectAll();
+}
+
+function deleteSelectedPresets() {
+const selectedIds = Array.from(document.querySelectorAll('.preset-delete-checkbox:checked:not(:disabled)')).map(box => box.value);
+if (!selectedIds.length) {
+alert(uiText('請先勾選要刪除的配置。'));
+return;
+}
+const deletableIds = selectedIds.filter(id => !getPresetDeleteBlockReason(id));
+if (!deletableIds.length) {
+alert(uiText('勾選的配置目前都不能刪除。'));
+renderPresetDeleteList();
+return;
+}
+if (Object.keys(scenarioPresets).length - deletableIds.length < 1) {
+alert(uiText('系統至少需要保留一組配置喔！'));
+renderPresetDeleteList();
+return;
+}
+const names = deletableIds.map(id => `• ${valueToText(scenarioPresets[id]?.presetName, '未命名配置')}`).join('\n');
+const confirmMessage = `${uiText('確定要刪除 {count} 個配置嗎？').replace('{count}', deletableIds.length)}\n${names}`;
+if (!confirm(confirmMessage)) return;
+const previousPresets = getJsonClone(scenarioPresets);
+deletableIds.forEach(id => delete scenarioPresets[id]);
+if (!scenarioPresets[activePresetId]) activePresetId = Object.keys(scenarioPresets)[0] || 'default';
+if (!persistJson('sanko_scenario_presets_v2', scenarioPresets, '角色配置')) {
+scenarioPresets = previousPresets;
+renderPresetDeleteList();
+return;
+}
+localStorage.setItem('sanko_active_preset_id', activePresetId);
+renderPresetSelector();
+loadPresetToForm(activePresetId);
+renderDesktopGameSettings();
+alert(uiText('已刪除 {count} 個配置。').replace('{count}', deletableIds.length));
+}
+
+function selectDesktopPreset(id) {
             if (!scenarioPresets[id] || id === activePresetId) return;
             commitCurrentPresetSilently();
             loadPresetToForm(id);
@@ -2683,10 +3030,18 @@ updateSetupCurrentPresetLabel();
             renderDesktopPresetOverview();
         }
 
-        function updateDesktopPresetName(value) {
-            const input = document.getElementById('input-preset-name');
-            if (input) input.value = value;
-        }
+ function updateDesktopPresetName(value) {
+ const input = document.getElementById('input-preset-name');
+ if (input) input.value = value;
+ const nextName = valueToText(value, uiText('未命名配置'));
+ if (scenarioPresets[activePresetId]) scenarioPresets[activePresetId].presetName = nextName;
+ const desktopOption = document.querySelector(`#desktop-preset-selector option[value="${CSS.escape(activePresetId)}"]`);
+ if (desktopOption) desktopOption.textContent = `${nextName}${scenarioPresets[activePresetId]?.isLocked ? ' 🔒' : ''}`;
+ const legacyOption = document.querySelector(`#preset-selector option[value="${CSS.escape(activePresetId)}"]`);
+ if (legacyOption) legacyOption.textContent = `${nextName}${scenarioPresets[activePresetId]?.isLocked ? ' 🔒' : ''}`;
+ renderDesktopPresetOverview();
+ updateSetupCurrentPresetLabel();
+ }
 
         function setDesktopLanguageMode(value) {
             syncPresetLanguageMode(value);
@@ -2764,7 +3119,7 @@ updateSetupCurrentPresetLabel();
 <div class="scenario-label u-inline-064">詳細設定</div>
  <div class="anime-sheet">
  <div><label>年齡 / 身高 / 體型</label><input type="text" id="npc-age-${index}" value="${escapeStatusHtml(npc.details?.age || '')}"></div>
- <div>
+ <div class="character-voice-field">
  <div class="character-test-inline">
  <label>說話習慣 / 語氣</label>
  <button type="button" class="btn character-test-mini-btn" onclick="testCharacterVoice('npc', ${index})">測試語氣</button>
@@ -2900,10 +3255,10 @@ function openRandomGenerator(mode = 'world') {
                 console.error('Random generator panel is unavailable; blocked an empty modal overlay.');
                 return;
             }
-            const useDesktopColumn = isDesktopConfigLayout()
-                && desktopConfigWorkspace === 'game'
-                && screen?.style.display === 'flex'
-                && box && editor;
+ const useDesktopColumn = isDesktopConfigLayout()
+ && ['scenarios', 'game'].includes(desktopConfigWorkspace)
+ && screen?.style.display === 'flex'
+ && box && editor;
             if (useDesktopColumn) {
                 modal.style.display = 'none';
                 editor.appendChild(box);
@@ -3316,13 +3671,14 @@ localStorage.setItem('sanko_active_preset_id', activePresetId);
 currentScenario = clonePersistentValue(p);
 clearEditScenarioDirty();
 renderPresetSelector();
+renderDesktopGameSettings();
             
             const statInputs = document.querySelectorAll('.stat-input');
             statInputs.forEach(input => input.disabled = true);
             document.getElementById('btn-roll-stats').style.display = 'none';
             document.getElementById('btn-respec-stats').style.display = 'inline-block';
             
-            alert("當前配置變更已成功儲存！基礎屬性已被鎖定！");
+alert(uiText('當前配置變更已成功儲存！基礎屬性已被鎖定！'));
         }
 
         function saveAsNewPreset() {
@@ -3330,7 +3686,7 @@ renderPresetSelector();
             const currentName = document.getElementById('input-preset-name').value.trim(); 
             const defaultName = currentName ? currentName + ' (另存)' : '未命名配置 (另存)';
             
-            const userInput = prompt("請輸入新的劇本配置名稱：", defaultName);
+ const userInput = prompt(uiText('另存配置：請輸入新的配置檔名'), defaultName);
             if (userInput === null) return; 
             
             const newPresetName = userInput.trim() || defaultName;
@@ -3348,7 +3704,7 @@ renderPresetSelector();
                 return;
             }
             localStorage.setItem('sanko_active_preset_id', activePresetId);
-            currentScenario = clonePersistentValue(p); renderPresetSelector(); loadPresetToForm(newId); alert(`已另存新檔為「${newPresetName}」！基礎屬性已被鎖定！`);
+currentScenario = clonePersistentValue(p); renderPresetSelector(); loadPresetToForm(newId); alert(uiText('已另存新檔為「{name}」！基礎屬性已被鎖定！').replace('{name}', newPresetName));
         }
 
 function cancelEdit() {
@@ -4079,10 +4435,14 @@ renderAdventureJournal();
             journalPageIndex = Math.max(0, Math.min(journalPageIndex, pageCount - 1));
             const start = journalPageIndex * JOURNAL_PAGE_SIZE;
             const visibleEntries = filteredEntries.slice(start, start + JOURNAL_PAGE_SIZE);
-            const locale = uiLocale();
-            meta.textContent = journalSearchText
-                ? (locale === 'en' ? `Found ${filteredEntries.length} / ${allEntries.length} entries` : locale === 'ja' ? `${filteredEntries.length} / ${allEntries.length} 件見つかりました` : `找到 ${filteredEntries.length} / ${allEntries.length} 條紀錄`)
-                : (locale === 'en' ? `${allEntries.length} entries; up to ${JOURNAL_PAGE_SIZE} per page` : locale === 'ja' ? `全 ${allEntries.length} 件；1ページ最大 ${JOURNAL_PAGE_SIZE} 件` : `共 ${allEntries.length} 條紀錄；每頁最多 ${JOURNAL_PAGE_SIZE} 條`);
+ const locale = uiLocale();
+ meta.textContent = journalSearchText
+ ? uiText('找到 {filtered} / {total} 條紀錄')
+ .replace('{filtered}', filteredEntries.length)
+ .replace('{total}', allEntries.length)
+ : uiText('共 {total} 條紀錄；每頁最多 {pageSize} 條')
+ .replace('{total}', allEntries.length)
+ .replace('{pageSize}', JOURNAL_PAGE_SIZE);
             pageLabel.textContent = locale === 'en' ? `Page ${journalPageIndex + 1} / ${pageCount}` : locale === 'ja' ? `${journalPageIndex + 1} / ${pageCount} ページ` : `第 ${journalPageIndex + 1} / ${pageCount} 頁`;
             if (prevButton) prevButton.disabled = journalPageIndex <= 0;
             if (nextButton) nextButton.disabled = journalPageIndex >= pageCount - 1;
@@ -4343,47 +4703,73 @@ document.getElementById('save-menu-screen').style.display = 'flex';
 renderSaveList();
 }
 
-        function renderSaveList() {
-            const listDiv = document.getElementById('save-list');
-            listDiv.innerHTML = '';
-            updateStorageHealthDisplay();
-            const saveKeys = Object.keys(savesData).sort((a, b) => String(b).localeCompare(String(a)));
-            if (saveKeys.length === 0) { listDiv.innerHTML = `<p class="u-inline-077">${escapeStatusHtml(uiText('目前沒有任何存檔紀錄。'))}</p>`; return; }
-            saveKeys.forEach(id => {
-                const saveData = savesData[id] && typeof savesData[id] === 'object' ? savesData[id] : {};
-                const scenario = saveData.scenario && typeof saveData.scenario === 'object' ? saveData.scenario : {};
-                const pName = valueToText(scenario.playerName, uiText('玩家'));
-                let tName = '群像劇';
-                if (Array.isArray(scenario.npcs) && scenario.npcs.length > 0) tName = valueToText(scenario.npcs[0]?.name, tName);
-                else if (scenario.targetName) tName = valueToText(scenario.targetName, tName);
-
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'save-slot';
-
-                const deleteButton = document.createElement('button');
-                deleteButton.className = 'delete-save-btn';
-                deleteButton.innerText = uiText('刪除');
-                deleteButton.onclick = event => { event.stopPropagation(); deleteSave(id); };
-
-                const title = document.createElement('div');
-                title.className = 'save-title';
-                title.innerText = valueToText(saveData.title, uiText('未命名存檔'));
-
-                const info = document.createElement('div');
-                info.className = 'save-info';
-                const locale = uiLocale();
-                info.innerText = locale === 'en' ? `Featured NPC: ${tName} | Player: ${pName}` : locale === 'ja' ? `代表NPC：${tName}｜プレイヤー：${pName}` : `代表NPC: ${tName} | 玩家: ${pName}`;
-
-                const date = document.createElement('div');
-                date.className = 'save-info u-inline-078';
-                const dateValue = valueToText(saveData.date, uiText('未知'));
-                date.innerText = locale === 'en' ? `Last played: ${dateValue}` : locale === 'ja' ? `最終プレイ：${dateValue}` : `最後遊玩：${dateValue}`;
-
-                slotDiv.append(deleteButton, title, info, date);
-                slotDiv.onclick = () => loadGame(id);
-                listDiv.appendChild(slotDiv);
-            });
-        }
+function renderSaveList() {
+const listDiv = document.getElementById('save-list');
+if (!listDiv) return;
+listDiv.innerHTML = '';
+updateStorageHealthDisplay();
+const saveKeys = Object.keys(savesData || {}).sort((a, b) => String(b).localeCompare(String(a)));
+if (saveKeys.length === 0) {
+window.journeySelectedSaveIds.clear();
+listDiv.innerHTML = `<p class="u-inline-077">${escapeStatusHtml(uiText('目前沒有任何存檔紀錄。'))}</p>`;
+updateSaveSelectAllState();
+return;
+}
+saveKeys.forEach(id => {
+const saveData = savesData[id] && typeof savesData[id] === 'object' ? savesData[id] : {};
+const scenario = saveData.scenario && typeof saveData.scenario === 'object' ? saveData.scenario : {};
+const pName = valueToText(scenario.playerName, uiText('玩家'));
+const presetId = scenario.sourcePresetId || scenario.id || '';
+const presetName = valueToText(scenarioPresets[presetId]?.presetName || scenario.presetName, uiText('未命名配置'));
+let tName = '群像劇';
+if (Array.isArray(scenario.npcs) && scenario.npcs.length > 0) tName = valueToText(scenario.npcs[0]?.name, tName);
+if (scenario.targetName) tName = valueToText(scenario.targetName, tName);
+const slotDiv = document.createElement('div');
+slotDiv.className = 'save-slot';
+slotDiv.onclick = event => {
+if (event.target.closest('input, button, label')) return;
+loadGame(id);
+};
+const main = document.createElement('div');
+main.className = 'save-slot-main';
+const titleInput = document.createElement('input');
+titleInput.className = 'save-title-input save-title';
+titleInput.value = valueToText(saveData.title, uiText('未命名存檔'));
+titleInput.setAttribute('aria-label', uiText('修改記憶紀錄檔名'));
+titleInput.onclick = event => event.stopPropagation();
+titleInput.onchange = event => renameSaveTitle(id, event.target.value);
+titleInput.onkeydown = event => {
+if (event.key === 'Enter') {
+event.preventDefault();
+event.currentTarget.blur();
+}
+};
+const info = document.createElement('div');
+info.className = 'save-info';
+const locale = uiLocale();
+info.innerText = locale === 'en'
+? `Preset: ${presetName}\nPartner/NPC: ${tName} | Player: ${pName}\nLast played: ${saveData.date || ''}`
+: locale === 'ja'
+? `設定：${presetName}\n相手/NPC：${tName}｜プレイヤー：${pName}\n最終プレイ：${saveData.date || ''}`
+: `配置：${presetName}\n代表NPC: ${tName}｜玩家: ${pName}\n最後遊玩：${saveData.date || ''}`;
+const frame = document.createElement('label');
+frame.className = 'save-select-frame';
+frame.setAttribute('aria-label', uiText('選取此記憶紀錄'));
+frame.onclick = event => event.stopPropagation();
+const checkbox = document.createElement('input');
+checkbox.type = 'checkbox';
+checkbox.className = 'save-select-box';
+checkbox.checked = window.journeySelectedSaveIds.has(String(id));
+checkbox.onchange = event => toggleSaveSelection(id, event.target.checked);
+main.appendChild(titleInput);
+main.appendChild(info);
+frame.appendChild(checkbox);
+slotDiv.appendChild(main);
+slotDiv.appendChild(frame);
+listDiv.appendChild(slotDiv);
+});
+updateSaveSelectAllState();
+}
 
         function createNewSave() {
             const defaultName = `群像劇紀錄 - ${new Date().toLocaleDateString()}`;
@@ -4402,137 +4788,91 @@ renderSaveList();
             loadGame(id); 
         }
 
-        function deleteSave(id) {
-            if(confirm("確定要刪除這個存檔嗎？此操作無法復原。")) {
-                const removedSave = savesData[id];
-                delete savesData[id];
-                if (!removePersistedSave(id, '刪除遊戲存檔')) { savesData[id] = removedSave; return; }
-                localStorage.removeItem(getInputDraftStorageKey(id));
-                if(currentSaveId === id) currentSaveId = null;
-                renderSaveList();
-            }
-        }
 
 function exportSaves() {
-saveCurrentProgress();
-if (Object.keys(savesData).length === 0 && Object.keys(scenarioPresets).length === 0) { alert("目前沒有資料可以匯出。"); return; }
-            const exportPayload = {
-                version: 4,
-                exportedAt: new Date().toISOString(),
-                saves: savesData,
-                scenarioPresets,
-                activePresetId,
-                apiUsageStats,
-                uiTheme,
-                uiLanguage: window.getUiLanguage ? getUiLanguage() : 'zh-TW',
-                homePic: document.getElementById('setup-pic')?.src || ''
-            };
-            const dataStr = JSON.stringify(exportPayload);
-            const blob = new Blob([dataStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `AVG_Engine_Full_Backup_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            localStorage.setItem(LAST_BACKUP_STORAGE_KEY, new Date().toISOString());
+const hasSaves = Object.keys(savesData || {}).length > 0;
+const hasPresets = Object.keys(scenarioPresets || {}).length > 0;
+if (!hasSaves && !hasPresets) {
+alert(uiText('目前沒有資料可以匯出。'));
+return;
+}
+const selectedIds = getSelectedSaveIds();
+const payload = buildBackupPayload(selectedIds.length ? selectedIds : null);
+const scopeName = selectedIds.length ? 'Selected_Saves' : 'Backup';
+downloadJsonFile(payload, `Journey_Notes_${scopeName}_${new Date().toISOString().slice(0,10)}.json`);
+localStorage.setItem(LAST_BACKUP_STORAGE_KEY, new Date().toISOString());
 updateStorageHealthDisplay();
 }
 
 function exportCurrentPreset() {
 syncEditingDataFromDOM();
-const preset = scenarioPresets[activePresetId] || gatherPresetData(activePresetId || `preset_${Date.now()}`, document.getElementById('input-preset-name')?.value?.trim() || '未命名配置');
-const safePreset = clonePersistentValue(preset);
+const sections = getPresetExportSections();
+const sourcePreset = scenarioPresets[activePresetId]
+|| gatherPresetData(activePresetId || `preset_${Date.now()}`, document.getElementById('input-preset-name')?.value?.trim() || '未命名配置');
+const safePreset = filterPresetForSections(sourcePreset, sections);
 const payload = {
-version: 1,
+version: 2,
 type: 'journey-notes-preset',
 exportedAt: new Date().toISOString(),
-preset: safePreset
+exportSections: sections,
+preset: safePreset,
+privacy: {
+excludes: ['apiKeys', 'homePhoto', 'privateTokens']
+}
 };
 const safeName = valueToText(safePreset.presetName, '未命名配置').replace(/[\\/:*?"<>|]+/g, '_').slice(0, 48);
-const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a');
-a.href = url;
-a.download = `Journey_Notes_Preset_${safeName}_${new Date().toISOString().slice(0,10)}.json`;
-a.click();
-URL.revokeObjectURL(url);
+downloadJsonFile(payload, `Journey_Notes_Preset_${safeName}_${new Date().toISOString().slice(0,10)}.json`);
 }
 
 function importSaves(input) {
-            if (!input.files || !input.files[0]) return;
-            const file = input.files[0];
-            if (file.size > 50 * 1024 * 1024) { alert('匯入失敗：備份檔超過 50MB。'); input.value = ''; return; }
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    const isFullBackup = importedData && typeof importedData === 'object' && !Array.isArray(importedData) && ('saves' in importedData || 'scenarioPresets' in importedData);
-                    const importedSaves = isFullBackup ? (importedData.saves || {}) : importedData;
-                    const importedPresets = isFullBackup ? (importedData.scenarioPresets || {}) : {};
-                    if (!importedSaves || typeof importedSaves !== 'object' || Array.isArray(importedSaves)) throw new Error('存檔集合格式不正確');
-
-                    let presetCount = 0;
-                    let importedCount = 0;
-                    let collisionCount = 0;
-                    const presetIdMap = {};
-
-                    if (importedPresets && typeof importedPresets === 'object' && !Array.isArray(importedPresets)) {
-                        Object.entries(importedPresets).forEach(([sourceId, preset]) => {
-                            if (!preset || typeof preset !== 'object' || Array.isArray(preset)) return;
-                            let targetId = String(sourceId || `preset_${Date.now()}`);
-                            while (scenarioPresets[targetId]) {
-                                collisionCount += 1;
-                                targetId = `${sourceId}_import_${Date.now()}_${collisionCount}`;
-                            }
-                            const copiedPreset = clonePersistentValue(preset);
-                            copiedPreset.id = targetId;
-                            scenarioPresets[targetId] = copiedPreset;
-                            presetIdMap[sourceId] = targetId;
-                            presetCount += 1;
-                        });
-                    }
-
-                    Object.entries(importedSaves).forEach(([sourceId, save]) => {
-                        if (!save || typeof save !== 'object' || Array.isArray(save)) return;
-                        let targetId = String(sourceId || Date.now());
-                        while (savesData[targetId]) {
-                            collisionCount += 1;
-                            targetId = `${sourceId}_import_${Date.now()}_${collisionCount}`;
-                        }
-                        const copiedSave = clonePersistentValue(save);
-                        const sourcePresetId = copiedSave.scenario?.sourcePresetId;
-                        if (sourcePresetId && presetIdMap[sourcePresetId]) copiedSave.scenario.sourcePresetId = presetIdMap[sourcePresetId];
-                        savesData[targetId] = copiedSave;
-                        importedCount += 1;
-                    });
-
-                    if (!importedCount && !presetCount) throw new Error('沒有可用的存檔或角色配置');
-                    if (isFullBackup && importedData.apiUsageStats && typeof importedData.apiUsageStats === 'object') {
-                        apiUsageStats = importedData.apiUsageStats;
-                        saveApiUsageStats();
-                    }
-                    if (isFullBackup && importedData.uiTheme && typeof importedData.uiTheme === 'object') {
-                        applyUiTheme(importedData.uiTheme, true);
-                    }
-                    if (isFullBackup && importedData.uiLanguage && window.setUiLanguage) {
-                        setUiLanguage(importedData.uiLanguage, { notify: false });
-                    }
-                    if (isFullBackup && typeof importedData.homePic === 'string' && importedData.homePic.startsWith('data:image/')) {
-                        document.getElementById('setup-pic').src = importedData.homePic;
-                        persistLargeValue('sanko_home_pic', importedData.homePic, '首頁頭像');
-                    }
-                    persistJson('sanko_scenario_presets_v2', scenarioPresets, '匯入角色配置');
-                    persistJson('sanko_saves_v8', savesData, '匯入存檔');
-                    renderPresetSelector();
-                    renderSaveList();
-                    alert(`匯入完成：${importedCount} 個存檔、${presetCount} 個角色配置${collisionCount ? `，${collisionCount} 個同 ID 資料已自動改名` : ''}。`);
-                }
-                catch (err) { alert(`匯入失敗：${err.message || '檔案格式不正確或已損毀。'}`); }
-                input.value = ""; 
-            };
-            reader.readAsText(file);
-        }
+const file = input.files?.[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = event => {
+try {
+const importedData = JSON.parse(event.target.result);
+const importedSaves = importedData.saves || importedData.savesData || {};
+const importedPresets = importedData.scenarioPresets || importedData.presets || {};
+if ((!importedSaves || typeof importedSaves !== 'object' || Array.isArray(importedSaves))
+&& (!importedPresets || typeof importedPresets !== 'object' || Array.isArray(importedPresets))) {
+throw new Error('沒有可用的存檔或角色配置');
+}
+let presetCount = 0;
+let saveCount = 0;
+const presetIdMap = {};
+Object.entries(importedPresets || {}).forEach(([sourceId, rawPreset]) => {
+if (!rawPreset || typeof rawPreset !== 'object' || Array.isArray(rawPreset)) return;
+const preset = normalizeImportedPreset(rawPreset, { characters: true, scenarios: true });
+presetIdMap[sourceId] = preset.id;
+scenarioPresets[preset.id] = preset;
+presetCount += 1;
+});
+Object.entries(importedSaves || {}).forEach(([sourceId, rawSave]) => {
+if (!rawSave || typeof rawSave !== 'object' || Array.isArray(rawSave)) return;
+const targetId = savesData[sourceId] ? `save_${Date.now()}_${Math.random().toString(36).slice(2, 7)}` : sourceId;
+const copiedSave = stripImagesAndPrivateData(getJsonClone(rawSave));
+if (copiedSave.scenario?.sourcePresetId && presetIdMap[copiedSave.scenario.sourcePresetId]) {
+copiedSave.scenario.sourcePresetId = presetIdMap[copiedSave.scenario.sourcePresetId];
+}
+savesData[targetId] = copiedSave;
+saveCount += 1;
+});
+if (!saveCount && !presetCount) throw new Error('沒有可用的存檔或角色配置');
+if (importedData.uiTheme && typeof importedData.uiTheme === 'object') applyUiTheme(stripImagesAndPrivateData(importedData.uiTheme), true);
+if (importedData.uiLanguage && window.setUiLanguage) setUiLanguage(importedData.uiLanguage, { notify: false });
+persistJson('sanko_scenario_presets_v2', scenarioPresets, '匯入角色配置');
+persistJson('sanko_saves_v8', savesData, '匯入存檔');
+renderPresetSelector();
+renderSaveList();
+alert(`匯入完成：${saveCount} 個存檔、${presetCount} 個角色配置。圖片與私密資料已略過。`);
+} catch (error) {
+alert(`匯入失敗：${error.message || '檔案格式不正確或已損毀。'}`);
+} finally {
+input.value = '';
+}
+};
+reader.readAsText(file);
+}
 
         function saveCurrentProgress() {
             if(!currentSaveId || !savesData[currentSaveId]) return false;

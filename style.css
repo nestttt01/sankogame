@@ -79,16 +79,15 @@
         #input-player-name,
         [id^="npc-name-"],
         .desktop-npc-avatar-button > span:last-child,
-        .desktop-overview-heading strong,
-        .desktop-workspace-heading h2,
-        .desktop-overview-card strong,
-        .desktop-config-tab,
-        .desktop-config-back {
-            font-family: "TRPG Cubic Pixel", "Microsoft JhengHei", sans-serif;
-            font-synthesis: none;
-        }
+.desktop-overview-heading strong,
+.desktop-workspace-heading h2,
+.desktop-overview-card strong,
+.desktop-config-tab {
+font-family: "TRPG Cubic Pixel", "Microsoft JhengHei", sans-serif;
+font-synthesis: none;
+}
 
-        /* Cubic 11：主要標題、指南標題、角色面板標題及所有按鈕。 */
+/* Cubic 11：主要標題、指南標題、角色面板標題及所有按鈕。 */
         #setup-screen h2,
         #setup-screen .u-inline-026,
         #setup-screen .api-home-guide strong,
@@ -287,15 +286,13 @@ z-index: 10;
 
         .scenario-label { font-size: 13px; font-weight: 800; color: var(--text-main); margin-bottom: 4px; letter-spacing: 1px; display: block; }
 
-        .save-slot { background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 12px; padding: 15px; cursor: pointer; transition: all 0.2s; text-align: left; position: relative; }
+.save-slot { display: grid; grid-template-columns: minmax(0, 1fr) 20px; align-items: center; gap: 10px; background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; text-align: left; position: relative; }
         .save-slot:hover { background: var(--accent-neon); box-shadow: var(--hard-shadow); transform: translate(-2px, -2px); }
         .save-title { font-weight: 800; color: var(--text-main); margin-bottom: 5px; font-size: 15px; padding-right: 60px; }
         .save-info { font-size: 12px; color: var(--text-sub); font-weight: 600; }
         .save-slot:hover .save-info { color: var(--text-main); }
 
-        .delete-save-btn { position: absolute; top: 12px; right: 12px; background: var(--card-bg); border: 2px solid var(--border-dark); color: var(--text-main); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.2s; z-index: 2; }
-
-        .journal-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.journal-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
         .journal-header h2 { margin: 0; text-align: left; }
         .journal-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-bottom: 10px; }
         .journal-toolbar select, .journal-toolbar input { width: 100%; min-width: 0; padding: 11px 12px; border: 2px solid var(--border-dark); border-radius: 8px; background: var(--card-bg); color: var(--text-main); font-size: 16px; font-weight: 800; }
@@ -816,16 +813,36 @@ background: var(--paper-bg);
             font-weight: 900;
             color: var(--text-main);
         }
-        #status-page-state .language-mode-select {
-            min-height: 36px;
-            margin: 0;
-            padding: 6px 12px;
-            border: 3px solid var(--border-dark);
+#status-page-state .language-mode-select {
+min-height: 36px;
+margin: 0;
+padding: 6px 12px;
+border: 3px solid var(--border-dark);
             border-radius: 9px;
             background: var(--card-bg);
-            box-shadow: none;
-            font-size: 14px;
-        }
+box-shadow: none;
+font-size: 14px;
+}
+
+#status-page-state .language-mode-select {
+justify-self: start;
+width: 190px;
+min-height: 30px;
+padding: 4px 10px;
+border: 3px solid var(--border-dark);
+border-radius: 9px;
+font-size: 12px;
+}
+
+.game-model-select {
+width: 86px;
+max-width: 86px;
+min-height: 30px;
+padding: 4px 8px;
+border-width: 2px;
+border-radius: 8px;
+font-size: 11px;
+}
         #status-summary-display {
             border-top: 3px solid var(--border-dark);
             padding-top: 14px;
@@ -1222,7 +1239,8 @@ border-radius: 16px;
                 z-index: 1;
             }
 
-.setup-side-tabs {
+.setup-side-tabs,
+.desktop-config-tabs {
 position: absolute;
 top: 82px;
 bottom: 32px;
@@ -1236,6 +1254,10 @@ align-items: flex-end;
                 z-index: 0;
             }
 
+.desktop-config-tabs {
+left: -3px;
+}
+
             .setup-side-unlocked {
                 display: none;
                 flex-direction: column;
@@ -1248,7 +1270,8 @@ align-items: flex-end;
                 display: flex;
             }
 
-.setup-side-tab {
+.setup-side-tab,
+.desktop-config-tab {
 width: 36px;
 min-height: 104px;
 padding: 13px 5px;
@@ -1550,25 +1573,6 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
                 flex-basis: 570px; width: min(570px, 42vw); min-width: 430px;
             }
 
-            .desktop-config-tabs {
-                position: absolute; left: -3px; top: 82px; transform: translateX(-100%);
-                display: flex; flex-direction: column; gap: 6px;
-            }
-            .desktop-config-tab {
-                width: 52px; min-height: 118px; padding: 12px 11px;
-                border: 3px solid var(--border-dark); border-right: 0; border-radius: 12px 0 0 12px;
-background: var(--paper-bg); color: var(--text-main); cursor: pointer;
-                writing-mode: vertical-rl; text-orientation: upright;
-                font-size: 14px; font-weight: 900; letter-spacing: 2px;
-                transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
-            }
-            .desktop-config-tab.active,
-            .desktop-config-tab:hover {
-                background: var(--accent-neon);
-                box-shadow: -4px 5px 0 #282828;
-                transform: translateY(-2px);
-            }
-
             .desktop-config-overview-inner {
                 flex: 1; min-height: 0; display: block;
             }
@@ -1668,9 +1672,24 @@ background: var(--paper-bg); color: var(--text-main); cursor: pointer;
                 width: 44px; height: 44px; display: grid; place-items: center;
                 border-radius: 0; background: transparent; color: #808080; font-size: 14px; font-weight: 900;
             }
-            .desktop-overview-add-card { border-style: dashed; background: var(--card-bg); }
-            .desktop-overview-add-card .desktop-scenario-number { background: transparent; color: #282828; font-size: 22px; }
-            .desktop-game-card {
+.desktop-overview-add-card { border-style: dashed; background: var(--card-bg); }
+.desktop-overview-add-card .desktop-scenario-number { background: transparent; color: #282828; font-size: 22px; }
+.desktop-scenario-random-panel {
+display: grid;
+gap: 12px;
+margin-top: auto;
+padding-top: 18px;
+border-top: 1px solid var(--accent-gray);
+}
+.desktop-scenario-random-panel strong {
+color: var(--text-main);
+font-size: 12px;
+font-weight: 900;
+}
+.desktop-scenario-random-actions {
+margin: 0;
+}
+.desktop-game-card {
                 margin: 18px 0 auto; padding: 26px; min-height: 160px;
                 display: flex; flex-direction: column; justify-content: center; gap: 8px;
                 background: var(--card-bg); box-shadow: 4px 4px 0 var(--accent-neon);
@@ -1678,16 +1697,6 @@ background: var(--paper-bg); color: var(--text-main); cursor: pointer;
             .desktop-game-card-label { color: #808080; font-size: 12px; font-weight: 900; letter-spacing: 1px; }
             .desktop-game-card strong { font-size: 28px; }
             #desktop-game-summary { color: var(--text-sub); font-size: 13px; font-weight: 800; }
-
-            .desktop-config-back {
-                position: absolute; left: -3px; bottom: 32px; transform: translateX(-100%);
-                width: 52px; min-height: 94px; padding: 12px 11px;
-                border: 3px solid var(--border-dark); border-right: 0; border-radius: 12px 0 0 12px;
-                background: var(--border-dark); color: #fff; cursor: pointer;
-                writing-mode: vertical-rl; text-orientation: upright;
-                font-size: 14px; font-weight: 900; letter-spacing: 2px;
-            }
-            .desktop-config-back:hover { background: var(--accent-neon); color: var(--text-main); }
 
             #desktop-config-editor {
                 display: none; flex: 0 1 680px; width: min(680px, 48vw);
@@ -1721,7 +1730,6 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             #edit-scenario-screen[data-editor-section="scenario"] #scenario-list-container,
             #edit-scenario-screen[data-editor-section="game"] #edit-scenario-container > .u-inline-035,
             #edit-scenario-screen[data-editor-section="game"] #input-preset-name,
-            #edit-scenario-screen[data-editor-section="game"] #edit-scenario-container > .random-generator-actions,
             #edit-scenario-screen[data-editor-section="game"] #preset-player-editor { display: block; }
 
             #edit-scenario-screen[data-editor-section="player"] #preset-player-editor .language-setting-row,
@@ -1733,21 +1741,44 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             #edit-scenario-screen[data-editor-section="game"] #preset-player-editor .game-difficulty-note { display: grid; }
             #edit-scenario-screen[data-editor-section="game"] #preset-player-editor .game-difficulty-note { display: block; }
 
-            #desktop-config-editor #preset-player-editor {
-                padding: 0; margin: 0; border: 0; background: transparent;
-            }
+#desktop-config-editor #preset-player-editor {
+position: relative;
+padding: 0; margin: 0; border: 0; background: transparent;
+}
+#desktop-config-editor .desktop-player-new-preset-btn {
+position: absolute;
+top: 0;
+right: 0;
+width: 34px;
+height: 34px;
+display: grid;
+place-items: center;
+padding: 0;
+border: 0;
+background: transparent;
+color: var(--accent-neon);
+font-size: 34px;
+font-weight: 400;
+line-height: 1;
+cursor: pointer;
+}
+#desktop-config-editor .desktop-player-new-preset-btn:hover,
+#desktop-config-editor .desktop-player-new-preset-btn:focus-visible {
+color: var(--text-main);
+outline: none;
+}
             #desktop-config-editor #preset-player-editor > .u-inline-037 { display: none; }
             #desktop-config-editor .avatar-setup-area {
                 border: 0; background: transparent; padding: 4px; margin-bottom: 12px;
             }
             #desktop-config-editor .avatar-label { display: none; }
             #desktop-config-editor .avatar-preview { width: 82px; height: 82px; }
-            #desktop-config-editor .scenario-input,
-            #desktop-config-editor .language-mode-select,
-            #desktop-config-editor .anime-sheet input,
-            #desktop-config-editor .anime-sheet textarea {
-                border: 2px solid #808080; box-shadow: none; background: var(--card-bg);
-            }
+#desktop-config-editor .scenario-input,
+#desktop-config-editor .language-mode-select,
+#desktop-config-editor .anime-sheet input,
+#desktop-config-editor .anime-sheet textarea {
+border: 1px solid #808080; box-shadow: none; background: var(--card-bg);
+}
             #desktop-config-editor .scenario-input:focus,
             #desktop-config-editor .language-mode-select:focus,
             #desktop-config-editor .anime-sheet input:focus,
@@ -1799,30 +1830,12 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
                 justify-content: flex-start; padding-top: clamp(26px, 5vh, 48px);
             }
 
-            .desktop-config-tab {
-                width: 46px; min-height: 114px; padding: 16px 8px;
-                background: var(--border-dark); color: var(--accent-neon);
-                border: 2px solid var(--accent-neon); border-right: 0; border-radius: 12px 0 0 12px;
-                box-shadow: -6px 6px 0 var(--accent-gray);
-            }
-            .desktop-config-tab.active,
-            .desktop-config-tab:hover {
-                background: var(--border-dark); color: var(--accent-neon);
-                box-shadow: -8px 7px 0 var(--accent-gray);
-                transform: translateX(-2px);
-            }
-            .desktop-config-back {
-                width: 46px; background: var(--border-dark); color: var(--accent-neon);
-                border: 2px solid var(--accent-neon); border-right: 0;
-                box-shadow: -6px 6px 0 var(--accent-gray);
-            }
-            .desktop-config-back:hover { background: var(--border-dark); color: var(--accent-neon); box-shadow: -8px 7px 0 var(--accent-gray); }
-
-            .desktop-game-settings-card {
-                flex: 1; min-height: 0; overflow-y: auto;
-                padding: 14px 0 0; background: transparent;
-                border: 0; border-radius: 0; box-shadow: none;
-            }
+.desktop-game-settings-card {
+flex: 1; min-height: 0; overflow-y: auto;
+max-width: 720px;
+padding: 14px 0 0; background: transparent;
+border: 0; border-radius: 0; box-shadow: none;
+}
             .desktop-game-setting-row { margin-bottom: 17px; }
             .desktop-game-setting-row > label,
             .desktop-game-label-line label,
@@ -1831,40 +1844,154 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             }
             .desktop-game-setting-row > label,
             .desktop-game-label-line { margin-bottom: 7px; }
-            .desktop-game-label-line { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+            .desktop-game-label-line { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
             #desktop-preset-lock-btn {
-                width: 34px; height: 30px; padding: 0; border: 0; background: transparent;
-                color: var(--text-main); cursor: pointer; font-size: 16px;
+                width: 20px; height: 20px; padding: 0; border: 0; background: transparent;
+                color: var(--text-main); cursor: pointer; font-size: 12px; line-height: 1;
             }
-            .desktop-game-inline-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
-            .desktop-game-inline-control select,
-            #desktop-preset-name-input,
-            .desktop-game-setting-grid select {
-                width: 100%; min-width: 0; padding: 11px 12px;
-                border: 2px solid var(--border-dark); border-radius: 8px;
-                background: var(--card-bg); color: var(--text-main); font-size: 13px; font-weight: 800;
-            }
-            .desktop-game-add-btn,
-            .desktop-game-two-buttons button,
-            .desktop-game-management-actions button {
-                padding: 10px 13px; border: 2px solid var(--border-dark); border-radius: 8px;
-                background: var(--card-bg); color: var(--text-main); cursor: pointer; font-size: 12px; font-weight: 900;
-            }
+.desktop-game-inline-control { display: grid; grid-template-columns: auto auto; gap: 8px; justify-content: start; }
+.desktop-game-preset-control { display: block; }
+.desktop-game-inline-control select,
+#desktop-preset-name-input,
+.desktop-game-setting-grid select {
+width: min(260px, 100%); min-width: 0; min-height: 34px; padding: 7px 10px;
+border: 2px solid var(--border-dark); border-radius: 8px;
+background: var(--card-bg); color: var(--text-main); font-size: 13px; font-weight: 800;
+}
+.desktop-game-preset-control #desktop-preset-selector {
+width: min(260px, 100%);
+min-height: 30px;
+padding: 5px 10px;
+border: 0;
+border-radius: 0;
+background: var(--accent-neon);
+box-shadow: none;
+}
+#desktop-preset-name-input {
+display: block;
+width: min(260px, 100%);
+min-height: 30px;
+padding: 5px 2px 7px;
+border: 0;
+border-bottom: 2px dotted var(--text-sub);
+border-radius: 0;
+background: transparent;
+}
+.desktop-preset-binding-note {
+min-height: 1.35em;
+margin: 6px 0 0;
+color: var(--text-sub);
+font-size: 10px;
+font-weight: 800;
+line-height: 1.35;
+}
+.desktop-game-add-btn,
+.desktop-game-two-buttons button,
+.desktop-game-management-actions button {
+padding: 10px 13px; border: 2px solid var(--border-dark); border-radius: 8px;
+background: var(--card-bg); color: var(--text-main); cursor: pointer; font-size: 12px; font-weight: 900;
+box-shadow: none;
+transition: background 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
+}
             .desktop-game-add-btn { background: var(--card-bg); color: var(--text-main); white-space: nowrap; }
-            .desktop-game-two-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-            .desktop-game-two-buttons button:hover,
-            .desktop-game-management-actions button:hover { background: var(--accent-neon); }
-            .desktop-game-setting-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 9px; }
-            .desktop-game-setting-grid label { display: grid; gap: 7px; }
+.desktop-game-two-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.desktop-game-two-buttons button:hover,
+.desktop-game-two-buttons button:focus-visible,
+.desktop-game-management-actions button:hover,
+.desktop-game-management-actions button:focus-visible {
+background: var(--accent-neon);
+box-shadow: 4px 4px 0 var(--border-dark);
+transform: translate(-2px, -2px);
+outline: none;
+}
+.desktop-preset-bulk-panel {
+display: grid;
+gap: 8px;
+margin: 0 0 16px;
+}
+.desktop-preset-bulk-toolbar {
+display: flex;
+align-items: center;
+gap: 12px;
+flex-wrap: wrap;
+margin-left: auto;
+}
+.desktop-preset-bulk-toolbar label,
+.desktop-preset-delete-row {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-size: 12px;
+font-weight: 900;
+color: var(--text-main);
+}
+.desktop-preset-bulk-toolbar button {
+width: auto;
+padding: 6px 10px;
+border: 2px solid var(--border-dark);
+border-radius: 8px;
+background: var(--card-bg);
+color: #ff4444;
+font-size: 12px;
+font-weight: 900;
+cursor: pointer;
+box-shadow: none;
+transition: background 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
+}
+.desktop-preset-bulk-toolbar button:hover,
+.desktop-preset-bulk-toolbar button:focus-visible {
+background: var(--accent-neon);
+box-shadow: 4px 4px 0 var(--border-dark);
+transform: translate(-2px, -2px);
+outline: none;
+}
+.desktop-preset-delete-list {
+display: grid;
+grid-template-columns: repeat(2, minmax(180px, 320px));
+gap: 6px 10px;
+justify-content: start;
+}
+.desktop-preset-delete-row {
+min-width: 0;
+padding: 5px 7px;
+border: 1px solid #cfcfcf;
+border-radius: 6px;
+background: var(--card-bg);
+}
+.desktop-preset-delete-row.disabled {
+opacity: 0.55;
+}
+.desktop-preset-delete-name {
+min-width: 0;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.desktop-game-setting-grid {
+display: flex;
+flex-wrap: wrap;
+align-items: end;
+gap: 12px 14px;
+margin-bottom: 9px;
+}
+ .desktop-game-setting-grid label { display: grid; gap: 7px; }
             .desktop-game-difficulty-note {
                 margin: 0 0 18px; color: var(--text-muted); font-size: 10px; font-weight: 700; line-height: 1.55;
             }
-            .desktop-game-management-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+            .desktop-game-management-actions {
+display: flex;
+align-items: center;
+flex-wrap: wrap;
+gap: 8px 10px;
+padding-bottom: 8px;
+margin-bottom: 10px;
+border-bottom: 0;
+}
             .desktop-game-management-actions .danger { color: #d33; border-color: #d33; }
-            .desktop-game-autosave-note {
-                margin-top: 16px; padding-top: 10px; border-top: 1px dashed #808080;
-                color: #808080; font-size: 11px; font-weight: 800;
-            }
+.desktop-game-autosave-note {
+margin-top: 16px; padding-top: 10px; border-top: 1px dashed #808080;
+color: #808080; font-size: 11px; font-weight: 800;
+}
 
             #edit-scenario-screen.random-generator-inline-open #desktop-config-overview {
                 flex: none; width: 100%; max-width: none; min-width: 0;
@@ -1892,9 +2019,10 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             #desktop-config-editor > .u-inline-051 { display: none !important; }
             #edit-scenario-screen[data-editor-section="game"] #desktop-config-editor { display: none !important; }
 
-            #edit-scenario-screen[data-editor-section="player"] #desktop-config-editor {
-                padding: 20px 28px 24px;
-            }
+#edit-scenario-screen[data-editor-section="player"] #desktop-config-editor,
+#edit-scenario-screen[data-editor-section="npc"] #desktop-config-editor {
+padding: 20px 28px 24px;
+}
             #edit-scenario-screen[data-editor-section="player"] .desktop-editor-title-row {
                 min-height: 38px; margin-bottom: 0;
             }
@@ -1952,33 +2080,16 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             }
 
             /* 角色／情境編輯細修：使用可自訂主題色，縮窄標籤與內容範圍。 */
- .desktop-config-tab,
- .setup-side-tab,
- .desktop-config-back {
- width: 36px; padding: 13px 5px;
- background: var(--border-dark); color: var(--accent-neon);
-                border-color: var(--accent-neon);
-                box-shadow: -5px 5px 0 var(--accent-gray);
-                font-size: 12px; letter-spacing: 1px;
-            }
- .desktop-config-tab,
- .setup-side-tab { min-height: 104px; }
-            .desktop-config-back { min-height: 82px; }
+.desktop-config-tab,
+.setup-side-tab { min-height: 104px; }
 .desktop-config-tab.active,
-.desktop-config-tab:hover,
-.desktop-config-back:hover {
-background: var(--border-dark); color: var(--accent-neon);
-box-shadow: -7px 6px 0 var(--accent-gray);
-}
-
 #setup-screen .setup-side-tab.active {
-  box-shadow: -5px 5px 0 var(--accent-gray);
-  transform: translate(-3px, -2px);
+box-shadow: -5px 5px 0 var(--accent-gray);
+transform: translate(-3px, -2px);
 }
 
 /* 英文側標籤：保留橫向單字形狀，再將整個單字側轉。 */
 html[lang="en"] .desktop-config-tab,
-html[lang="en"] .desktop-config-back,
 html[lang="en"] .setup-side-tab,
 html[lang="en"] #floating-menu-btn {
 writing-mode: sideways-lr;
@@ -2015,11 +2126,12 @@ white-space: nowrap;
                 border: 0; outline: 2px solid var(--border-dark); box-shadow: none; transform: none;
             }
 
-            #edit-scenario-screen[data-editor-section="player"] #preset-player-editor .anime-sheet,
-            #edit-scenario-screen[data-editor-section="npc"] #npc-list-container .anime-sheet {
-                grid-template-columns: 1fr 1fr; gap: 10px 12px;
-                margin: 0; padding: 0; background: transparent;
-            }
+#edit-scenario-screen[data-editor-section="player"] #preset-player-editor .anime-sheet,
+#edit-scenario-screen[data-editor-section="npc"] #npc-list-container .anime-sheet {
+width: 100%;
+grid-template-columns: 1fr 1fr; gap: 10px 12px;
+margin: 0; padding: 0; background: transparent;
+}
             #desktop-config-editor .anime-sheet .full { grid-column: 1 / -1; }
             #desktop-config-editor #p-app,
             #desktop-config-editor #p-bg,
@@ -2326,7 +2438,9 @@ color: var(--text-main);
 
 .setup-current-preset-save {
 margin: -6px 0 18px;
+transform: none;
 }
+
 
 .character-test-inline {
 display: flex;
@@ -2341,9 +2455,11 @@ margin: 0;
 
 .btn.character-test-mini-btn {
   width: auto;
-  height: 28px;
-  min-height: 28px;
+  height: 22px;
+  min-height: 22px;
+  box-sizing: border-box;
   padding: 0 10px;
+  border: 1px solid var(--text-sub);
   border-radius: 6px;
   font-size: 12px;
   line-height: 1;
@@ -2352,13 +2468,22 @@ margin: 0;
   justify-content: center;
   white-space: nowrap;
   position: relative;
-  top: -3px;
+  top: -5px;
 }
 
 .character-test-row {
 display: grid;
 gap: 8px;
 align-items: start;
+}
+
+#desktop-config-editor .character-voice-field {
+margin-top: -12px;
+}
+
+.character-test-row .scenario-input {
+border-width: 1px;
+border-color: var(--text-sub);
 }
 
 .character-test-row-top {
@@ -2417,4 +2542,157 @@ align-self: center;
 
 .journal-entry-important {
 box-shadow: 2px 2px 0 var(--accent-neon);
+}
+
+.setup-side-tab.setup-home-tab,
+.desktop-config-tab.desktop-config-home-tab {
+min-height: 54px;
+background: var(--accent-neon);
+color: var(--border-dark);
+border-color: var(--border-dark);
+font-size: 20px;
+line-height: 1;
+letter-spacing: 0;
+writing-mode: horizontal-tb;
+text-orientation: mixed;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+}
+
+.setup-home-tab img,
+.desktop-config-home-tab img {
+width: 22px;
+height: 22px;
+display: block;
+object-fit: contain;
+filter: brightness(0) saturate(100%) invert(13%) sepia(0%) saturate(0%) hue-rotate(183deg) brightness(95%) contrast(87%);
+pointer-events: none;
+}
+
+.setup-side-tab.setup-home-tab:hover,
+.desktop-config-tab.desktop-config-home-tab:hover {
+background: var(--accent-neon);
+color: var(--border-dark);
+box-shadow: -8px 7px 0 var(--accent-gray);
+transform: translateX(-2px);
+}
+
+.desktop-config-transfer-panel {
+display: flex;
+flex-direction: column;
+gap: 10px;
+padding-top: 4px;
+border-top: 0;
+}
+
+.desktop-config-export-options {
+display: flex;
+align-items: center;
+gap: 24px;
+flex-wrap: wrap;
+}
+
+.desktop-config-export-options label,
+.save-select-all {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-size: 14px;
+font-weight: 900;
+color: var(--text-main);
+}
+
+.desktop-config-export-options input,
+.save-select-all input,
+.save-select-box {
+width: 16px;
+height: 16px;
+accent-color: var(--accent-neon);
+cursor: pointer;
+}
+
+.desktop-config-transfer-actions {
+margin-top: 0;
+}
+
+.save-menu-toolbar {
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 8px;
+margin: 0 0 12px;
+}
+
+.save-toolbar-delete {
+margin: 0;
+padding: 4px 10px;
+min-height: 0;
+font-size: 13px;
+line-height: 1.2;
+}
+
+.save-slot-main {
+min-width: 0;
+}
+
+.save-title-input {
+width: 100%;
+padding: 0 0 4px;
+border: 0;
+border-bottom: 1px dashed transparent;
+background: transparent;
+color: var(--text-main);
+font: inherit;
+font-size: 15px;
+font-weight: 900;
+outline: none;
+}
+
+.save-title-input:hover,
+.save-title-input:focus {
+border-bottom-color: var(--text-sub);
+}
+
+.save-slot:hover .save-title-input {
+color: var(--text-main);
+}
+
+.save-select-frame {
+width: 18px;
+height: 18px;
+border: 0;
+border-radius: 0;
+background: transparent;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+}
+
+.save-select-frame .save-select-box {
+margin: 0;
+width: 16px;
+height: 16px;
+}
+
+@media (min-width: 1100px) {
+.setup-side-tabs,
+.desktop-config-tabs {
+top: 32px;
+}
+
+#setup-screen #save-menu-screen .setup-current-preset-save {
+width: min(100%, 620px);
+margin-left: auto;
+margin-right: auto;
+text-align: left;
+transform: none;
+overflow-wrap: anywhere;
+}
+
+#setup-screen #save-menu-screen .save-menu-toolbar {
+margin: -35px 0 10px;
+}
 }
