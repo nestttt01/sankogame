@@ -143,7 +143,7 @@
         '詳細設定': ['Details', '詳細'],
         '玩家、NPC 與情境的詳細欄位集中在這裡。跑團中只想看摘要時，回到「狀態」頁即可。': ['Detailed player, NPC, and scenario fields are here. Return to Status when you only need a summary.', 'プレイヤー、NPC、シナリオの詳細項目はこちらです。要約だけを見る場合は「ステータス」に戻ってください。'],
         '編輯玩家細節設定': ['Edit Player Details', 'プレイヤー詳細を編集'],
-        '登場 NPC 管理': ['Manage NPCs', 'NPC管理'], '情境空間管理': ['Manage Scenes', 'シーン管理'],
+        '登場 NPC 管理': ['Manage NPCs', 'NPC管理'], '情境空間管理': ['Manage Scenes', 'シナリオ管理'],
         '角色名稱': ['Character Name', 'キャラクター名'], '目前好感度': ['Current Affection', '現在の好感度'], '目前好感度（死亡後停止）': ['Current Affection (locked after death)', '現在の好感度（死亡後は固定）'],
         '已死亡': ['Deceased', '死亡'], '已死亡・復活失敗': ['Deceased · Revival Failed', '死亡・復活失敗'],
         '動態狀態': ['Dynamic Status', '動的ステータス'], '當前情緒': ['Current Mood', '現在の気分'],
