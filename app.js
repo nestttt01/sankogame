@@ -261,6 +261,7 @@ tab.textContent = locale === 'en'
 window.addEventListener('ui-language-change', () => {
  updateSetupCurrentPresetLabel();
  syncSetupSideLabels();
+ if (document.getElementById('save-menu-screen')?.style.display === 'flex') renderSaveList();
  renderAdventureJournalSaveSelector();
  renderAdventureJournal();
 });
@@ -2076,39 +2077,92 @@ currentOpenTasks = serializeTaskChecklist(tasks);
             return { mood: '', condition: '', relationship: '', goal: '', memoryNotes: [], isDead: false, deathCause: '', diedAt: '', revivedAt: '', reviveAttempted: false, reviveLocked: false, reviveFailureReason: '', reviveAttemptedAt: '', lastReason: '', updatedAt: '' };
         }
 
-        function createPresetSnapshotFromScenario(sourceScenario, baselinePreset = null) {
-            const snapshot = clonePersistentValue(sourceScenario || defaultPreset);
-            const baselineNpcs = Array.isArray(baselinePreset?.npcs) ? baselinePreset.npcs : [];
-            delete snapshot.playerDynamic;
-            delete snapshot.sourcePresetId;
-            if (!Array.isArray(snapshot.npcs)) snapshot.npcs = [];
-            if (Array.isArray(snapshot.scenarios)) {
-                snapshot.scenarios.forEach(scene => { delete scene.runtimePlayerPresence; delete scene.runtimeGuideRole; });
-            }
-            snapshot.npcs = snapshot.npcs.map(npc => {
-                const cleanNpc = clonePersistentValue(npc);
-                delete cleanNpc.dynamic;
-                if (baselinePreset) {
-                    const baselineNpc = baselineNpcs.find(item =>
-                        (item.id && cleanNpc.id && item.id === cleanNpc.id)
-                        || (item.name && cleanNpc.name && item.name === cleanNpc.name)
-                    );
-                    if (baselineNpc && baselineNpc.affection !== undefined) cleanNpc.affection = baselineNpc.affection;
-                }
-                return cleanNpc;
-            });
-            return snapshot;
-        }
+function createPresetSnapshotFromScenario(sourceScenario, baselinePreset = null) {
+const snapshot = clonePersistentValue(sourceScenario || defaultPreset);
+delete snapshot.playerDynamic;
+delete snapshot.sourcePresetId;
+if (!Array.isArray(snapshot.npcs)) snapshot.npcs = [];
+if (Array.isArray(snapshot.scenarios)) {
+snapshot.scenarios.forEach(scene => { delete scene.runtimePlayerPresence; delete scene.runtimeGuideRole; });
+}
+snapshot.npcs = snapshot.npcs.map(npc => {
+const cleanNpc = clonePersistentValue(npc);
+delete cleanNpc.dynamic;
+return cleanNpc;
+});
+return snapshot;
+}
 
-        function createFreshScenarioFromPreset(preset) {
-            const fresh = createPresetSnapshotFromScenario(preset || defaultPreset);
-            fresh.playerDynamic = createEmptyDynamicState();
-            fresh.npcs.forEach(npc => { npc.dynamic = createEmptyDynamicState(); });
-            fresh.memoryNotesPaused = false;
-            return fresh;
-        }
+function createFreshScenarioFromPreset(preset) {
+const fresh = createPresetSnapshotFromScenario(preset || defaultPreset);
+fresh.playerDynamic = createEmptyDynamicState();
+fresh.npcs.forEach(npc => { npc.dynamic = createEmptyDynamicState(); });
+fresh.memoryNotesPaused = false;
+return fresh;
+}
 
-        function normalizeMemoryNotes(value) {
+function findMatchingRuntimeNpc(existingNpcs, nextNpc, index) {
+if (!Array.isArray(existingNpcs)) return null;
+const nextId = valueToText(nextNpc?.id);
+const nextName = valueToText(nextNpc?.name);
+return existingNpcs.find(item =>
+(nextId && valueToText(item?.id) === nextId)
+|| (nextName && valueToText(item?.name) === nextName)
+) || existingNpcs[index] || null;
+}
+
+function resolvePresetIdForScenario(scenario) {
+if (!scenario || typeof scenario !== 'object') return '';
+const directId = valueToText(scenario.sourcePresetId || scenario.id);
+if (directId && scenarioPresets[directId]) return directId;
+const presetName = valueToText(scenario.presetName);
+if (!presetName) return directId;
+return Object.keys(scenarioPresets).find(id => valueToText(scenarioPresets[id]?.presetName) === presetName) || directId;
+}
+
+function mergePresetIntoBoundSaveScenario(saveScenario, presetId, preset) {
+const previousScenario = saveScenario && typeof saveScenario === 'object' ? saveScenario : {};
+const nextScenario = createFreshScenarioFromPreset(preset);
+nextScenario.sourcePresetId = presetId;
+nextScenario.id = presetId;
+nextScenario.presetName = preset.presetName || nextScenario.presetName;
+nextScenario.playerDynamic = previousScenario.playerDynamic
+? clonePersistentValue(previousScenario.playerDynamic)
+: createEmptyDynamicState();
+nextScenario.memoryNotesPaused = previousScenario.memoryNotesPaused === true;
+
+const previousNpcs = Array.isArray(previousScenario.npcs) ? previousScenario.npcs : [];
+if (!Array.isArray(nextScenario.npcs)) nextScenario.npcs = [];
+nextScenario.npcs.forEach((npc, index) => {
+const previousNpc = findMatchingRuntimeNpc(previousNpcs, npc, index);
+npc.dynamic = previousNpc?.dynamic
+? clonePersistentValue(previousNpc.dynamic)
+: createEmptyDynamicState();
+});
+
+const previousScenarios = Array.isArray(previousScenario.scenarios) ? previousScenario.scenarios : [];
+if (Array.isArray(nextScenario.scenarios)) {
+nextScenario.scenarios.forEach((scene, index) => {
+const previousScene = previousScenarios.find(item =>
+valueToText(item?.name) && valueToText(item.name) === valueToText(scene?.name)
+) || previousScenarios[index];
+if (!previousScene) return;
+if (previousScene.runtimePlayerPresence !== undefined) scene.runtimePlayerPresence = previousScene.runtimePlayerPresence;
+if (previousScene.runtimeGuideRole !== undefined) scene.runtimeGuideRole = previousScene.runtimeGuideRole;
+});
+}
+
+return nextScenario;
+}
+
+function getCanonicalScenarioForSave(scenario) {
+if (!scenario || typeof scenario !== 'object') return scenario;
+const presetId = resolvePresetIdForScenario(scenario);
+const preset = presetId ? scenarioPresets[presetId] : null;
+return preset ? mergePresetIntoBoundSaveScenario(scenario, presetId, preset) : scenario;
+}
+
+function normalizeMemoryNotes(value) {
             const rawEntries = Array.isArray(value)
                 ? value
                 : valueToText(value).split(/\n+/);
@@ -3705,13 +3759,16 @@ clearEditScenarioDirty();
             activePresetId = newId; renderPresetSelector(); loadPresetToForm(newId);
         }
 
-        function getPresetBoundSaves(presetId) {
-            return Object.entries(savesData).filter(([, save]) => {
-                const scenario = save?.scenario;
-                if (!scenario || typeof scenario !== 'object') return false;
-                return String(scenario.sourcePresetId || scenario.id || '') === String(presetId);
-            });
-        }
+function getPresetBoundSaves(presetId) {
+return Object.entries(savesData).filter(([, save]) => {
+const scenario = save?.scenario;
+if (!scenario || typeof scenario !== 'object') return false;
+const resolvedId = resolvePresetIdForScenario(scenario);
+if (resolvedId && String(resolvedId) === String(presetId)) return true;
+const presetName = valueToText(scenarioPresets[presetId]?.presetName);
+return Boolean(presetName && valueToText(scenario.presetName) === presetName);
+});
+}
 
 function deleteCurrentPreset() {
 if (Object.keys(scenarioPresets).length <= 1) { alert("系統至少需要保留一組配置喔！"); return; }
@@ -4266,17 +4323,22 @@ function openStatusModal() {
             else openStatusModal();
         }
 
-        function saveStatusModal() {
-            try {
-                syncDomToCurrentScenario();
-                if (!saveCurrentProgress()) return; // 存檔未成功時禁止繼續覆寫大廳配置
+function saveStatusModal() {
+try {
+syncDomToCurrentScenario();
+let presetSyncedBeforeSave = false;
+const preSaveSourceId = currentScenario.sourcePresetId || currentScenario.id;
+if (preSaveSourceId && scenarioPresets[preSaveSourceId] && !scenarioPresets[preSaveSourceId].isLocked) {
+presetSyncedBeforeSave = syncBoundPresetFromCurrentScenario();
+}
+if (!saveCurrentProgress()) return; // 存檔未成功時禁止繼續覆寫大廳配置
                 
                 // 雙向同步：覆寫回大廳的原始配置檔
                 let sourceId = currentScenario.sourcePresetId || currentScenario.id;
                 if (sourceId && scenarioPresets[sourceId]) {
-                    if (scenarioPresets[sourceId].isLocked) {
-                        alert(`【系統提醒】\n因為大廳的配置 [${scenarioPresets[sourceId].presetName}] 已上鎖 (🔒)，\n本次變更僅儲存於「當前遊戲紀錄」中，不會覆蓋回大廳。\n(若要備份目前設定，請使用另存配置；若要覆蓋回大廳，請先至大廳解鎖)`);
-                    } else {
+if (scenarioPresets[sourceId].isLocked) {
+alert(`【系統提醒】\n因為大廳的配置 [${scenarioPresets[sourceId].presetName}] 已上鎖 (🔒)，\n本次變更僅儲存於「當前遊戲紀錄」中，不會覆蓋回大廳。\n(若要備份目前設定，請使用另存配置；若要覆蓋回大廳，請先至大廳解鎖)`);
+} else if (!presetSyncedBeforeSave) {
                         let syncPreset = createPresetSnapshotFromScenario(currentScenario, scenarioPresets[sourceId]);
                         syncPreset.id = sourceId;
                         syncPreset.presetName = scenarioPresets[sourceId].presetName; 
@@ -4954,7 +5016,7 @@ return;
 }
 saveKeys.forEach(id => {
 const saveData = savesData[id] && typeof savesData[id] === 'object' ? savesData[id] : {};
-const scenario = saveData.scenario && typeof saveData.scenario === 'object' ? saveData.scenario : {};
+const scenario = getCanonicalScenarioForSave(saveData.scenario && typeof saveData.scenario === 'object' ? saveData.scenario : {}) || {};
 const pName = valueToText(scenario.playerName, uiText('玩家'));
 const presetId = scenario.sourcePresetId || scenario.id || '';
 const presetName = valueToText(scenarioPresets[presetId]?.presetName || scenario.presetName, uiText('未命名配置'));
@@ -5163,21 +5225,46 @@ savesData[currentSaveId].inputDraft = currentInputDraft;
             } catch (error) {
                 console.warn('輸入草稿暫存失敗', error);
             }
-if (currentScenario && typeof currentScenario === 'object') {
-const boundPresetId = currentScenario.sourcePresetId
-|| (currentScenario.id && scenarioPresets?.[currentScenario.id] ? currentScenario.id : '')
-|| (activePresetId && scenarioPresets?.[activePresetId] ? activePresetId : '');
-if (boundPresetId) currentScenario.sourcePresetId = boundPresetId;
+    if (currentScenario && typeof currentScenario === 'object') {
+        const boundPresetId = currentScenario.sourcePresetId
+            || (currentScenario.id && scenarioPresets?.[currentScenario.id] ? currentScenario.id : '')
+            || (activePresetId && scenarioPresets?.[activePresetId] ? activePresetId : '');
+        if (boundPresetId) currentScenario.sourcePresetId = boundPresetId;
+    }
+    syncBoundPresetFromCurrentScenario();
+    const scenarioForSave = getCanonicalScenarioForSave(currentScenario);
+savesData[currentSaveId].scenario = scenarioForSave;
+currentScenario = scenarioForSave;
+savesData[currentSaveId].sceneTransition = pendingSceneTransition;
+delete savesData[currentSaveId].script;
+const saved = persistSingleSave(currentSaveId, '遊戲存檔');
+return saved;
 }
-savesData[currentSaveId].scenario = currentScenario;
-            savesData[currentSaveId].sceneTransition = pendingSceneTransition;
-            delete savesData[currentSaveId].script;
-            return persistSingleSave(currentSaveId, '遊戲存檔');
-        }
 
-        function getInputDraftStorageKey(saveId = currentSaveId) {
-            return `sanko_input_draft_${saveId || 'none'}`;
-        }
+function syncBoundPresetFromCurrentScenario() {
+if (!currentScenario || typeof currentScenario !== 'object') return false;
+const sourceId = currentScenario.sourcePresetId
+|| (currentScenario.id && scenarioPresets?.[currentScenario.id] ? currentScenario.id : '')
+|| '';
+if (!sourceId || !scenarioPresets?.[sourceId]) return false;
+const previousPreset = scenarioPresets[sourceId];
+if (previousPreset.isLocked) return false;
+const syncPreset = createPresetSnapshotFromScenario(currentScenario);
+syncPreset.id = sourceId;
+syncPreset.presetName = previousPreset.presetName;
+syncPreset.isLocked = false;
+syncPreset.statsLocked = previousPreset.statsLocked !== undefined ? previousPreset.statsLocked : true;
+scenarioPresets[sourceId] = syncPreset;
+if (!persistJson('sanko_scenario_presets_v2', scenarioPresets, '角色配置')) {
+scenarioPresets[sourceId] = previousPreset;
+return false;
+}
+return true;
+}
+
+function getInputDraftStorageKey(saveId = currentSaveId) {
+return `sanko_input_draft_${saveId || 'none'}`;
+}
 
         function persistActiveInputDraft() {
             if (activeInputDraftTimer) {
@@ -6011,11 +6098,12 @@ const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.sty
  }
  currentSaveId = id;
  const fallbackScenario = scenarioPresets[activePresetId] || defaultPreset;
-            if (!saveData.scenario || typeof saveData.scenario !== 'object' || Array.isArray(saveData.scenario)) {
-                saveData.scenario = JSON.parse(JSON.stringify(fallbackScenario));
-            }
-            
-            if(saveData.scenario) { 
+if (!saveData.scenario || typeof saveData.scenario !== 'object' || Array.isArray(saveData.scenario)) {
+saveData.scenario = JSON.parse(JSON.stringify(fallbackScenario));
+}
+saveData.scenario = getCanonicalScenarioForSave(saveData.scenario);
+
+if(saveData.scenario) {
                 currentScenario = saveData.scenario; 
                 if(!currentScenario.languageMode) currentScenario.languageMode = 'zh-tw';
                 if(!currentScenario.gameDifficulty) currentScenario.gameDifficulty = 'standard';
