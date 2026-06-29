@@ -270,13 +270,15 @@
 <button id="home-update-tab" class="home-update-tab" type="button" onclick="toggleHomeUpdateNotes()" aria-label="更新內容" aria-expanded="false"></button>
 <aside id="home-update-drawer" class="home-update-drawer" aria-label="更新內容">
 <button class="home-update-close" type="button" onclick="toggleHomeUpdateNotes(false)" aria-label="關閉更新內容">×</button>
-<p class="home-update-kicker">v1.4 更新</p>
+<p class="home-update-kicker">v1.6 更新</p>
 <h3>更新內容</h3>
 <ul>
+<li>強化 AI 場景記憶：每個情境會記住目前地點、時間與在場角色，減少切換或多回合後 AI 忘記時空與 NPC 的情況。</li>
 <li>角色配置與遊戲紀錄綁定後，角色資料會雙向同步。</li>
 <li>遊戲內角色面板與角色配置頁共用好感度等角色設定。</li>
 <li>匯出記憶紀錄會保存遊戲紀錄、角色配置、情境配置與角色頭像，不包含 API Key。</li>
 <li>修正選擇存檔畫面部分文字切換語言時未更新的問題。</li>
+<li>新增純色／自訂背景切換功能，使用自訂背景時面板會自動轉為半透明。</li>
 </ul>
 </aside>
 </div>
@@ -344,6 +346,18 @@
 <label class="theme-color-field">重點<input id="theme-accent" type="color" aria-label="重點顏色" oninput="updateUiThemeColor('accent', this.value)"></label>
 <label class="theme-color-field">對話<input id="theme-dialogue" type="color" aria-label="NPC 對話顏色" oninput="updateUiThemeColor('dialogue', this.value)"></label>
 </div>
+<div class="bg-style-row" role="group" aria-label="背景樣式">
+<span class="bg-style-label">背景樣式</span>
+<div class="bg-style-switch">
+<button type="button" class="bg-style-btn active" data-bg="solid" onclick="setBackgroundMode('solid')">純色</button>
+<button type="button" class="bg-style-btn" data-bg="image" onclick="setBackgroundMode('image')">圖片</button>
+</div>
+</div>
+<div class="bg-upload-row">
+<input type="file" id="bg-image-input" accept="image/*" onchange="handleBackgroundUpload(this)" hidden class="hidden-file-input">
+<button type="button" class="bg-upload-btn" onclick="document.getElementById('bg-image-input').click()">上傳背景圖</button>
+<button type="button" class="bg-clear-btn" onclick="clearBackgroundImage()">清除背景圖</button>
+</div>
 <div class="theme-reset-row"><button type="button" class="theme-reset-btn" onclick="resetUiTheme()">恢復預設</button></div>
 </details>
 <label class="ui-language-picker">
@@ -354,7 +368,7 @@
 <option value="ja">日本語</option>
 </select>
 </label>
-<p class="setup-version"> Threads @ miyazaki.617 · v1.4 · 2026/06/28</p>
+<p class="setup-version"> Threads @ miyazaki.617 · v1.6 · 2026/06/30</p>
 </div>
 </section>
 
@@ -783,6 +797,19 @@
         </div>
     </div>
     <script src="i18n.js"></script>
-    <script src="app.js"></script>
+    <!-- app.js 已拆分為下列模組，請維持此載入順序（等同原 app.js 由上而下） -->
+    <script src="app-core.js"></script>
+    <script src="app-storage.js"></script>
+    <script src="app-ui-helpers.js"></script>
+    <script src="app-backup-io.js"></script>
+    <script src="app-memory.js"></script>
+    <script src="app-scenario-state.js"></script>
+    <script src="app-api.js"></script>
+    <script src="app-config-ui.js"></script>
+    <script src="app-preset-edit.js"></script>
+    <script src="app-status-journal.js"></script>
+    <script src="app-saves-game.js"></script>
+    <script src="app-gameplay.js"></script>
+    <script src="app-ai.js"></script>
 </body>
 </html>

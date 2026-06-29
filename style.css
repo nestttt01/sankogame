@@ -268,7 +268,6 @@ font-synthesis: none;
 
         /* 這裡把展開與收起的按鈕底框拿掉，改用文字顏色 */
 
-
         .dark-card-content { padding: 15px; background: var(--card-bg); position: relative; }
 
         .section-header-flex { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--border-dark); padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; }
@@ -436,7 +435,6 @@ z-index: 10;
 #journal-screen.journal-screen-embedded .journal-entry { grid-template-columns: 32px minmax(0, 1fr) auto auto; }
         #journal-screen.journal-screen-embedded .journal-pagination { grid-template-columns: auto minmax(90px, 1fr) auto; }
 
-
         #game-container {
             width: 100%; max-width: 950px; height: 100vh;
             margin: 0 auto; background: var(--card-bg);
@@ -575,7 +573,6 @@ z-index: 10;
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-
         input[type="file"].hidden-file-input,
         #pic-input,
         #upload-player,
@@ -617,99 +614,37 @@ z-index: 10;
             min-height: 0;
             overflow-y: auto;
             padding: 14px 20px 18px;
-        }
-        #status-modal-content .status-tabs {
-            position: sticky;
-            top: 0;
-            z-index: 5;
-background: var(--paper-bg);
-            margin: 0 0 14px;
-            padding: 0 0 10px;
-        }
-        #status-modal-content .status-tab-btn {
+        }        #status-modal-content .status-tab-btn {
             min-height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-
         .language-setting-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: center; margin: 8px 0 12px; }
         .language-setting-row .scenario-label { margin: 0; }
-        .language-mode-select { width: 100%; background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; padding: 10px 12px; color: var(--text-main); font-size: 13px; font-weight: 800; }
-
-
-        .quick-status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 14px; }
-        .quick-status-box { background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; padding: 10px; box-shadow: 2px 2px 0 var(--accent-neon); }
-        .quick-status-label { font-size: 11px; color: var(--text-sub); font-weight: 900; margin-bottom: 4px; }
-        .quick-status-value { font-size: 16px; color: var(--text-main); font-weight: 900; word-break: break-word; }
-        .status-panel-hint { font-size: 12px; color: var(--text-sub); font-weight: 800; line-height: 1.5; margin: 8px 0 12px; }
-
-
-        #status-modal-content .status-tabs {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 10px;
-            border-bottom: 3px solid var(--border-dark);
-            padding-bottom: 12px;
-        }
-        #status-modal-content .status-tab-btn {
+        .language-mode-select { width: 100%; background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; padding: 10px 12px; color: var(--text-main); font-size: 13px; font-weight: 800; }.quick-status-label { font-size: 11px; color: var(--text-sub); font-weight: 900; margin-bottom: 4px; }        .status-panel-hint { font-size: 12px; color: var(--text-sub); font-weight: 800; line-height: 1.5; margin: 8px 0 12px; }        #status-modal-content .status-tab-btn {
             border-radius: 8px;
             min-height: 52px;
             box-shadow: none;
             font-size: 14px;
             letter-spacing: 0;
-        }
-        #status-modal-content .status-tab-btn.active {
-            background: var(--accent-neon);
-            box-shadow: 4px 4px 0 var(--border-dark);
-            transform: translate(-2px, -2px);
-        }
-        .quick-status-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-            margin: 12px 0 18px;
-        }
-        .quick-status-box {
-            background: var(--card-bg);
-            border: 3px solid var(--border-dark);
-            border-radius: 8px;
-            padding: 12px 14px;
-            box-shadow: 4px 4px 0 var(--accent-neon);
-            min-height: 72px;
-        }
-        .quick-status-label {
+        }.quick-status-label {
             font-size: 12px;
             color: var(--text-sub);
             font-weight: 900;
             margin-bottom: 6px;
         }
-        .quick-status-value {
-            font-size: 20px;
-            color: var(--text-main);
-            font-weight: 900;
-            line-height: 1.2;
-            word-break: break-word;
-        }
-
         #status-page-state .language-setting-row {
             grid-template-columns: 140px minmax(0, 1fr);
             margin: 4px 0 16px;
-        }
-        #status-page-state .language-mode-select {
-            border-width: 3px;
-            min-height: 52px;
-            font-size: 16px;
-        }
-        #ui-flags-container,
+        }        #ui-flags-container,
         #ui-items-container {
             border-radius: 8px;
             border: none;
             background: var(--surface-muted);
             padding: 14px 16px;
         }
-
 
         /* Softer status panel: keep the app palette, reduce noisy framing. */
         #status-modal-content .status-tab-btn {
@@ -718,53 +653,38 @@ background: var(--paper-bg);
             font-size: 13px;
             border-width: 2px;
             box-shadow: none;
-        }
-        #status-modal-content .status-tab-btn.active {
-            background: var(--accent-neon);
-            box-shadow: 3px 3px 0 var(--border-dark);
-            transform: translate(-1px, -1px);
-        }
-        #status-page-state .language-setting-row {
+        }        #status-page-state .language-setting-row {
             grid-template-columns: 86px minmax(0, 1fr);
             gap: 10px;
             margin: 2px 0 14px;
-        }
-        #status-page-state .language-mode-select {
-            min-height: 44px;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-width: 2px;
-            box-shadow: none;
-        }
-        .quick-status-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0;
-            margin: 8px 0 18px;
-            background: var(--card-bg);
-            border: 2px solid var(--border-dark);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 3px 3px 0 var(--accent-neon);
-        }
-        .quick-status-box {
-            border: 0;
-            border-right: 2px solid var(--border-dark);
-            border-radius: 0;
-            box-shadow: none;
-            min-height: 0;
-            padding: 10px 12px;
-            background: var(--card-bg);
-        }
+        }.quick-status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 8px 0 18px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-dark);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 3px 3px 0 var(--accent-neon);
+}.quick-status-box {
+    border: 0;
+    border-right: 2px solid var(--border-dark);
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 0;
+    padding: 10px 12px;
+    background: var(--card-bg);
+}
         .quick-status-box:last-child {
             border-right: 0;
-        }
-
-        .quick-status-value {
-            font-size: 16px;
-            line-height: 1.25;
-            font-weight: 900;
-        }
+        }.quick-status-value {
+    color: var(--text-main);
+    word-break: break-word;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 900;
+}
         #status-page-state .u-inline-016,
         #status-page-state .u-inline-013 {
             font-size: 13px;
@@ -792,7 +712,6 @@ background: var(--paper-bg);
             font-size: 12px;
         }
 
-
         /* Panel polish: lighter state page, compact language control, readable settings forms. */
         #status-page-state .language-setting-row {
             display: flex;
@@ -806,17 +725,7 @@ background: var(--paper-bg);
             flex: 0 0 auto;
             font-size: 12px;
             color: var(--text-sub);
-        }
-        #status-page-state .language-mode-select {
-            flex: 1;
-            min-height: 36px;
-            padding: 6px 10px;
-            font-size: 13px;
-            border-width: 2px;
-            border-radius: 8px;
-            box-shadow: none;
-        }
-        #status-summary-display .quick-status-grid {
+        }        #status-summary-display .quick-status-grid {
             display: none;
         }
         #status-page-settings .anime-sheet textarea,
@@ -835,7 +744,6 @@ background: var(--paper-bg);
             overflow: visible;
         }
 
-
         /* Status panel refinement: compact controls and softer summary rhythm. */
         #status-page-state .language-setting-row {
             display: grid;
@@ -851,18 +759,7 @@ background: var(--paper-bg);
             font-size: 12px;
             font-weight: 900;
             color: var(--text-main);
-        }
-        #status-page-state .language-mode-select {
-            width: 100%;
-            min-height: 34px;
-            padding: 5px 10px;
-            font-size: 13px;
-            border-width: 2px;
-            border-radius: 7px;
-            box-shadow: none;
-            margin: 0;
-        }
-        #status-summary-display .quick-status-grid {
+        }        #status-summary-display .quick-status-grid {
             display: none !important;
         }
         #status-summary-display .u-inline-016 {
@@ -888,7 +785,6 @@ background: var(--paper-bg);
             overflow: visible !important;
         }
 
-
         /* Match status panel back to the main game comic/TRPG style. */
         #status-modal-content {
 background: var(--paper-bg);
@@ -897,26 +793,18 @@ background: var(--paper-bg);
         }
         #status-modal-content .modal-header {
             border-bottom: 3px solid var(--border-dark);
-        }
-        #status-modal-content .status-tabs {
-            gap: 10px;
-            border-bottom: 3px solid var(--border-dark);
-            padding-bottom: 12px;
-            margin-bottom: 16px;
-        }
-        #status-modal-content .status-tab-btn {
+        }        #status-modal-content .status-tab-btn {
             border: 3px solid var(--border-dark);
             border-radius: 10px;
             background: var(--card-bg);
             box-shadow: none;
             font-size: 14px;
             min-height: 42px;
-        }
-        #status-modal-content .status-tab-btn.active {
-            background: var(--accent-neon);
-            box-shadow: 5px 5px 0 var(--border-dark);
-            transform: translate(-2px, -2px);
-        }
+        }#status-modal-content .status-tab-btn.active {
+    background: var(--accent-neon);
+    box-shadow: 5px 5px 0 var(--border-dark);
+    transform: translate(-2px, -2px);
+}
         #status-page-state .language-setting-row {
             display: inline-grid;
             grid-template-columns: auto minmax(150px, 260px);
@@ -930,26 +818,19 @@ background: var(--paper-bg);
             font-size: 13px;
             font-weight: 900;
             color: var(--text-main);
-        }
-#status-page-state .language-mode-select {
-min-height: 36px;
-margin: 0;
-padding: 6px 12px;
-border: 3px solid var(--border-dark);
-            border-radius: 9px;
-            background: var(--card-bg);
-box-shadow: none;
-font-size: 14px;
-}
-
-#status-page-state .language-mode-select {
-justify-self: start;
-width: 190px;
-min-height: 30px;
-padding: 4px 10px;
-border: 3px solid var(--border-dark);
-border-radius: 9px;
-font-size: 12px;
+        }#status-page-state .language-mode-select {
+    flex: 1;
+    border-width: 2px;
+    margin: 0;
+    background: var(--card-bg);
+    box-shadow: none;
+    justify-self: start;
+    width: 190px;
+    min-height: 30px;
+    padding: 4px 10px;
+    border: 3px solid var(--border-dark);
+    border-radius: 9px;
+    font-size: 12px;
 }
 
 .game-model-select {
@@ -973,25 +854,23 @@ font-size: 12px;
             border-left: 4px solid var(--accent-neon);
             font-size: 13px;
             line-height: 1.2;
-        }
-
-
-        /* NPC affection list: tidy for many NPCs, readable score colors. */
-        #status-modal-content .status-tabs {
-            border-bottom: 2px dashed #b8b8b8;
-        }
-        #status-summary-display {
+        }        #status-summary-display {
             border-top: 0;
             padding-top: 10px;
-        }
-
-
-        /* User-directed NPC summary: no boxes, no extra line, tidy multi-column text. */
-        #status-modal-content .status-tabs {
-            border-bottom: 0 !important;
-            padding-bottom: 8px;
-            margin-bottom: 16px;
-        }
+        }#status-modal-content .status-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--paper-bg);
+    margin: 0 0 14px;
+    padding: 0 0 10px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    border-bottom: 0 !important;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+}
         #status-summary-display {
             border-top: 0 !important;
             padding-top: 8px;
@@ -1004,7 +883,6 @@ font-size: 12px;
             font-size: 13px;
             line-height: 1.25;
         }
-
 
         /* NPC 好感摘要：唯一生效版本，調整這段即可 */
         .npc-summary-list {
@@ -1077,7 +955,6 @@ font-size: 12px;
         .npc-affection.affection-neutral { background: #9a8d94; }
         .npc-affection.affection-good { background: #9b59b6; }
         .npc-affection.affection-high { background: #ff4f5a; }
-
 
         /* API model usage list */
         .api-model-list {
@@ -1260,7 +1137,6 @@ font-size: 12px;
         .u-inline-077 { text-align:center; color:var(--text-sub); font-size:13px; font-weight:bold; }
         /* ===== End consolidated inline styles ===== */
 
-
         /* 角色動態狀態：核心設定不受 AI 覆寫 */
         .dynamic-state-panel { grid-column: 1 / -1; margin-top: 6px; padding: 12px 12px 10px; background: var(--surface-muted); border-left: 4px solid var(--accent-neon); border-radius: 0 6px 6px 0; }
         .dynamic-state-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
@@ -1282,10 +1158,8 @@ font-size: 12px;
         .random-generator-actions .btn { width: 100%; margin: 0; }
         .random-preview { margin-top: 12px; padding: 12px; max-height: 45vh; overflow: auto; border: 2px solid var(--border-dark); border-radius: 8px; background: var(--card-bg); white-space: pre-wrap; font-size: 12px; line-height: 1.65; }
 
-
         .dynamic-state-preview { min-width: 0; margin-left: auto; color: #c9bdc2; font-size: 10px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .player-dynamic-preview { margin: -2px 0 10px; color: #756a6e; font-size: 11px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
 
         .setup-version { margin: 24px 0 0; color: var(--text-sub); font-size: 9px; font-weight: 600; line-height: 1; }
 
@@ -1304,18 +1178,15 @@ font-size: 12px;
         .theme-reset-btn { padding: 5px 9px; border: 1px solid var(--border-dark); border-radius: 5px; background: transparent; color: var(--text-main); font-size: 10px; font-weight: 800; cursor: pointer; }
         .theme-reset-btn:hover { background: var(--accent-neon); }
 
-
         .opt-check-label { display: inline-block; margin-left: 8px; color: #756a6e; font-size: 9px; font-weight: 800; white-space: nowrap; }
         .game-difficulty-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: center; margin: 4px 0 6px; }
         .game-difficulty-row .scenario-label { margin: 0; }
         .game-difficulty-note { margin: 0 0 14px; color: var(--text-sub); font-size: 10px; font-weight: 700; line-height: 1.5; }
 
-
         .stat-total-display { display: inline-block; margin-right: 8px; color: var(--text-sub); font-size: 11px; font-weight: 900; white-space: nowrap; }
         .stat-total-display.at-cap { color: #9b596f; }
 
         button, input, textarea, select { touch-action: manipulation; }
-
 
 /* =========================================================
    Responsive styles grouped by breakpoint
@@ -2556,8 +2427,15 @@ margin: -6px 0 18px;
 transform: none;
 }
 
+.character-voice-field {
+  position: relative;
+}
 
 .character-test-inline {
+  /* 按鈕絕對定位並垂直置中於本列；padding-right 預留按鈕空間，margin-bottom 對齊一般欄位的 label */
+  position: relative;
+  padding-right: 72px;
+  margin-bottom: 2px;
 display: flex;
 align-items: center;
 justify-content: space-between;
@@ -2570,8 +2448,8 @@ margin: 0;
 
 .btn.character-test-mini-btn {
   width: auto;
-  height: 22px;
-  min-height: 22px;
+  height: 20px;
+  min-height: 20px;
   box-sizing: border-box;
   padding: 0 10px;
   border: 1px solid var(--text-sub);
@@ -2582,8 +2460,10 @@ margin: 0;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  position: relative;
-  top: -5px;
+  position: absolute;
+  right: 0;
+  bottom: 0;   /* 底邊對齊標籤列、按鈕往上長，永遠不會碰到下方輸入框 */
+  top: auto;
 }
 
 .character-test-row {
@@ -2593,7 +2473,7 @@ align-items: start;
 }
 
 #desktop-config-editor .character-voice-field {
-margin-top: -12px;
+margin-top: 0;
 }
 
 .character-test-row .scenario-input {
@@ -2853,4 +2733,143 @@ width: min(300px, calc((100vw - 680px) / 2 - 48px));
 max-height: min(420px, calc(100dvh - 120px));
 border-radius: 16px;
 }
+}
+
+/* ============================================================
+   背景系統：純色 / 自訂圖片
+   用固定全螢幕 body::before 當背景層，position:fixed 不隨捲動重繪，
+   避免大圖造成捲動卡頓。模式由 <html data-bg-mode> 控制；
+   圖片網址放在 --bg-image（由 JS 設定）。
+   ============================================================ */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: transparent;   /* 純色：透出 body 的 --bg-main */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 自訂圖片 */
+:root[data-bg-mode="image"] body::before {
+    background-image: var(--bg-image, none);
+}
+
+
+/* ============================================================
+   背景控制項（外觀配色面板內：純色 / 圖片 + 上傳/清除）
+   ============================================================ */
+.bg-style-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
+.bg-style-label { font-size: 12px; font-weight: 800; color: var(--text-sub); }
+.bg-style-switch { display: inline-flex; border: 2px solid var(--border-dark); border-radius: 10px; overflow: hidden; }
+.bg-style-btn { padding: 6px 10px; border: 0; background: var(--card-bg); color: var(--text-main); font-weight: 800; font-size: 12px; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.bg-style-btn + .bg-style-btn { border-left: 2px solid var(--border-dark); }
+.bg-style-btn.active { background: var(--border-dark); color: var(--card-bg); }
+.bg-upload-row { display: flex; gap: 8px; margin-top: 8px; }
+.bg-upload-row button { flex: 1; padding: 7px 10px; border: 2px solid var(--border-dark); border-radius: 8px; background: var(--card-bg); color: var(--text-main); font-weight: 800; font-size: 12px; cursor: pointer; }
+.bg-upload-row button:disabled { opacity: 0.45; cursor: default; }
+
+/* 修正：body 自身的 background-color 會在繪製順序上蓋住 body::before（z-index:-1）背景層，
+   導致圖片背景看不到。改成 body 透明、純色背景由 html 提供。 */
+body { background-color: transparent; }
+html { background-color: var(--bg-main); }
+
+
+/* ============================================================
+   背景圖模式：讓側標籤各頁（首頁／API／玩法／存檔／日誌／角色配置）的面板與
+   卡片、輸入框半透明，透出背景圖。純色模式（data-bg-mode!=image）完全不受影響。
+   用屬性選擇器提高特異性蓋過原底色，未使用任何 !important；半透明用 color-mix
+   並保留純色 fallback。聊天泡泡與卡片深色標題列維持原樣以確保可讀性。
+   數值越小越透明，可自行微調 74% / 66%。
+   ============================================================ */
+:root[data-bg-mode="image"] {
+    --bg-panel-glass: var(--paper-bg);
+    --bg-panel-glass: color-mix(in srgb, var(--paper-bg) 74%, transparent);
+    --bg-card-glass: var(--card-bg);
+    --bg-card-glass: color-mix(in srgb, var(--card-bg) 66%, transparent);
+}
+
+/* 大面板 / 視窗 */
+:root[data-bg-mode="image"] .setup-home-panel,
+:root[data-bg-mode="image"] #status-modal-content,
+:root[data-bg-mode="image"] #tutorial-modal-content,
+:root[data-bg-mode="image"] #api-guide-modal-content,
+:root[data-bg-mode="image"] #mid-modal-content,
+:root[data-bg-mode="image"] #edit-scenario-screen[data-editor-section="game"] #desktop-config-editor {
+    background: var(--paper-bg);
+    background: var(--bg-panel-glass);
+}
+
+/* 卡片 / 輸入框 */
+:root[data-bg-mode="image"] details.foldable-card,
+:root[data-bg-mode="image"] details.dark-card,
+:root[data-bg-mode="image"] .dark-card-content,
+:root[data-bg-mode="image"] .storage-health-card,
+:root[data-bg-mode="image"] .memory-brief-card,
+:root[data-bg-mode="image"] #model-selection-area,
+:root[data-bg-mode="image"] .stat-box,
+:root[data-bg-mode="image"] #desktop-config-editor .stat-box,
+:root[data-bg-mode="image"] .save-slot,
+:root[data-bg-mode="image"] .journal-entry,
+:root[data-bg-mode="image"] .key-input,
+:root[data-bg-mode="image"] .model-select,
+:root[data-bg-mode="image"] .scenario-input,
+:root[data-bg-mode="image"] #player-input,
+:root[data-bg-mode="image"] #new-flag-input {
+    background: var(--card-bg);
+    background: var(--bg-card-glass);
+}
+
+
+/* ---- 背景圖模式：補齊其餘大面板（角色/情境/遊戲設定、遊戲區、其他 modal）與
+        桌機設定頁卡片/輸入框，讓所有側標籤頁一致透出背景。
+        用 [data-editor-section] 通配 + 前綴一次蓋過所有 section 的特異性。 ---- */
+:root[data-bg-mode="image"] .modal-box,
+:root[data-bg-mode="image"] #desktop-config-overview,
+:root[data-bg-mode="image"] #edit-scenario-screen[data-editor-section] #desktop-config-editor,
+:root[data-bg-mode="image"] #game-container {
+    background: var(--paper-bg);
+    background: var(--bg-panel-glass);
+}
+
+:root[data-bg-mode="image"] .desktop-overview-card,
+:root[data-bg-mode="image"] .desktop-game-card,
+:root[data-bg-mode="image"] .desktop-overview-add-card,
+:root[data-bg-mode="image"] #desktop-config-editor .anime-sheet,
+:root[data-bg-mode="image"] #desktop-config-editor .stat-box,
+:root[data-bg-mode="image"] .anime-sheet input,
+:root[data-bg-mode="image"] .anime-sheet textarea,
+:root[data-bg-mode="image"] .dynamic-state-field input,
+:root[data-bg-mode="image"] .dynamic-state-field textarea,
+:root[data-bg-mode="image"] #ui-story-summary,
+:root[data-bg-mode="image"] #ui-relationship-summary,
+:root[data-bg-mode="image"] .random-preview,
+:root[data-bg-mode="image"] .journal-toolbar select,
+:root[data-bg-mode="image"] .journal-toolbar input,
+:root[data-bg-mode="image"] .memory-task-text,
+:root[data-bg-mode="image"] .api-stat-box {
+    background: var(--card-bg);
+    background: var(--bg-card-glass);
+}
+
+
+/* ---- 背景圖模式：這些區塊不要任何底色，直接透出背景（按鈕本身維持原樣）。
+        放在最後，靠 source order 蓋過前面把它們設成半透明的規則。 ---- */
+:root[data-bg-mode="image"] #model-selection-area,
+:root[data-bg-mode="image"] .desktop-overview-add-card,
+:root[data-bg-mode="image"] .setup-info-view h2,
+:root[data-bg-mode="image"] .setup-info-lead,
+:root[data-bg-mode="image"] .modal-header-sticky,
+:root[data-bg-mode="image"] #status-modal-content .status-tabs {
+    background: transparent;
+}
+
+
+/* ---- 背景圖模式：補上首頁「更新內容」抽屜 ---- */
+:root[data-bg-mode="image"] .home-update-drawer {
+    background: var(--paper-bg);
+    background: var(--bg-panel-glass);
 }
