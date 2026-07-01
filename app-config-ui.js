@@ -519,6 +519,7 @@ widget.classList.toggle('open', willOpen);
                         : (document.getElementById('input-core-rules')?.value || '');
                     setTimeout(() => editor.focus(), 50);
                 }
+                if (typeof renderProficiencyTags === 'function') renderProficiencyTags();
             }
         }
 
@@ -532,6 +533,118 @@ widget.classList.toggle('open', willOpen);
             } else {
                 const hidden = document.getElementById('input-core-rules');
                 if (hidden) hidden.value = el.value;
+            }
+        }
+
+        function readEditingProficiencyList() {
+            try {
+                const v = JSON.parse(document.getElementById('input-proficiencies')?.value || '[]');
+                return Array.isArray(v) ? v.map(x => valueToText(x).trim()).filter(Boolean) : [];
+            } catch (e) { return []; }
+        }
+
+        function getProficiencyListForContext(inGame) {
+            if (inGame) {
+                return (currentScenario && Array.isArray(currentScenario.playerProficiencies))
+                    ? currentScenario.playerProficiencies.map(x => valueToText(x).trim()).filter(Boolean) : [];
+            }
+            return readEditingProficiencyList();
+        }
+
+        function renderProficiencyTags() {
+            document.querySelectorAll('[data-proficiency-tags]').forEach(container => {
+                const inGame = Boolean(container.closest('#game-container'));
+                const list = getProficiencyListForContext(inGame);
+                container.innerHTML = '';
+                if (!list.length) {
+                    const empty = document.createElement('span');
+                    empty.className = 'proficiency-empty';
+                    empty.textContent = (typeof uiText === 'function') ? uiText('尚未生成擅長領域。') : '尚未生成擅長領域。';
+                    container.appendChild(empty);
+                    return;
+                }
+                list.forEach((prof, index) => {
+                    const tag = document.createElement('span');
+                    tag.className = 'proficiency-tag';
+                    tag.appendChild(document.createTextNode(valueToText(prof) + ' '));
+                    const rm = document.createElement('span');
+                    rm.className = 'proficiency-tag-remove';
+                    rm.textContent = '✖';
+                    rm.setAttribute('role', 'button');
+                    rm.setAttribute('tabindex', '0');
+                    rm.onclick = () => removeProficiency(index, inGame);
+                    rm.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') removeProficiency(index, inGame); };
+                    tag.appendChild(rm);
+                    container.appendChild(tag);
+                });
+            });
+        }
+
+        function persistProficiencyList(clean, inGame) {
+            if (inGame) {
+                if (currentScenario && typeof currentScenario === 'object') currentScenario.playerProficiencies = clean;
+                if (typeof saveCurrentProgress === 'function') saveCurrentProgress();
+            } else {
+                const input = document.getElementById('input-proficiencies');
+                if (input) input.value = JSON.stringify(clean);
+                if (typeof commitCurrentPresetSilently === 'function') commitCurrentPresetSilently();
+            }
+            renderProficiencyTags();
+        }
+
+        function setEditingProficiencies(list, inGame) {
+            const clean = (Array.isArray(list) ? list : []).map(v => valueToText(v).trim()).filter(Boolean).slice(0, 4);
+            persistProficiencyList(clean, inGame);
+        }
+
+        function removeProficiency(index, inGame) {
+            const list = getProficiencyListForContext(inGame).slice();
+            if (index < 0 || index >= list.length) return;
+            list.splice(index, 1);
+            persistProficiencyList(list, inGame);
+        }
+
+        async function generatePlayerProficiencies(btn) {
+            const inGame = Boolean(btn && btn.closest && btn.closest('#game-container'));
+            if (!inGame && scenarioPresets[activePresetId] && scenarioPresets[activePresetId].isLocked) {
+                alert((typeof uiText === 'function') ? uiText('目前這個配置已上鎖，無法修改。') : '目前這個配置已上鎖，無法修改。');
+                return;
+            }
+            let name = '', bg = '', likes = '';
+            if (inGame) {
+                const det = (currentScenario && currentScenario.playerDetails) || {};
+                name = valueToText(currentScenario && currentScenario.playerName);
+                bg = valueToText(det.bg).trim();
+                likes = valueToText(det.likes).trim();
+            } else {
+                name = document.getElementById('input-player-name')?.value.trim() || '';
+                bg = document.getElementById('p-bg')?.value.trim() || '';
+                likes = document.getElementById('p-likes')?.value.trim() || '';
+            }
+            if (!bg) {
+                alert((typeof uiText === 'function') ? uiText('請先在「核心性格 / 背景故事」填寫角色設定，再生成擅長。') : '請先填寫角色的性格 / 背景，再生成擅長。');
+                return;
+            }
+            const buttons = Array.from(document.querySelectorAll('.proficiency-gen-btn'));
+            const restoreLabel = (typeof uiText === 'function') ? uiText('角色專屬的魔法') : '角色專屬的魔法';
+            buttons.forEach(b => { b.disabled = true; });
+            if (btn) btn.textContent = (typeof uiText === 'function') ? uiText('生成中…') : '生成中…';
+            try {
+                const prompt = `你是 TRPG 角色專長分析器。只根據下面角色「已明確寫出」的性格與背景，列出這名角色真正擅長的 2～4 個具體領域，作為檢定加值依據。\n\n角色名稱：${name || '（未命名）'}\n性格 / 背景：${bg}\n喜好：${likes || '（未填）'}\n\n規則：\n- 只列設定裡明確、具體、符合常理的專長；設定沒有依據的不要編。\n- 拒絕籠統或萬能描述（例如「什麼都會」「天才」「無所不能」），那類請忽略不列。\n- 每項用 4～12 字的具體技能領域（例：安撫他人、潛行跟蹤、機械維修）。\n- 最多 4 項；設定不足時可少於 4 項甚至空陣列。\n\n只輸出 JSON：{"proficiencies":["...","..."]}`;
+                const rawText = await requestAIText(prompt, { kind: 'dice', maxTokens: 220 });
+                let parsed;
+                try { parsed = JSON.parse(extractJsonText(rawText)); } catch (e) { parsed = null; }
+                const list = parsed && Array.isArray(parsed.proficiencies) ? parsed.proficiencies : null;
+                if (!list) {
+                    alert((typeof uiText === 'function') ? uiText('AI 無法生成擅長領域，請稍後再試。') : 'AI 無法生成擅長領域，請稍後再試。');
+                    return;
+                }
+                setEditingProficiencies(list.map(v => valueToText(v).trim().slice(0, 16)), inGame);
+            } catch (err) {
+                alert((typeof uiText === 'function') ? uiText('AI 無法生成擅長領域，請稍後再試。') : 'AI 無法生成擅長領域，請稍後再試。');
+            } finally {
+                buttons.forEach(b => { b.disabled = false; });
+                if (btn) btn.textContent = restoreLabel;
             }
         }
 

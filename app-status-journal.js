@@ -310,7 +310,7 @@ alert(`【系統提醒】\n因為大廳的配置 [${scenarioPresets[sourceId].pr
                 });
             }
             const omitted = Math.max(0, allFlags.length - selectedFlags.length);
-            return `${selectedFlags.map(flag => `[狀態/成就] ${flag}`).join('\n')}${omitted ? `\n（另有 ${omitted} 個較舊 Flags 完整保留於角色面板；重要歷史應以摘要為準。）` : ''}`;
+            return `${selectedFlags.map(flag => `${flag}`).join('\n')}${omitted ? `\n（另有 ${omitted} 個較舊 Flags 完整保留於角色面板；重要歷史應以摘要為準。）` : ''}`;
         }
 
         function manualAddFlag() {

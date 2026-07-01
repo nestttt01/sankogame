@@ -279,8 +279,18 @@
 <button id="home-update-tab" class="home-update-tab" type="button" onclick="toggleHomeUpdateNotes()" aria-label="更新內容" aria-expanded="false"></button>
 <aside id="home-update-drawer" class="home-update-drawer" aria-label="更新內容">
 <button class="home-update-close" type="button" onclick="toggleHomeUpdateNotes(false)" aria-label="關閉更新內容">×</button>
-<p class="home-update-kicker">v1.7 更新</p>
+<p class="home-update-kicker">v1.8 更新</p>
 <h3>更新內容</h3>
+<ul>
+<li>骰點難度改為範圍隨機：同一種難度每次的目標值（DC）會在區間內浮動，不再固定同一個數字，判定更有變化。</li>
+<li>新增「超簡單」檢定：理所當然的小動作幾乎必過，但骰到大失敗時仍可能意外出包。</li>
+<li>新增 Anthropic Claude Sonnet 5，可直接在模型清單選用。</li>
+<li>模型清單自動濾除程式碼、語音、審查等非寫作用途的模型，選單更精簡。</li>
+<li>新增「擅長領域」：角色設定頁可依角色性格與背景生成專長並鎖定，判定符合時 +2，讓你怎麼寫角色會影響骰點。</li>
+</ul>
+<details class="home-update-history">
+<summary>查看更早的更新紀錄</summary>
+<p class="home-update-kicker">v1.7 更新</p>
 <ul>
 <li>新增 Anthropic (Claude) 供應商：首頁可選 Anthropic，貼上官方金鑰即可遊玩。</li>
 <li>新增「核心準則」：可設定 AI 每回合必讀、不可違反的鐵則（世界觀或人物設定），角色設定頁與遊戲頁皆可調整、兩邊同步。</li>
@@ -288,8 +298,6 @@
 <li>強化 AI 場景記憶：每個情境會記住目前地點、時間與在場角色，減少切換或多回合後 AI 忘記時空與 NPC 的情況。</li>
 <li>強化錯誤提示：AI 無法回覆時會標出供應商、原因與診斷資訊，更好判斷問題。</li>
 </ul>
-<details class="home-update-history">
-<summary>查看更早的更新紀錄</summary>
 <p class="home-update-kicker">v1.5 更新</p>
 <ul>
 <li>角色配置與遊戲紀錄綁定後，角色資料會雙向同步。</li>
@@ -388,7 +396,7 @@
 <option value="ja">日本語</option>
 </select>
 </label>
-<p class="setup-version"> Threads @ miyazaki.617 · v1.7 · 2026/06/30</p>
+<p class="setup-version"> Threads @ miyazaki.617 · v1.8 · 2026/07/01</p>
 </div>
 </section>
 
@@ -511,6 +519,12 @@
 <p class="core-rules-kicker">核心準則</p>
 <div class="core-rules-hint" style="font-size:11px;color:var(--text-sub);margin:0 0 8px;line-height:1.5;">AI 每回合必讀、不會遺忘也不可違反的設定。可寫世界觀（例：這世界沒有魔法），或人物鐵律（例：主角必須一直戴著面具）。</div>
 <textarea class="core-rules-editor" oninput="onCoreRulesInput(this)"></textarea>
+<div class="proficiency-block">
+<p class="proficiency-kicker">擅長領域</p>
+<div class="proficiency-hint">依角色的性格 / 背景生成的專長，判定符合時 +2。可刪除不合適的項目。</div>
+<div class="proficiency-tags" data-proficiency-tags data-no-i18n></div>
+<button type="button" class="proficiency-gen-btn" onclick="generatePlayerProficiencies(this)">角色專屬的魔法</button>
+</div>
 </aside>
 </div>
 <aside id="desktop-config-overview" aria-label="角色配置總覽">
@@ -521,6 +535,12 @@
 <p class="core-rules-kicker">核心準則</p>
 <div class="core-rules-hint" style="font-size:11px;color:var(--text-sub);margin:0 0 8px;line-height:1.5;">AI 每回合必讀、不會遺忘也不可違反的設定。可寫世界觀（例：這世界沒有魔法），或人物鐵律（例：主角必須一直戴著面具）。</div>
 <textarea class="core-rules-editor" oninput="onCoreRulesInput(this)"></textarea>
+<div class="proficiency-block">
+<p class="proficiency-kicker">擅長領域</p>
+<div class="proficiency-hint">依角色的性格 / 背景生成的專長，判定符合時 +2。可刪除不合適的項目。</div>
+<div class="proficiency-tags" data-proficiency-tags data-no-i18n></div>
+<button type="button" class="proficiency-gen-btn" onclick="generatePlayerProficiencies(this)">角色專屬的魔法</button>
+</div>
 </aside>
 </div>
             <div class="desktop-config-tabs" aria-label="配置分類">
@@ -688,6 +708,7 @@
                 </details>
 
                 <input type="hidden" id="input-core-rules">
+                <input type="hidden" id="input-proficiencies">
 
                 <div class="language-setting-row interface-language-setting">
                     <div class="scenario-label">介面語言</div>
@@ -820,6 +841,12 @@
 <p class="core-rules-kicker">核心準則</p>
 <div class="core-rules-hint" style="font-size:11px;color:var(--text-sub);margin:0 0 8px;line-height:1.5;">AI 每回合必讀、不會遺忘也不可違反的設定。可寫世界觀（例：這世界沒有魔法），或人物鐵律（例：主角必須一直戴著面具）。</div>
 <textarea class="core-rules-editor" oninput="onCoreRulesInput(this)"></textarea>
+<div class="proficiency-block">
+<p class="proficiency-kicker">擅長領域</p>
+<div class="proficiency-hint">依角色的性格 / 背景生成的專長，判定符合時 +2。可刪除不合適的項目。</div>
+<div class="proficiency-tags" data-proficiency-tags data-no-i18n></div>
+<button type="button" class="proficiency-gen-btn" onclick="generatePlayerProficiencies(this)">角色專屬的魔法</button>
+</div>
 </aside>
 </div>
         

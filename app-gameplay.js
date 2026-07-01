@@ -360,8 +360,12 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
             const score = Number.isFinite(rawScore) ? Math.round(rawScore) : 10;
             const abilityModifier = Math.floor((score - 10) / 2);
             const survivalModifier = options.applySurvivalModifier === false ? 0 : getSurvivalDiceModifier(statKey);
-            const totalModifier = abilityModifier + survivalModifier;
-            const dc = Math.max(2, Math.min(30, difficulty.dc + gameDifficulty.dcModifier));
+            const proficiencyModifier = options.proficient === true ? 2 : 0;
+            const totalModifier = abilityModifier + survivalModifier + proficiencyModifier;
+            const dcMin = Number.isFinite(difficulty.dcMin) ? difficulty.dcMin : difficulty.dc;
+            const dcMax = Number.isFinite(difficulty.dcMax) ? difficulty.dcMax : difficulty.dc;
+            const baseDc = Math.floor(Math.random() * (Math.max(dcMin, dcMax) - Math.min(dcMin, dcMax) + 1)) + Math.min(dcMin, dcMax);
+            const dc = Math.max(2, Math.min(30, baseDc + gameDifficulty.dcModifier));
             const roll = forcedRoll === null ? Math.floor(Math.random() * 20) + 1 : Math.max(1, Math.min(20, Math.round(forcedRoll)));
             const total = roll + totalModifier;
             let result = total >= dc ? '成功' : '失敗';
@@ -375,11 +379,12 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
                 abilityModifier,
                 difficultyKey,
                 difficultyLabel: difficulty.label,
-                difficultyDc: difficulty.dc,
+                difficultyDc: baseDc,
                 gameDifficultyKey: gameDifficulty.key,
                 gameDifficultyLabel: gameDifficulty.label,
                 gameDifficultyDcModifier: gameDifficulty.dcModifier,
                 survivalModifier,
+                proficiencyModifier,
                 totalModifier,
                 dc,
                 roll,
@@ -405,6 +410,7 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
         function normalizeDiceDifficulty(value) {
             const clean = valueToText(value).toLowerCase();
             const aliases = {
+                trivial: 'trivial', '超簡單': 'trivial', '超简单': 'trivial', '極簡單': 'trivial', '极简单': 'trivial', 'very easy': 'trivial', veryeasy: 'trivial',
                 easy: 'easy', '簡單': 'easy', '简单': 'easy',
                 normal: 'normal', medium: 'normal', '普通': 'normal',
                 hard: 'hard', '困難': 'hard', '困难': 'hard',
@@ -417,6 +423,8 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
             const stats = options.stats || currentScenario.playerStats || { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
             const scene = currentScenario.scenarios?.[currentScenarioIndex] || {};
             const actorLabel = options.actorLabel || '玩家';
+            const profList = Array.isArray(options.proficiencies) ? options.proficiencies.map(v => valueToText(v).trim()).filter(Boolean) : [];
+            const profBlock = profList.length ? `\n這名角色已確立的擅長領域（僅供判斷是否熟練）：${profList.join('、')}\n- 若本次行動明顯屬於上述任一擅長領域，proficient 設 true；否則 false。不要因為想幫玩家就寬鬆給 true。` : '';
             const prompt = `你是 TRPG 檢定分類器。只判斷這個行動最適合哪一項六屬性與難度，不要擲骰、不要判斷成功失敗，也不要因為某項數值較高就偏袒它。
 
 判定對象：${actorLabel}
@@ -432,10 +440,11 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
 - INT 智力：知識、推理、破解、分析技術。
 - WIS 感知：觀察、直覺、洞察、追蹤與察覺。
 - CHA 魅力：說服、欺瞞、威嚇、表演與社交影響。
-- 難度只能是 easy、normal、hard、extreme，依行動本身與情境風險決定。
+- 難度只能是 trivial、easy、normal、hard、extreme，依行動本身與情境風險決定。
+- trivial（超簡單）：幾乎穩過的瑣事或理所當然的小動作（撿起腳邊的東西、走幾步路、開沒上鎖的門），基本上只有大失敗才會出包。${profBlock}
 
-只輸出 JSON：{"attribute":"str|dex|con|int|wis|cha","difficulty":"easy|normal|hard|extreme","reason":"30字內理由"}`;
-            const rawText = await requestAIText(prompt, { kind: 'dice', maxTokens: 160 });
+只輸出 JSON：{"attribute":"str|dex|con|int|wis|cha","difficulty":"trivial|easy|normal|hard|extreme","proficient":true|false,"reason":"30字內理由"}`;
+            const rawText = await requestAIText(prompt, { kind: 'dice', maxTokens: 190 });
             let parsed;
             try { parsed = JSON.parse(extractJsonText(rawText)); }
             catch (error) { throw new Error('AI 無法辨識這次檢定屬性，請稍後重試。'); }
@@ -444,8 +453,31 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
             return {
                 statKey,
                 difficultyKey: normalizeDiceDifficulty(parsed.difficulty),
+                proficient: profList.length ? parsed.proficient === true : false,
                 reason: valueToText(parsed.reason, '依玩家行動判定')
             };
+        }
+
+        function buildDiceSummary(check, isNarratorDice) {
+            const lang = (typeof getUiLanguage === 'function') ? getUiLanguage() : 'zh-TW';
+            const STAT_NAMES = {
+                str: { 'zh-TW': '力量', ja: '筋力' }, dex: { 'zh-TW': '敏捷', ja: '敏捷' },
+                con: { 'zh-TW': '體質', ja: '体力' }, int: { 'zh-TW': '智力', ja: '知力' },
+                wis: { 'zh-TW': '感知', ja: '感知' }, cha: { 'zh-TW': '魅力', ja: '魅力' }
+            };
+            const RESULTS = {
+                '大成功': { en: 'Crit!', ja: '大成功' }, '成功': { en: 'Success', ja: '成功' },
+                '失敗': { en: 'Fail', ja: '失敗' }, '大失敗': { en: 'Fumble', ja: '大失敗' }
+            };
+            const statName = (lang === 'en') ? '' : ((STAT_NAMES[check.statKey] && STAT_NAMES[check.statKey][lang === 'ja' ? 'ja' : 'zh-TW']) || check.label || '');
+            const statPart = statName ? `${check.code} ${statName}` : check.code;
+            const resultWord = (lang === 'zh-TW') ? check.result : ((RESULTS[check.result] && RESULTS[check.result][lang]) || check.result);
+            const signed = check.totalModifier >= 0 ? `+${check.totalModifier}` : String(check.totalModifier);
+            let summary = `${statPart}｜${resultWord}｜${check.roll}${signed}=${check.total}／DC${check.dc}`;
+            if (isNarratorDice) {
+                summary = `NPC｜${summary}`;
+            }
+            return summary;
         }
 
         function stripHardDiceDirective(text) {
@@ -476,7 +508,7 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
             const difficulty = normalizeGameDifficulty(currentScenario?.gameDifficulty);
             if (difficulty === 'nightmare' || isNpcRevivePermanentlyLocked(intent.npc)) return null;
             if (difficulty === 'hard') {
-                const rank = { easy: 0, normal: 1, hard: 2, extreme: 3 };
+                const rank = { trivial: -1, easy: 0, normal: 1, hard: 2, extreme: 3 };
                 return {
                     ...option,
                     check: DICE_STATS[option.check] ? option.check : 'wis',
@@ -550,11 +582,11 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
                         difficultyKey: normalizeDiceDifficulty(inputEl.dataset.diceDifficulty),
                         reason: '採用行動選項的預設檢定'
                     }
-                    : await classifyDiceCheck(playerText, isNarratorDice ? { stats: neutralNpcStats, actorLabel: 'NPC／旁白支線' } : {});
+                    : await classifyDiceCheck(playerText, isNarratorDice ? { stats: neutralNpcStats, actorLabel: 'NPC／旁白支線' } : { proficiencies: currentScenario?.playerProficiencies });
                 const resurrectionIntent = getResurrectionIntent(playerText);
                 if (resurrectionIntent && normalizeGameDifficulty(currentScenario?.gameDifficulty) === 'hard') {
                     if (isNpcRevivePermanentlyLocked(resurrectionIntent.npc)) throw new Error('這名 NPC 的復活機會已經失敗，無法再次嘗試。');
-                    const rank = { easy: 0, normal: 1, hard: 2, extreme: 3 };
+                    const rank = { trivial: -1, easy: 0, normal: 1, hard: 2, extreme: 3 };
                     if ((rank[classification.difficultyKey] ?? 1) < rank.hard) classification.difficultyKey = 'hard';
                     classification.reason = `困難模式復活檢定：${resurrectionIntent.npc.name}`;
                 }
@@ -562,18 +594,18 @@ document.getElementById('setup-screen').style.display = 'none'; document.getElem
                     classification.statKey,
                     classification.difficultyKey,
                     null,
-                    isNarratorDice ? { stats: neutralNpcStats, applySurvivalModifier: false, scope: 'narrator' } : {}
+                    isNarratorDice ? { stats: neutralNpcStats, applySurvivalModifier: false, scope: 'narrator' } : { proficient: classification.proficient }
                 );
                 const signedAbility = check.abilityModifier >= 0 ? `+${check.abilityModifier}` : String(check.abilityModifier);
                 const signedTotal = check.totalModifier >= 0 ? `+${check.totalModifier}` : String(check.totalModifier);
                 const gameDifficultyText = check.gameDifficultyDcModifier ? `｜遊戲難度 ${check.gameDifficultyLabel}：DC +${check.gameDifficultyDcModifier}` : `｜遊戲難度 ${check.gameDifficultyLabel}`;
                 const survivalText = check.survivalModifier ? `｜生存狀態修正 ${check.survivalModifier}` : '';
+                const proficiencyText = check.proficiencyModifier ? `｜熟練 +${check.proficiencyModifier}` : '';
                 const scopeText = isNarratorDice ? '｜NPC／旁白支線判定，不得套用玩家 HP/SAN 或好感' : '';
                 const diceReason = `${classification.reason}${scopeText}`;
                 classification.reason = diceReason;
-                const directive = `(系統硬判定：${check.code} ${check.label}｜屬性 ${check.score}（加值 ${signedAbility}）｜行動難度 ${check.difficultyLabel}：基礎 DC ${check.difficultyDc}${gameDifficultyText}${survivalText}｜最終 DC ${check.dc}｜D20 ${check.roll} ${signedTotal} = ${check.total}｜結果【${check.result}】｜判定理由：${classification.reason}。此結果由程式計算，AI 不得更改。)`;
-                pendingDiceSummary = `${check.code} ${check.label}｜${check.result}｜${check.roll}${signedTotal}=${check.total}／DC${check.dc}`;
-                if (isNarratorDice) pendingDiceSummary = `支線判定｜${pendingDiceSummary}`;
+                const directive = `(系統硬判定：${check.code} ${check.label}｜屬性 ${check.score}（加值 ${signedAbility}）｜行動難度 ${check.difficultyLabel}：基礎 DC ${check.difficultyDc}${gameDifficultyText}${survivalText}${proficiencyText}｜最終 DC ${check.dc}｜D20 ${check.roll} ${signedTotal} = ${check.total}｜結果【${check.result}】｜判定理由：${classification.reason}。此結果由程式計算，AI 不得更改。)`;
+                pendingDiceSummary = buildDiceSummary(check, isNarratorDice);
                 inputEl.value = `${playerText}\n${directive}`;
                 document.getElementById('ui-target-typing').innerText = window.uiMessage ? window.uiMessage('引擎 (DM)') : '引擎 (DM)';
                 await sendChoice();

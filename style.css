@@ -2955,7 +2955,23 @@ box-shadow: -2px 2px 0 var(--bg-tab-shadow);
 .core-rules-widget.open .core-rules-drawer { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
 .core-rules-close { position: absolute; top: 6px; right: 10px; width: 24px; height: 24px; border: 0; background: transparent; color: var(--text-sub); font-size: 24px; font-weight: 900; line-height: 1; cursor: pointer; }
 .core-rules-kicker { margin: 0 28px 6px 0; color: var(--text-sub); font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+.core-rules-kicker::before { content: "\2726"; margin-right: 5px; color: var(--border-dark); }
 .core-rules-editor { width: 100%; box-sizing: border-box; min-height: 130px; max-height: 38vh; resize: vertical; background: var(--card-bg); border: 2px solid var(--border-dark); border-radius: 8px; padding: 10px; color: var(--text-main); font-size: 14px; font-weight: 600; }
+
+/* === 擅長領域(熟練)：核心準則抽屜內的小區塊 === */
+.proficiency-block { margin: 14px 0 0; padding: 12px 0 0; border-top: 2px dashed var(--accent-gray); }
+.proficiency-kicker { margin: 0 0 6px; color: var(--text-sub); font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+.proficiency-kicker::before { content: "\2726"; margin-right: 5px; color: var(--border-dark); }
+.proficiency-hint { font-size: 11px; color: var(--text-sub); line-height: 1.5; margin: 0 0 9px; }
+.proficiency-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.proficiency-tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 11px; border: 2px solid var(--border-dark); border-radius: 999px; background: color-mix(in srgb, var(--accent-neon) 60%, var(--card-bg)); color: var(--border-dark); font-size: 12px; font-weight: 800; box-shadow: 2px 2px 0 rgba(40,40,40,0.12); }
+.proficiency-tag-remove { cursor: pointer; font-size: 10px; line-height: 1; color: var(--text-sub); transition: color 0.15s ease, transform 0.15s ease; }
+.proficiency-tag-remove:hover, .proficiency-tag-remove:focus-visible { color: var(--border-dark); transform: scale(1.15); outline: none; }
+.proficiency-empty { font-size: 12px; color: var(--text-sub); font-weight: 700; opacity: 0.85; }
+.proficiency-gen-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 2px solid var(--border-dark); border-radius: 8px; background: var(--card-bg); color: var(--border-dark); font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 2px 2px 0 var(--border-dark); transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease; }
+.proficiency-gen-btn::before { content: "\2726"; }
+.proficiency-gen-btn:hover:not(:disabled), .proficiency-gen-btn:focus-visible:not(:disabled) { background: var(--accent-neon); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border-dark); outline: none; }
+.proficiency-gen-btn:disabled { opacity: 0.55; cursor: default; box-shadow: 1px 1px 0 var(--border-dark); }
 @media (max-width: 699px) {
 #game-container .core-rules-widget {
 position: absolute;

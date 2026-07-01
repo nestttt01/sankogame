@@ -279,6 +279,7 @@ syncEditingDataFromDOM(); editingScenarios.splice(index, 1); markEditScenarioDir
             document.getElementById('input-preset-name').value = p.presetName || ''; 
             document.getElementById('input-player-name').value = p.playerName || '';
             const coreRulesInput = document.getElementById('input-core-rules'); if (coreRulesInput) coreRulesInput.value = p.coreRules || ''; 
+            const profInput = document.getElementById('input-proficiencies'); if (profInput) profInput.value = JSON.stringify(Array.isArray(p.playerProficiencies) ? p.playerProficiencies : []); if (typeof renderProficiencyTags === 'function') renderProficiencyTags();
             document.getElementById('preview-player').src = p.playerAvatar || emptyAvatar;
             setLanguageModeControls(p.languageMode || 'zh-tw');
             document.getElementById('input-game-difficulty').value = normalizeGameDifficulty(p.gameDifficulty);
@@ -445,6 +446,7 @@ function gatherPresetData(idToSave, nameToSave) {
  id: idToSave, presetName: nameToSave, 
  playerName: document.getElementById('input-player-name')?.value.trim() || previousPreset.playerName || '',
  coreRules: document.getElementById('input-core-rules')?.value.trim() || previousPreset.coreRules || '',
+ playerProficiencies: (() => { try { const v = JSON.parse(document.getElementById('input-proficiencies')?.value || '[]'); return Array.isArray(v) ? v : (previousPreset.playerProficiencies || []); } catch (e) { return previousPreset.playerProficiencies || []; } })(),
  languageMode: document.getElementById('input-language-mode')?.value || 'zh-tw',
  gameDifficulty: normalizeGameDifficulty(document.getElementById('input-game-difficulty')?.value),
  playerAvatar: document.getElementById('preview-player')?.src || previousPreset.playerAvatar || emptyAvatar,
