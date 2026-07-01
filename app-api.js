@@ -215,9 +215,12 @@ async function fetchAvailableModelsFromGame() {
             const name = (model.name || '').toLowerCase();
             const haystack = `${id} ${name}`;
             let score = 0;
-            if (haystack.includes('gpt-4.1') || haystack.includes('gpt-4o') || haystack.includes('o4')) score += 120;
+            if (haystack.includes('gpt-5') || haystack.includes('gpt-4.1') || haystack.includes('gpt-4o') || haystack.includes('o4')) score += 120;
             if (haystack.includes('claude') && (haystack.includes('sonnet') || haystack.includes('opus'))) score += 110;
             if (haystack.includes('gemini') && (haystack.includes('pro') || haystack.includes('flash'))) score += 100;
+            if (haystack.includes('grok')) score += 100;
+            if (haystack.includes('deepseek')) score += 90;
+            if (haystack.includes('kimi')) score += 70;
             if (haystack.includes('mistral') || haystack.includes('qwen')) score += 35;
             if (haystack.includes('free') || haystack.includes('preview') || haystack.includes('experimental')) score -= 20;
             if (model.context_length) score += Math.min(40, Math.floor(model.context_length / 8000));

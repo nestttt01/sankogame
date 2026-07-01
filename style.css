@@ -1621,7 +1621,7 @@ background: var(--paper-bg); border: 3px solid var(--border-dark); border-radius
             .desktop-npc-avatar-button > span:last-child {
                 width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
             }
-            .desktop-npc-add-icon { border-style: dashed; color: var(--text-sub); }
+            .desktop-npc-add-icon { border-style: dashed; color: var(--text-sub); background: color-mix(in srgb, var(--card-bg) 30%, transparent); }
 
             .desktop-workspace-heading {
                 display: block;
