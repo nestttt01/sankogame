@@ -418,6 +418,53 @@ function normalizeMemoryNotes(value) {
             }) || null;
         }
 
+        // === 關係里程碑保底旗標（好感滿值 / 好感觸底 / NPC 死亡；程式硬保證，不靠 AI 自覺）===
+        const AFFECTION_MAX_MILESTONE = 100;
+        const AFFECTION_MIN_MILESTONE = -30;
+        let pendingRelationshipMilestones = [];
+
+        function queueRelationshipMilestone(npcName, kind) {
+            const name = valueToText(npcName);
+            if (!name) return;
+            if (pendingRelationshipMilestones.some(m => m.npcName === name && m.kind === kind)) return;
+            pendingRelationshipMilestones.push({ npcName: name, kind });
+        }
+
+        function buildMilestoneFlagText(npcName, kind) {
+            if (kind === 'maxAffection') return `與 ${npcName} 締結至深羈絆`;
+            if (kind === 'minAffection') return `與 ${npcName} 結下難解深仇`;
+            if (kind === 'death') return `${npcName} 已殞命`;
+            return '';
+        }
+
+        function addGuaranteedFlag(flagText) {
+            const cleanFlag = normalizeFlagText(flagText);
+            if (!cleanFlag || currentFlags.includes(cleanFlag)) return false;
+            if (currentFlags.length >= MAX_STORED_FLAGS) {
+                createSystemNote(`Flags 已達 ${MAX_STORED_FLAGS} 個上限；重要標記「${cleanFlag}」未加入，請至角色面板整理。`);
+                return false;
+            }
+            currentFlags.push(cleanFlag);
+            createSystemNote(`新增狀態 [ ${cleanFlag} ]`);
+            return true;
+        }
+
+        // aiFlagsThisTurn：本回合 AI 回傳的 flags_add。好感里程碑若 AI 已給含該角色名的標籤，
+        // 交給 AI 的關係措辭，程式不再補；死亡一律程式保底。
+        function flushRelationshipMilestoneFlags(aiFlagsThisTurn = []) {
+            if (!pendingRelationshipMilestones.length) return;
+            const aiFlags = Array.isArray(aiFlagsThisTurn)
+                ? aiFlagsThisTurn.map(flag => normalizeFlagText(flag)).filter(Boolean)
+                : [];
+            const pending = pendingRelationshipMilestones;
+            pendingRelationshipMilestones = [];
+            pending.forEach(({ npcName, kind }) => {
+                if ((kind === 'maxAffection' || kind === 'minAffection')
+                    && npcName && aiFlags.some(flag => flag.includes(npcName))) return;
+                addGuaranteedFlag(buildMilestoneFlagText(npcName, kind));
+            });
+        }
+
         function applyAffectionUpdate(npc, value, mode = 'change', { announce = true } = {}) {
             if (!npc || isNpcDead(npc)) return null;
             const previous = clampAffectionValue(npc.affection, 0);
@@ -427,6 +474,8 @@ function normalizeMemoryNotes(value) {
                 ? clampAffectionValue(numericValue, previous)
                 : clampAffectionValue(previous + numericValue, previous);
             npc.affection = next;
+            if (previous < AFFECTION_MAX_MILESTONE && next >= AFFECTION_MAX_MILESTONE) queueRelationshipMilestone(npc.name, 'maxAffection');
+            if (previous > AFFECTION_MIN_MILESTONE && next <= AFFECTION_MIN_MILESTONE) queueRelationshipMilestone(npc.name, 'minAffection');
             if (announce) createSystemAlert(`— ${npc.name} 的好感度 ${previous} → ${next} —`);
             return { npcId: npc.id || npc.name, npcName: npc.name, previous, next, mode };
         }
@@ -478,6 +527,7 @@ function normalizeMemoryNotes(value) {
                 const cause = normalizeDynamicState(npc.dynamic).deathCause;
                 events.push(`${npc.name} 已死亡：${cause}`);
                 createSystemAlert(`☠ ${npc.name} 已死亡${cause ? `：${cause}` : ''}`);
+                queueRelationshipMilestone(npc.name, 'death');
             });
             return events;
         }

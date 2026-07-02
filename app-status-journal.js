@@ -10,6 +10,7 @@ function openStatusModal() {
             document.getElementById('ui-relationship-summary').value = currentRelationshipSummary;
             setLanguageModeControls(currentScenario.languageMode || 'zh-tw');
             const rlSel = document.getElementById('reply-length-select'); if (rlSel && typeof getReplyLengthPref === 'function') rlSel.value = getReplyLengthPref();
+            if (typeof refreshMatureToggle === 'function') refreshMatureToggle();
             
             const pStats = currentScenario.playerStats || {str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10};
             let pDet = currentScenario.playerDetails || { age: '', speech: '', likes: '', dislikes: '', app: '', bg: currentScenario.playerPersona || '' };

@@ -207,6 +207,24 @@ event.returnValue = '';
             const v = (value === 'short' || value === 'long') ? value : 'medium';
             localStorage.setItem('sanko_reply_length', v);
         }
+        function getMatureModePref() {
+            return localStorage.getItem('sanko_mature_mode') === 'on';
+        }
+        function setMatureMode(value) {
+            localStorage.setItem('sanko_mature_mode', value === 'on' ? 'on' : 'off');
+        }
+        function toggleMatureMode() {
+            setMatureMode(getMatureModePref() ? 'off' : 'on');
+            refreshMatureToggle();
+        }
+        function refreshMatureToggle() {
+            const btn = document.getElementById('mature-mode-toggle');
+            if (!btn) return;
+            const on = getMatureModePref();
+            btn.textContent = on ? 'ON' : 'OFF';
+            btn.classList.toggle('on', on);
+            btn.setAttribute('aria-pressed', String(on));
+        }
         function getReplyLengthCapTokens(bilingual) {
             const caps = { short: 2500, medium: 4500, long: 9000 };
             let cap = caps[getReplyLengthPref()] || 4500;

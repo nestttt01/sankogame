@@ -116,6 +116,10 @@
                             <option value="long">長（詳細）</option>
                         </select>
                     </div>
+                    <div class="language-setting-row">
+                        <div class="scenario-label">成人模式</div>
+                        <button type="button" id="mature-mode-toggle" class="mature-toggle" aria-pressed="false" onclick="toggleMatureMode()">OFF</button>
+                    </div>
                     </div>
                 </div>
 
@@ -214,11 +218,11 @@
     <p class="u-inline-020">匯出備份會保存遊戲紀錄、角色配置、情境配置與角色頭像，方便換裝置或恢復進度。備份不包含 API Key。匯入備份後，會保留目前裝置原本的介面語言與外觀設定。</p>
 
     <div class="u-inline-021">
-        <p class="u-inline-019">💡 AI 忘記事情怎麼辦？</p>
-        <p class="u-inline-022">打開角色面板，檢查重點劇情、任務、角色關係、Flags 與動態狀態是否正確。你可以手動修正，也可以使用整理摘要功能重新整理目前狀態。</p>
+        <p class="u-inline-019">💡 AI 忘記、重複或場景錯亂怎麼辦？</p>
+        <p class="u-inline-022">先打開角色面板，檢查重點劇情、任務、角色關係、Flags 與動態狀態，可手動修正或用「整理摘要／整理紀錄」重新整理，並確認冒險日誌是否正確。如果 AI 仍然混淆，可開啟「神」模式，直接說明目前場景、在場角色與接下來想聚焦的方向。</p>
 
-        <p class="u-inline-019">💡 劇情重複或場景錯亂怎麼辦？</p>
-        <p class="u-inline-022">先確認摘要與冒險日誌是否正確。如果 AI 仍然混淆，可以開啟「神」模式，直接說明目前場景、在場角色與接下來希望聚焦的方向。</p>
+        <p class="u-inline-019">💡 重大事件與里程碑會自動記錄</p>
+        <p class="u-inline-022">當 NPC 好感度達到滿值、與你關係徹底破裂，或在劇情中死亡時，系統會自動在 Flags 留下一條里程碑標籤，不必依賴 AI 自行判斷。此外，即使 AI 當回合沒有特別描述，獲得／失去重要道具或場景移動也會自動補進冒險日誌——重大關係與事件因此不會被漏記。</p>
 
         <p class="u-inline-019">💡 核心準則（AI 不可違反的鐵則）</p>
         <p class="u-inline-022">角色設定頁與遊戲頁都有「核心準則」小標籤。寫進去的設定（例如世界觀「這世界沒有魔法」，或人物鐵律「主角必須一直戴著面具」），AI 每回合都會優先讀取、不會遺忘也不可違反。它跟著配置保存，兩邊同步。</p>
@@ -227,7 +231,12 @@
         <p class="u-inline-022">情境設定裡每個情境可選填「本場目標」。填了之後 DM 會讓劇情自然朝目標推進、鋪陳線索與機會，但不會硬拉玩家或無視你的選擇；留空則自由發展。</p>
 
         <p class="u-inline-019">💡 玩久了 AI 變笨、接不上怎麼辦？</p>
-        <p class="u-inline-022">即使規則調得再細，故事拉長後 AI 仍可能變遲鈍或銜接不順，這是模型本身的能力限制。建議：（一）長篇、複雜或重視連貫的故事，盡量選較強的模型（清單中標 ★ 的優先項，例如 Gemini Pro／Flash、Claude Sonnet／Opus、GPT-4.1）；輕量模型（Lite、Haiku）雖然快又省，但較容易忘記與跳針。（二）善用「整理摘要／整理紀錄」壓縮記憶，並把關鍵設定寫進「核心準則」或角色面板。（三）模型可在遊戲中隨時切換，不必重開。</p>
+        <p class="u-inline-022">故事拉長後，AI 可能變遲鈍或接不上，這是模型本身的能力限制。三個改善方向：</p>
+        <p class="u-inline-022">・選強一點的模型：長篇／重視連貫選標 ▪ 的大廠款（Gemini Pro／Flash、Claude Sonnet／Opus、GPT-4.1）；輕量款（Lite、Haiku）快省但容易忘、跳針。</p>
+        <p class="u-inline-022">・壓縮記憶：多用「整理摘要／整理紀錄」，關鍵設定寫進「核心準則」或角色面板。</p>
+        <p class="u-inline-022">・隨時換模型：遊戲中可切換，不必重開。</p>
+        <p class="u-inline-019">💡 成人模式（親密場景）</p>
+        <p class="u-inline-022">狀態面板的設定裡有「成人模式」開關，預設關閉。開啟後會放寬模型對親密／情慾情節的限制，讓旁白與 NPC 自然承接、不隨意中斷；前提是所有角色皆為成年人、互動出於合意。尺度由你在遊玩中掌握；效果以 Gemini 最明顯，Claude／GPT 天生較保守。</p>
 
     </div>
 </div>
@@ -255,7 +264,7 @@
                 <p class="u-inline-020">選擇 Google Gemini 用 Google AI Studio 的金鑰；選擇 OpenRouter 用 OpenRouter 金鑰（可跨多家模型）；選擇 Anthropic（Claude）用 Anthropic 官方金鑰（直接使用 Claude 模型）。三種金鑰不能互換，可用模型清單會在驗證後載入。</p>
 
                 <p class="u-inline-019">3. 模型怎麼選？</p>
-                <p class="u-inline-020">輕量模型通常回覆較快、用量較省，適合測試設定或日常遊玩；較大型模型通常更擅長長篇劇情、人物語氣與複雜指令。清單中的 ★ 代表較適合目前遊戲用途的優先選項。模型表現與費用可能不同，請以供應商顯示的資訊為準。</p>
+                <p class="u-inline-020">輕量模型通常回覆較快、用量較省，適合測試設定或日常遊玩；較大型模型通常更擅長長篇劇情、人物語氣與複雜指令。清單中標 ▪ 的是大廠通用優質模型，會排在前面方便挑選。模型表現與費用可能不同，請以供應商顯示的資訊為準。</p>
 
                 <p class="u-inline-019">4. 金鑰會保存在哪裡？</p>
                 <p class="u-inline-020">未開啟「在這台裝置保留金鑰」時，金鑰只在目前頁面使用，重新開啟後需要再次輸入；開啟後才會保存在這台裝置的瀏覽器。匯出備份不包含 API Key，因此在新裝置匯入遊戲資料後仍需重新驗證。</p>
@@ -290,16 +299,23 @@
 <button id="home-update-tab" class="home-update-tab" type="button" onclick="toggleHomeUpdateNotes()" aria-label="更新內容" aria-expanded="false"></button>
 <aside id="home-update-drawer" class="home-update-drawer" aria-label="更新內容">
 <button class="home-update-close" type="button" onclick="toggleHomeUpdateNotes(false)" aria-label="關閉更新內容">×</button>
-<p class="home-update-kicker">v1.9 更新</p>
+<p class="home-update-kicker">v2.0 更新</p>
 <h3>更新內容</h3>
+<ul>
+<li>新增「關係里程碑標籤」：NPC 好感度達到滿值、關係徹底破裂，或 NPC 死亡時，系統會自動在 Flags 留下里程碑標籤，重大關係節點不再漏掉。</li>
+<li>強化冒險日誌：重要事件更不易漏記；即使 AI 當回合沒特別說明，獲得／失去重要道具、場景移動也會自動補進日誌。</li>
+<li>模型清單分類：驗證後會把大廠通用優質模型標 ▪ 並排在前面，方便挑選。</li>
+<li>新增「成人模式」開關（預設關）：開啟後放寬性內容過濾並提示 AI 自然演出親密情節，放寬條件為角色皆成年且合意，可隨時關閉。</li>
+</ul>
+<details class="home-update-history">
+<summary>查看更早的更新紀錄</summary>
+<p class="home-update-kicker">v1.9 更新</p>
 <ul>
 <li>新增「回覆長度」設定（短／中／長）：可調整 AI 每回合回覆的詳細程度。</li>
 <li>修正部分 Claude 新模型（例如 Sonnet 5）第一則訊息就出現「回覆太長」錯誤的問題。</li>
 <li>骰點結果會依介面語言顯示（中／英／日）。</li>
 <li>骰點難度重新平衡、更有成敗張力；狀態旗標（Flags）加入嚴格判定，不再把瑣事都寫成標籤。</li>
 </ul>
-<details class="home-update-history">
-<summary>查看更早的更新紀錄</summary>
 <p class="home-update-kicker">v1.8 更新</p>
 <ul>
 <li>骰點難度改為範圍隨機：同一種難度每次的目標值（DC）會在區間內浮動，不再固定同一個數字，判定更有變化。</li>
@@ -414,7 +430,7 @@
 <option value="ja">日本語</option>
 </select>
 </label>
-<p class="setup-version"> Threads @ miyazaki.617 · v1.9 · 2026/07/02</p>
+<p class="setup-version"> Threads @ miyazaki.617 · v2.0 · 2026/07/02</p>
 </div>
 </section>
 
@@ -449,7 +465,7 @@
 </article>
 <article>
 <h3>7. 模型建議</h3>
-<p>測試設定時可先用較快、較省的模型；長篇劇情、複雜角色語氣或需要穩定記憶整理時，再切換到較大型模型。模型可以在遊戲內切換。</p>
+<p>驗證後的模型清單會把大廠通用優質模型（Gemini、Claude、GPT、DeepSeek 等）標上 ▪ 並排在前面，這些模型穩定、擅長長篇與複雜指令。測試設定可先用較快、較省的；長篇或複雜劇情建議選標 ▪ 的模型。模型可在遊戲內隨時切換。</p>
 </article>
 </div>
 </div>
@@ -497,12 +513,12 @@
 <p>匯出記憶紀錄會保存遊戲紀錄、角色配置、情境配置與角色頭像，方便換裝置或恢復進度。備份不包含 API Key。匯入備份後，會保留目前裝置原本的介面語言與外觀設定。</p>
 </article>
 <article>
-<h3>💡 AI 忘記事情怎麼辦？</h3>
-<p>打開角色面板，檢查重點劇情、任務、角色關係、Flags 與動態狀態是否正確。你可以手動修正，也可以使用整理摘要功能重新整理目前狀態。</p>
+<h3>💡 AI 忘記、重複或場景錯亂怎麼辦？</h3>
+<p>先打開角色面板，檢查重點劇情、任務、角色關係、Flags 與動態狀態，可手動修正或用「整理摘要／整理紀錄」重新整理，並確認冒險日誌是否正確。如果 AI 仍然混淆，可開啟「神」模式，直接說明目前場景、在場角色與接下來想聚焦的方向。</p>
 </article>
 <article>
-<h3>💡 劇情重複或場景錯亂怎麼辦？</h3>
-<p>先確認摘要與冒險日誌是否正確。如果 AI 仍然混淆，可以開啟「神」模式，直接說明目前場景、在場角色與接下來希望聚焦的方向。</p>
+<h3>💡 重大事件與里程碑會自動記錄</h3>
+<p>當 NPC 好感度達到滿值、與你關係徹底破裂，或在劇情中死亡時，系統會自動在 Flags 留下一條里程碑標籤，不必依賴 AI 自行判斷。此外，即使 AI 當回合沒有特別描述，獲得／失去重要道具或場景移動也會自動補進冒險日誌——重大關係與事件因此不會被漏記。</p>
 </article>
 <article>
 <h3>💡 核心準則（AI 不可違反的鐵則）</h3>
@@ -514,7 +530,14 @@
 </article>
 <article>
 <h3>💡 玩久了 AI 變笨、接不上怎麼辦？</h3>
-<p>即使規則調得再細，故事拉長後 AI 仍可能變遲鈍或銜接不順，這是模型本身的能力限制。建議：（一）長篇、複雜或重視連貫的故事，盡量選較強的模型（清單中標 ★ 的優先項，例如 Gemini Pro／Flash、Claude Sonnet／Opus、GPT-4.1）；輕量模型（Lite、Haiku）雖然快又省，但較容易忘記與跳針。（二）善用「整理摘要／整理紀錄」壓縮記憶，並把關鍵設定寫進「核心準則」或角色面板。（三）模型可在遊戲中隨時切換，不必重開。</p>
+<p>故事拉長後，AI 可能變遲鈍或接不上，這是模型本身的能力限制。三個改善方向：</p>
+<p>・選強一點的模型：長篇／重視連貫選標 ▪ 的大廠款（Gemini Pro／Flash、Claude Sonnet／Opus、GPT-4.1）；輕量款（Lite、Haiku）快省但容易忘、跳針。</p>
+<p>・壓縮記憶：多用「整理摘要／整理紀錄」，關鍵設定寫進「核心準則」或角色面板。</p>
+<p>・隨時換模型：遊戲中可切換，不必重開。</p>
+</article>
+<article>
+<h3>💡 成人模式（親密場景）</h3>
+<p>狀態面板的設定裡有「成人模式」開關，預設關閉。開啟後會放寬模型對親密／情慾情節的限制，讓旁白與 NPC 自然承接、不隨意中斷；前提是所有角色皆為成年人、互動出於合意。尺度由你在遊玩中掌握；效果以 Gemini 最明顯，Claude／GPT 天生較保守。</p>
 </article>
 </div>
 </div>

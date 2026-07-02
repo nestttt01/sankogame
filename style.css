@@ -700,18 +700,51 @@ z-index: 10;
             background: transparent;
             padding: 0;
             margin: 2px 0 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 18px;
+            row-gap: 2px;
+            align-items: start;
         }
-        #status-page-state .settings-group .language-setting-row { margin: 0 0 12px; }
+        #status-page-state .settings-group .language-setting-row { margin: 0 0 12px; grid-template-columns: 120px 150px; column-gap: 10px; align-items: center; }
         #status-page-state .settings-group .language-setting-row:last-child { margin-bottom: 0; }
         #status-page-state .settings-group .language-mode-select {
             background: var(--accent-neon);
-            border-color: transparent;
+            border: none;
             border-radius: 0;
             font-weight: 900;
+            padding: 3px 12px;
+            width: 150px;
+            min-height: 0;
+            justify-self: start;
         }
         :root[data-bg-mode="image"] #status-page-state .settings-group .language-mode-select {
             background: var(--accent-neon);
         }
+        .mature-toggle {
+            justify-self: start;
+            box-sizing: border-box;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            padding: 0 8px;
+            line-height: 1.2;
+            background: var(--card-bg);
+            border: 2px solid var(--border-dark);
+            border-radius: 999px;
+            color: #e03131;
+            font-size: 12px;
+            font-weight: 900;
+            font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans TC", Arial, sans-serif;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--accent-neon);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .mature-toggle.on { color: #16a34a; }
+        .mature-toggle:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px var(--accent-neon); }
+        .mature-toggle:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px var(--accent-neon); }
         #status-page-state .u-inline-014,
         .status-panel-hint {
             font-size: 11px;
@@ -2312,6 +2345,7 @@ margin: 0; padding: 0; background: transparent;
                 width: 100%;
                 gap: 6px;
             }
+            #status-page-state .settings-group { grid-template-columns: 1fr; }
             .quick-status-box {
                 border-right: 0;
                 border-bottom: 1px solid #d0d0d0;

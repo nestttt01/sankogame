@@ -82,6 +82,10 @@
             if (!apiKey) throw new Error(`${getApiProviderLabel()} API Key 未載入，請回到首頁重新驗證金鑰。`);
             if (!selectedModel) throw new Error("尚未選擇模型，請回到首頁重新選擇模型。");
             const temperature = kind === 'generation' ? 0.9 : (kind === 'normal' ? 0.7 : (kind === 'journal' || kind === 'summary' ? 0.25 : 0.1));
+            // 抑制重複：只對劇情對話與創作生成加溫和懲罰；整理日誌/摘要/JSON 修復要忠實，不加（也避免懲罰到 JSON 結構）。
+            const repetitionSensitiveKind = (kind === 'normal' || kind === 'generation');
+            const frequencyPenalty = repetitionSensitiveKind ? 0.3 : 0;
+            const presencePenalty = repetitionSensitiveKind ? 0.5 : 0;
             if (apiProvider === 'openrouter') {
                 return {
                     url: 'https://openrouter.ai/api/v1/chat/completions',
@@ -97,6 +101,8 @@
                             messages: [{ role: 'user', content: fullPrompt }],
                             response_format: { type: 'json_object' },
                             temperature,
+                            frequency_penalty: frequencyPenalty,
+                            presence_penalty: presencePenalty,
                             max_tokens: maxTokens
                         })
                     }
@@ -124,7 +130,9 @@
                 };
             }
 
-            const safetySettings = [{ category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }];
+            const matureOn = (typeof getMatureModePref === "function") && getMatureModePref();
+            const sexualThreshold = matureOn ? "BLOCK_NONE" : "BLOCK_ONLY_HIGH";
+            const safetySettings = [{ category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" }, { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: sexualThreshold }, { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }];
             return {
                 url: `https://generativelanguage.googleapis.com/v1beta/${selectedModel}:generateContent?key=${apiKey}`,
                 options: {
@@ -606,6 +614,8 @@ ${rawAction}
                 const memoryCategory = valueToText(memoryPayload?.category).toLowerCase();
                 const characterNoteCategories = new Set(['task', 'relationship', 'clue', 'decision']);
                 const allowCharacterMemoryNotes = !currentScenario.memoryNotesPaused && characterNoteCategories.has(memoryCategory);
+                const itemJournalEvents = [];
+                let sceneJournalEvent = '';
                 const protectedRevivedIds = new Set(Array.isArray(protectedRevivedNpcIds) ? protectedRevivedNpcIds : []);
                 let revivePayload = changes.npc_revives ?? parsedData.npc_revives;
                 const hasRevivePayload = Array.isArray(revivePayload) ? revivePayload.length > 0 : Boolean(revivePayload);
@@ -662,6 +672,7 @@ ${rawAction}
                             updatedAt: new Date().toISOString()
                         };
                         if (runtimeSituationHasContent(mergedSituation)) activeScene.runtimeSituation = mergedSituation;
+                        if (mergedSituation.location && mergedSituation.location !== prevSituation.location) sceneJournalEvent = `來到 ${truncatePromptText(mergedSituation.location, 60)}`;
                     }
                 }
 
@@ -714,6 +725,7 @@ if (npcLifeEvents.length) applyAutomaticMemoryUpdate({ story_summary: npcLifeEve
                         if(itemText && !currentItems.includes(itemText)) {
                             currentItems.push(itemText);
                             createSystemAlert(`獲得道具 [ ${itemText} ]`);
+                            itemJournalEvents.push(`獲得 ${itemText}`);
                         }
                     });
                 }
@@ -727,7 +739,8 @@ if (npcLifeEvents.length) applyAutomaticMemoryUpdate({ story_summary: npcLifeEve
                         if(idx > -1) { 
                             const removedName = currentItems[idx];
                             currentItems.splice(idx, 1); 
-                            createSystemAlert(`失去道具 [ ${removedName} ]`); 
+                            createSystemAlert(`失去道具 [ ${removedName} ]`);
+                            itemJournalEvents.push(`失去 ${removedName}`); 
                         } 
                     }); 
                 }
@@ -743,6 +756,18 @@ if (npcLifeEvents.length) applyAutomaticMemoryUpdate({ story_summary: npcLifeEve
                         } else if (cleanFlag && !currentFlags.includes(cleanFlag)) flagLimitReached = true;
                     }); 
                     if (flagLimitReached) createSystemNote(`Flags 已達 ${MAX_STORED_FLAGS} 個上限；新項目未加入，請至角色面板整理。`);
+                }
+                // 關係里程碑保底旗標：好感滿值 / 好感觸底 / NPC 死亡由程式硬保證。
+                // 好感里程碑若 AI 本回合已回傳含角色名的標籤，優先採用 AI 措辭，程式不重複補。
+                flushRelationshipMilestoneFlags(Array.isArray(addedFlags) ? addedFlags : []);
+
+                // 冒險日誌安全網：AI 未回傳 memory.event（無聲漏記或截斷）時，
+                // 把本回合具體發生的大事（物品得失、場景移動）補進冒險日誌，避免大事遺失。
+                if (!(memoryEvent && memoryCategory === 'item')) {
+                    itemJournalEvents.forEach(ev => { currentAdventureLog = mergeAdventureLog(currentAdventureLog, ev); });
+                }
+                if (!memoryEvent && sceneJournalEvent) {
+                    currentAdventureLog = mergeAdventureLog(currentAdventureLog, sceneJournalEvent);
                 }
 
                 const narrativeText = valueToText(parsedData.narrative);

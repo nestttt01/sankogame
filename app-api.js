@@ -227,8 +227,28 @@ async function fetchAvailableModelsFromGame() {
             return score;
         }
 
+        // 選單分類：✦ = 專為角色扮演/跑團微調的模型；▪ = 大廠通用優質文字模型；其餘無標記。
+        const ROLEPLAY_MODEL_TOKENS = ['sao10k','stheno','euryale','lunaris','fimbulvetr','thedrummer','drummer','cydonia','rocinante','anubis','skyfall','magnum','magmell','mag-mell','mythomax','mytho','noromaid','hermes','lyra','midnight','erosumika','kunoichi','tiefighter','psyfighter','mlewd','chronos','weaver','wayfarer','unslop','nothingiisreal','venice','abliterated','uncensored','roleplay','-rp-','rpmax','eva-','starcannon','umbral','sorcererlm','painted','violet','angelslayer','wingless','dolphin'];
+        const PREMIUM_MODEL_TOKENS = ['gpt-5','gpt-4.1','gpt-4o','o4','o3','claude','gemini','grok','deepseek','kimi','qwen','mistral','llama-4','llama-3'];
+
+        function classifyModelForMenu(model) {
+            const haystack = `${model.id || ''} ${model.name || ''}`.toLowerCase();
+            if (ROLEPLAY_MODEL_TOKENS.some(t => haystack.includes(t))) return 'rp';
+            if (PREMIUM_MODEL_TOKENS.some(t => haystack.includes(t))) return 'premium';
+            return 'other';
+        }
+
+        function menuCategoryRank(model) {
+            const category = classifyModelForMenu(model);
+            return category === 'premium' ? 0 : (category === 'rp' ? 1 : 2);
+        }
+
         function sortModelsForTRPG(models) {
-            return [...models].sort((a, b) => scoreModelForTRPG(b) - scoreModelForTRPG(a));
+            return [...models].sort((a, b) => {
+                const rankDiff = menuCategoryRank(a) - menuCategoryRank(b);
+                if (rankDiff !== 0) return rankDiff;
+                return scoreModelForTRPG(b) - scoreModelForTRPG(a);
+            });
         }
 
 
